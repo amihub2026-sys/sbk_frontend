@@ -1,0 +1,13 @@
+<div class="admin-layout">
+  <aside class="sidebar" [class.open]="menu()">
+    <div class="admin-brand"><span>CT</span><div><b>Chithiram Thiruvila</b><small>ADMIN WORKSPACE</small></div></div>
+    <nav>@for(link of links;track link[0]){<a [routerLink]="link[0]" routerLinkActive="selected" (click)="menu.set(false)"><span>{{link[2]}}</span>{{link[1]}}</a>}</nav>
+    <div class="sidebar-bottom"><a routerLink="/register" target="_blank">↗ Open student application</a><button (click)="logout()">Sign out</button></div>
+  </aside>
+  <div class="admin-body">
+    <header class="admin-top" [style.background-image]="'linear-gradient(90deg,rgba(16,47,41,.97),rgba(16,47,41,.85)),url(' + store.settings().bannerImage + ')'">
+      <button class="menu-button" (click)="menu.set(!menu())">☰</button><div><small>SBK VIBGYOR SCHOOL</small><b>{{store.settings().title}}</b></div><span class="user">{{auth.session()?.name}}</span>
+    </header>
+    <main class="admin-main"><router-outlet /></main>
+  </div>
+</div>

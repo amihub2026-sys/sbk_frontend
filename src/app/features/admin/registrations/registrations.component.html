@@ -1,0 +1,1730 @@
+<div class="page-heading">
+  <div>
+    <span class="eyebrow">PARTICIPANT MANAGEMENT</span>
+
+    <h1>Registrations</h1>
+
+    <p>
+      Online and paper applications use one registration-number sequence and
+      one participant list.
+    </p>
+  </div>
+
+  <a routerLink="/admin/offline-registration" class="btn">
+    + Paper / cash entry
+  </a>
+</div>
+
+
+<section class="registration-filter-panel">
+
+  <div class="filter-panel-head">
+    <div>
+      <span class="eyebrow">FILTER REGISTRATIONS</span>
+
+      <h3>Find Participants</h3>
+
+      <p>
+        Filter by category, competition, payment, status,
+        registration source and registration date.
+      </p>
+    </div>
+
+    @if (hasFilters()) {
+      <button
+        type="button"
+        class="btn secondary small"
+        (click)="resetFilters()"
+      >
+        Reset Filters
+      </button>
+    }
+  </div>
+
+
+  <div class="registration-filter-grid">
+
+    <label class="filter-search">
+      <span>Search</span>
+
+      <input
+        type="search"
+        placeholder="Application no / student / school / phone / email"
+        [ngModel]="search()"
+        (ngModelChange)="search.set($event)"
+      />
+    </label>
+
+
+    <label>
+      <span>Category</span>
+
+      <select
+        [ngModel]="category()"
+        (ngModelChange)="setCategoryFilter($event)"
+      >
+        <option value="">
+          All Categories
+        </option>
+
+        @for (
+          item of categories();
+          track item.id
+        ) {
+          <option [value]="item.id">
+            {{ item.name }} · {{ store.categoryLabel(item.id) }}
+          </option>
+        }
+      </select>
+    </label>
+
+
+    <label>
+      <span>Competition</span>
+
+      <select
+        [ngModel]="competition()"
+        (ngModelChange)="competition.set($event)"
+      >
+        <option value="">
+          All Competitions
+        </option>
+
+        @for (
+          item of competitionOptions();
+          track item.id
+        ) {
+          <option [value]="item.id">
+            {{ item.name }}
+          </option>
+        }
+      </select>
+    </label>
+
+
+    <label>
+      <span>Registration Source</span>
+
+      <select
+        [ngModel]="source()"
+        (ngModelChange)="source.set($event)"
+      >
+        <option value="">
+          Online + Paper
+        </option>
+
+        <option value="Online">
+          Online
+        </option>
+
+        <option value="Paper">
+          Direct / Paper
+        </option>
+      </select>
+    </label>
+
+
+    <label>
+      <span>Payment</span>
+
+      <select
+        [ngModel]="paymentStatus()"
+        (ngModelChange)="paymentStatus.set($event)"
+      >
+        <option value="">
+          All Payments
+        </option>
+
+        <option value="Paid">
+          Paid
+        </option>
+
+        <option value="Pending">
+          Pending
+        </option>
+
+        <option value="Failed">
+          Failed
+        </option>
+
+        <option value="RefundPending">
+          Refund Pending
+        </option>
+
+        <option value="Refunded">
+          Refunded
+        </option>
+      </select>
+    </label>
+
+
+    <label>
+      <span>Registration Status</span>
+
+      <select
+        [ngModel]="status()"
+        (ngModelChange)="status.set($event)"
+      >
+        <option value="">
+          All Statuses
+        </option>
+
+        <option value="Confirmed">
+          Confirmed
+        </option>
+
+        <option value="Pending">
+          Pending
+        </option>
+
+        <option value="Correction requested">
+          Correction Requested
+        </option>
+
+        <option value="Rejected">
+          Rejected
+        </option>
+
+        <option value="Cancelled">
+          Cancelled
+        </option>
+      </select>
+    </label>
+
+
+    <label>
+      <span>From Date</span>
+
+      <input
+        type="date"
+        [ngModel]="fromDate()"
+        (ngModelChange)="fromDate.set($event)"
+      />
+    </label>
+
+
+    <label>
+      <span>To Date</span>
+
+      <input
+        type="date"
+        [ngModel]="toDate()"
+        (ngModelChange)="toDate.set($event)"
+      />
+    </label>
+
+  </div>
+
+
+  <div class="registration-filter-footer">
+
+    <div class="filter-quick-buttons">
+
+      <button
+        type="button"
+        class="filter-chip"
+        (click)="filterToday()"
+      >
+        Today
+      </button>
+
+
+      <button
+        type="button"
+        class="filter-chip"
+        (click)="fromDate.set(''); toDate.set('')"
+      >
+        All Dates
+      </button>
+
+    </div>
+
+
+    <div class="filter-result-count">
+
+      <span>Showing</span>
+
+      <b>
+        {{ filteredCount() }}
+      </b>
+
+      <span>of</span>
+
+      <b>
+        {{ totalCount() }}
+      </b>
+
+      <span>registrations</span>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =====================================================
+     DESKTOP TABLE
+===================================================== -->
+
+<div class="table-wrap desktop-table">
+
+  <table>
+
+    <thead>
+      <tr>
+
+        <th>
+          Registration
+        </th>
+
+        <th>
+          Student
+        </th>
+
+        <th>
+          Category
+        </th>
+
+        <th>
+          Competitions
+        </th>
+
+        <th>
+          Payment
+        </th>
+
+        <th>
+          Amount Paid
+        </th>
+
+        <th>
+          Status
+        </th>
+
+        <th></th>
+
+      </tr>
+    </thead>
+
+
+    <tbody>
+
+      @for (
+        r of rows();
+        track r.id
+      ) {
+
+        <tr>
+
+          <!-- REGISTRATION -->
+
+          <td>
+
+            <b>
+              {{ r.applicationNo }}
+            </b>
+
+            <span class="sub">
+              {{ r.source }} · {{ r.applicationDate }}
+            </span>
+
+          </td>
+
+
+          <!-- STUDENT -->
+
+          <td>
+
+            <div class="person-cell">
+
+              @if (r.photo) {
+                <img
+                  [src]="r.photo"
+                  alt="Student photo"
+                />
+              }
+
+              <span>
+
+                {{ r.name }}
+
+                <small>
+                  {{ r.school }}
+                </small>
+
+              </span>
+
+            </div>
+
+          </td>
+
+
+          <!-- CATEGORY -->
+
+          <td>
+
+            {{ store.category(r.categoryId)?.name }}
+
+            <span class="sub">
+              {{ store.categoryLabel(r.categoryId) }}
+            </span>
+
+          </td>
+
+
+          <!-- COMPETITIONS -->
+
+          <td>
+
+            {{ r.competitionIds.length }} selected
+
+            <span class="sub">
+              {{ competitionNames(r) }}
+            </span>
+
+          </td>
+
+
+          <!-- PAYMENT -->
+
+          <td>
+
+            <span
+              class="pill"
+              [class.green]="r.payment === 'Paid'"
+              [class.amber]="r.payment !== 'Paid'"
+            >
+              {{ r.paymentMethod }} · {{ r.payment }}
+            </span>
+
+            <span class="sub">
+
+              Expected:
+
+              {{
+                r.total
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- ACTUAL AMOUNT PAID -->
+
+          <td>
+
+            <b>
+
+              {{
+                (r.amountPaid || r.latestPayment?.amount || 0)
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+            </b>
+
+            <span class="sub">
+
+              {{
+                r.payment === "Paid"
+                  ? "Received"
+                  : "Not confirmed"
+              }}
+
+            </span>
+
+          </td>
+
+
+          <!-- STATUS -->
+
+          <td>
+
+            @if (
+              r.payment === "Paid" &&
+              r.approval === "Approved"
+            ) {
+
+              <span class="pill green">
+                Confirmed
+              </span>
+
+            } @else {
+
+              <span
+                class="pill"
+                [class.green]="r.approval === 'Approved'"
+                [class.amber]="r.approval === 'Pending'"
+              >
+                {{ r.approval }}
+              </span>
+
+            }
+
+          </td>
+
+
+          <!-- MANAGE -->
+
+          <td>
+
+            <button
+              class="btn secondary small"
+              (click)="open(r)"
+            >
+              Manage
+            </button>
+
+          </td>
+
+        </tr>
+
+      } @empty {
+
+        <tr>
+
+          <td
+            colspan="8"
+            class="empty"
+          >
+            No registrations match the selected filters.
+          </td>
+
+        </tr>
+
+      }
+
+    </tbody>
+
+  </table>
+
+</div>
+
+
+<!-- =====================================================
+     MOBILE LIST
+===================================================== -->
+
+<div class="mobile-list">
+
+  @for (
+    r of rows();
+    track r.id
+  ) {
+
+    <article>
+
+      <header>
+
+        <div>
+
+          <b>
+            {{ r.applicationNo }}
+          </b>
+
+          <span>
+            {{ r.source }} · {{ r.applicationDate }}
+          </span>
+
+        </div>
+
+
+        @if (
+          r.payment === "Paid" &&
+          r.approval === "Approved"
+        ) {
+
+          <span class="pill green">
+            Confirmed
+          </span>
+
+        } @else {
+
+          <span
+            class="pill"
+            [class.green]="r.approval === 'Approved'"
+            [class.amber]="r.approval === 'Pending'"
+          >
+            {{ r.approval }}
+          </span>
+
+        }
+
+      </header>
+
+
+      <div class="mobile-person">
+
+        @if (r.photo) {
+          <img
+            [src]="r.photo"
+            alt="Student photo"
+          />
+        }
+
+        <div>
+
+          <h3>
+            {{ r.name }}
+          </h3>
+
+          <p>
+            {{ r.school }}
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="mini-grid">
+
+        <span>
+          <small>
+            Category
+          </small>
+
+          {{ store.category(r.categoryId)?.name }}
+        </span>
+
+
+        <span>
+          <small>
+            Payment
+          </small>
+
+          {{ r.payment }}
+        </span>
+
+
+        <span>
+          <small>
+            Events
+          </small>
+
+          {{ r.competitionIds.length }}
+        </span>
+
+
+        <span>
+          <small>
+            Expected Fee
+          </small>
+
+          {{
+            r.total
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+        </span>
+
+
+        <span>
+
+          <small>
+            Amount Paid
+          </small>
+
+          {{
+            (r.amountPaid || r.latestPayment?.amount || 0)
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+
+        </span>
+
+      </div>
+
+
+      <div class="mobile-competition-names">
+
+        <small>
+          Competitions
+        </small>
+
+        <span>
+          {{ competitionNames(r) }}
+        </span>
+
+      </div>
+
+
+      <button
+        class="btn secondary"
+        (click)="open(r)"
+      >
+        Manage registration
+      </button>
+
+    </article>
+
+  } @empty {
+
+    <div class="empty">
+      No registrations match the selected filters.
+    </div>
+
+  }
+
+</div>
+
+
+<!-- =====================================================
+     MANAGE DRAWER
+===================================================== -->
+
+@if (
+  selected();
+  as r
+) {
+
+  <div
+    class="modal-backdrop"
+    (click)="close()"
+  >
+
+    <section
+      class="drawer registration-drawer"
+      (click)="$event.stopPropagation()"
+    >
+
+      <!-- HEADER -->
+
+      <header class="drawer-head">
+
+        <div>
+
+          <span class="eyebrow">
+            {{ r.applicationNo }}
+          </span>
+
+          <h2>
+            {{ r.name }}
+          </h2>
+
+          <small>
+            {{ r.source }} registration ·
+            {{ r.applicationDate }}
+          </small>
+
+        </div>
+
+
+        <button
+          class="icon-close"
+          type="button"
+          (click)="close()"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+      </header>
+
+
+      <div class="drawer-body">
+
+        @if (error()) {
+
+          <p class="error">
+            {{ error() }}
+          </p>
+
+        }
+
+
+        <!-- PARTICIPANT SUMMARY -->
+
+        <div class="participant-summary">
+
+          @if (r.photo) {
+
+            <img
+              [src]="r.photo"
+              alt="Student photo"
+            />
+
+          }
+
+
+          <div>
+
+            <b>
+              {{ r.name }}
+            </b>
+
+            <span>
+              {{ r.school }}
+            </span>
+
+            <small>
+              {{ r.applicationNo }}
+            </small>
+
+          </div>
+
+
+          @if (
+            r.payment === "Paid" &&
+            r.approval === "Approved"
+          ) {
+
+            <span class="pill green">
+              Confirmed
+            </span>
+
+          } @else {
+
+            <span
+              class="pill"
+              [class.green]="r.approval === 'Approved'"
+              [class.amber]="r.approval === 'Pending'"
+            >
+              {{ r.approval }}
+            </span>
+
+          }
+
+        </div>
+
+
+        <!-- DETAILS -->
+
+        <div class="detail-grid">
+
+          <div>
+
+            <span>
+              School
+            </span>
+
+            <b>
+              {{ r.school }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Father
+            </span>
+
+            <b>
+              {{ r.fatherName }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              DOB
+            </span>
+
+            <b>
+              {{ r.dob | date: "d MMM y" }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Category
+            </span>
+
+            <b>
+              {{ store.category(r.categoryId)?.name }}
+              ·
+              {{ store.categoryLabel(r.categoryId) }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Phone
+            </span>
+
+            <b>
+              {{ r.phone }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Email
+            </span>
+
+            <b>
+              {{ r.email }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Registration source
+            </span>
+
+            <b>
+              {{ r.source }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Expected fee
+            </span>
+
+            <b>
+
+              {{
+                r.total
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Amount paid
+            </span>
+
+            <b>
+
+              {{
+                (r.amountPaid || r.latestPayment?.amount || 0)
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Registration date
+            </span>
+
+            <b>
+              {{ r.applicationDate }}
+            </b>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              Check-in
+            </span>
+
+            <b>
+
+              {{
+                r.checkedInAt
+                  ? store.formatIndiaDateTime(r.checkedInAt)
+                  : "Not checked in"
+              }}
+
+            </b>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             COMPETITIONS
+        ================================================== -->
+
+        <h3>
+          Selected competitions & schedule
+        </h3>
+
+
+        <div class="selected-events">
+
+          @for (
+            id of r.competitionIds;
+            track id
+          ) {
+
+            @if (
+              store.competition(id);
+              as c
+            ) {
+
+              <div>
+
+                @if (c.image) {
+
+                  <img
+                    [src]="c.image"
+                    [alt]="c.name"
+                  />
+
+                }
+
+
+                <span>
+
+                  <b>
+                    {{ c.name }}
+                  </b>
+
+                  <small>
+                    {{ c.tamil }}
+                  </small>
+
+
+                  <small>
+
+                    @if (
+                      store.slot(c.slotId);
+                      as s
+                    ) {
+
+                      {{
+                        s.date ||
+                        "Date will be announced"
+                      }}
+
+                      ·
+
+                      {{
+                        s.start ||
+                        "Time will be announced"
+                      }}
+
+                      ·
+
+                      {{
+                        s.venue ||
+                        "Venue will be announced"
+                      }}
+
+                    } @else {
+
+                      Date · Time · Venue will be announced
+
+                    }
+
+                  </small>
+
+                </span>
+
+              </div>
+
+            }
+
+          }
+
+        </div>
+
+
+        <!-- SCHEDULE -->
+
+        <div
+          class="schedule-status"
+          [class.ready]="scheduleReady(r)"
+        >
+
+          <b>
+
+            {{
+              scheduleReady(r)
+                ? "✓ Competition schedule assigned"
+                : "Schedule will be assigned later"
+            }}
+
+          </b>
+
+
+          <span>
+
+            {{
+              scheduleReady(r)
+                ? "Date, time and venue have been assigned."
+                : "Registration and QR remain valid. The organiser can assign date, time and venue later."
+            }}
+
+          </span>
+
+        </div>
+
+
+        <!-- PASS -->
+
+        <button
+          type="button"
+          class="btn secondary full"
+          (click)="viewPass()"
+        >
+
+          View / print
+
+          {{
+            r.payment === "Paid" &&
+            r.approval === "Approved"
+              ? "participant pass"
+              : "registration receipt"
+          }}
+
+          ↗
+
+        </button>
+
+
+        <hr class="divider" />
+
+
+        <!-- =================================================
+             PAYMENT DETAILS
+        ================================================== -->
+
+        <section class="review-section">
+
+          <h3>
+            Payment details
+          </h3>
+
+
+          @if (
+            r.payment === "Paid" &&
+            r.approval === "Approved"
+          ) {
+
+            <div class="detail-grid">
+
+
+              <div>
+
+                <span>
+                  Status
+                </span>
+
+                <b>
+                  Paid
+                </b>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Method
+                </span>
+
+                <b>
+                  {{ r.paymentMethod }}
+                </b>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Expected fee
+                </span>
+
+                <b>
+
+                  {{
+                    r.total
+                      | currency: "INR" : "symbol" : "1.0-0"
+                  }}
+
+                </b>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Amount paid
+                </span>
+
+                <b>
+
+                  {{
+                    (r.amountPaid || r.latestPayment?.amount || 0)
+                      | currency: "INR" : "symbol" : "1.0-0"
+                  }}
+
+                </b>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Verification
+                </span>
+
+                <b>
+
+                  {{
+                    r.source === "Online"
+                      ? "Backend confirmed"
+                      : "Admin cash verified"
+                  }}
+
+                </b>
+
+              </div>
+
+
+              <!-- ONLINE PAYMENT INFORMATION -->
+
+              @if (
+                r.latestPayment;
+                as p
+              ) {
+
+                <div>
+
+                  <span>
+                    Provider
+                  </span>
+
+                  <b>
+                    {{ p.provider || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Transaction ID
+                  </span>
+
+                  <b>
+                    {{ p.transactionId || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Provider reference
+                  </span>
+
+                  <b>
+                    {{ p.providerRef || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Order ID
+                  </span>
+
+                  <b>
+                    {{ p.providerOrderId || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Payment record status
+                  </span>
+
+                  <b>
+                    {{ p.status || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Payment method
+                  </span>
+
+                  <b>
+                    {{ p.paymentMethod || "—" }}
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Paid at
+                  </span>
+
+                  <b>
+
+                    {{
+                      p.paidAt
+                        ? store.formatIndiaDateTime(p.paidAt)
+                        : "—"
+                    }}
+
+                  </b>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    Verified at
+                  </span>
+
+                  <b>
+
+                    {{
+                      p.verifiedAt
+                        ? store.formatIndiaDateTime(p.verifiedAt)
+                        : "—"
+                    }}
+
+                  </b>
+
+                </div>
+
+              }
+
+            </div>
+
+
+            @if (
+              r.paymentRecords?.length
+            ) {
+
+              <p class="help">
+
+                Payment attempts:
+
+                <b>
+                  {{ r.paymentRecords?.length }}
+                </b>
+
+              </p>
+
+            }
+
+
+            <p class="help">
+
+              @if (r.source === "Online") {
+
+                Successful online payment confirms the registration automatically.
+                No manual payment approval is required.
+
+              } @else {
+
+                Verified cash payment confirms the paper registration automatically.
+                No additional manual approval is required.
+
+              }
+
+            </p>
+
+
+          } @else {
+
+            <!-- MANUAL / UNCONFIRMED PAYMENT -->
+
+            <label>
+
+              Payment status
+
+              <select
+                [(ngModel)]="payment"
+              >
+
+                <option>
+                  Pending
+                </option>
+
+                <option>
+                  Paid
+                </option>
+
+                <option>
+                  Failed
+                </option>
+
+                <option>
+                  RefundPending
+                </option>
+
+                <option>
+                  Refunded
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <p class="help">
+
+              {{ r.paymentMethod }}
+
+              ·
+
+              Expected fee:
+
+              {{
+                r.total
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+              ·
+
+              Amount received:
+
+              {{
+                (r.amountPaid || r.latestPayment?.amount || 0)
+                  | currency: "INR" : "symbol" : "1.0-0"
+              }}
+
+              · Original fee snapshot is preserved.
+
+            </p>
+
+          }
+
+        </section>
+
+
+        <!-- =================================================
+             REVIEW / CONFIRMATION
+        ================================================== -->
+
+        <section class="review-section">
+
+          @if (
+            r.payment === "Paid" &&
+            r.approval === "Approved"
+          ) {
+
+            <h3>
+              Registration confirmation
+            </h3>
+
+
+            <div class="detail-grid">
+
+              <div>
+
+                <span>
+                  Status
+                </span>
+
+                <b>
+                  Confirmed
+                </b>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  Approval
+                </span>
+
+                <b>
+
+                  {{
+                    r.source === "Online"
+                      ? "Automatically approved"
+                      : "Cash verified / approved"
+                  }}
+
+                </b>
+
+              </div>
+
+
+              @if (
+                r.paymentConfirmedAt
+              ) {
+
+                <div>
+
+                  <span>
+                    Payment confirmed at
+                  </span>
+
+                  <b>
+
+                    {{
+                      store.formatIndiaDateTime(
+                        r.paymentConfirmedAt
+                      )
+                    }}
+
+                  </b>
+
+                </div>
+
+              }
+
+
+              @if (
+                r.passStatus
+              ) {
+
+                <div>
+
+                  <span>
+                    Pass status
+                  </span>
+
+                  <b>
+                    {{ r.passStatus }}
+                  </b>
+
+                </div>
+
+              }
+
+            </div>
+
+
+            <p class="help">
+
+              @if (r.source === "Online") {
+
+                This online registration was confirmed automatically after
+                successful payment. No manual admin approval is required.
+
+              } @else {
+
+                This paper registration was confirmed automatically after
+                verified cash payment. No additional manual approval is required.
+
+              }
+
+            </p>
+
+
+          } @else {
+
+            <h3>
+              Manual review
+            </h3>
+
+
+            <label>
+
+              Decision
+
+              <select
+                [(ngModel)]="approval"
+              >
+
+                <option>
+                  Pending
+                </option>
+
+                <option>
+                  Approved
+                </option>
+
+                <option>
+                  Correction requested
+                </option>
+
+                <option>
+                  Rejected
+                </option>
+
+              </select>
+
+            </label>
+
+
+            <label>
+
+              Admin note
+
+              <textarea
+                [(ngModel)]="reviewNote"
+                placeholder="Reason or correction message"
+              ></textarea>
+
+            </label>
+
+          }
+
+        </section>
+
+
+        <!-- =================================================
+             EMAIL STATUS
+        ================================================== -->
+
+        @if (
+          r.approval === "Approved"
+        ) {
+
+          <div class="email-preview">
+
+            <b>
+              Participant pass email
+            </b>
+
+
+            <p>
+
+              <strong>
+                To:
+              </strong>
+
+              {{ r.email }}
+
+            </p>
+
+
+            <p>
+
+              <strong>
+                Status:
+              </strong>
+
+              {{ r.emailStatus }}
+
+            </p>
+
+
+            <p>
+              Email delivery will be enabled after SMTP configuration is added.
+              Registration and QR are already valid even if email delivery is
+              unavailable.
+            </p>
+
+
+            <div class="email-state">
+
+              <span
+                class="pill"
+                [class.green]="r.emailStatus === 'Sent'"
+                [class.amber]="r.emailStatus === 'Failed'"
+              >
+                {{ r.emailStatus }}
+              </span>
+
+
+              @if (
+                r.passEmailSentAt
+              ) {
+
+                <small>
+
+                  {{
+                    store.formatIndiaDateTime(
+                      r.passEmailSentAt
+                    )
+                  }}
+
+                </small>
+
+              }
+
+            </div>
+
+          </div>
+
+        }
+
+      </div>
+
+
+      <!-- =================================================
+           DRAWER ACTIONS
+      ================================================== -->
+
+      <footer class="drawer-actions">
+
+        <button
+          type="button"
+          class="btn secondary"
+          (click)="close()"
+        >
+          Close
+        </button>
+
+
+        @if (
+          !(
+            r.payment === "Paid" &&
+            r.approval === "Approved"
+          )
+        ) {
+
+          <button
+            type="button"
+            class="btn"
+            (click)="saveReview()"
+          >
+            Save payment & review
+          </button>
+
+        }
+
+
+        @if (
+          r.approval === "Approved"
+        ) {
+
+          <button
+            type="button"
+            class="btn light-green"
+            disabled
+          >
+            Email setup pending
+          </button>
+
+        }
+
+      </footer>
+
+    </section>
+
+  </div>
+
+}

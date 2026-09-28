@@ -1,0 +1,418 @@
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="page-heading">
+
+  <div>
+
+    <span class="eyebrow">
+      DYNAMIC EVENT CONFIGURATION
+    </span>
+
+    <h1>
+      Event settings
+    </h1>
+
+    <p>
+      These values feed the student application,
+      participant pass, admin workspace and judge workspace.
+    </p>
+
+  </div>
+
+
+  <button
+    type="button"
+    class="btn"
+    [disabled]="saving()"
+    (click)="save()"
+  >
+
+    {{
+      saving()
+        ? "Saving..."
+        : "Save settings"
+    }}
+
+  </button>
+
+</div>
+
+
+@if (error()) {
+
+  <p class="error">
+    {{ error() }}
+  </p>
+
+}
+
+
+<div class="settings-grid">
+
+
+  <!-- =================================================
+       EVENT INFORMATION
+  ================================================== -->
+
+  <section class="card">
+
+    <h2>
+      Event information
+    </h2>
+
+
+    <div class="form-grid">
+
+
+      <label>
+
+        English title
+
+        <input
+          [(ngModel)]="form.title"
+          placeholder="Chithiram Thiruvila"
+        />
+
+      </label>
+
+
+      <label>
+
+        Tamil title
+
+        <input
+          [(ngModel)]="form.titleTa"
+          placeholder="சித்திரம் திருவிழா"
+        />
+
+      </label>
+
+
+      <label class="span2">
+
+        Presented by
+
+        <input
+          [(ngModel)]="form.presenters"
+          placeholder="SBK VIBGYOR School / Star Guru"
+        />
+
+      </label>
+
+
+      <label>
+
+        Event date
+
+        <input
+          type="date"
+          [(ngModel)]="form.date"
+        />
+
+      </label>
+
+
+      <label>
+
+        Registration deadline
+
+        <input
+          type="date"
+          [(ngModel)]="form.registrationDeadline"
+        />
+
+      </label>
+
+
+      <label class="span2">
+
+        Venue
+
+        <input
+          [(ngModel)]="form.venue"
+          placeholder="Event venue"
+        />
+
+      </label>
+
+
+      <label>
+
+        Contact number
+
+        <input
+          type="tel"
+          [(ngModel)]="form.contact"
+          placeholder="+91..."
+        />
+
+      </label>
+
+
+      <label>
+
+        Organiser email
+
+        <input
+          type="email"
+          [(ngModel)]="form.email"
+          placeholder="event@example.com"
+        />
+
+      </label>
+
+
+      <label>
+
+        Registration prefix
+
+        <input
+          [(ngModel)]="form.prefix"
+          placeholder="26SBK"
+        />
+
+        <small class="help">
+          Example: 26SBK → 26SBK01, 26SBK02...
+        </small>
+
+      </label>
+
+
+      <label class="check-label">
+
+        <input
+          type="checkbox"
+          [(ngModel)]="form.registrationOpen"
+        />
+
+        Online registration open
+
+      </label>
+
+
+    </div>
+
+  </section>
+
+
+  <!-- =================================================
+       WEBSITE BACKGROUND
+  ================================================== -->
+
+  <section class="card">
+
+    <h2>
+      Website background
+    </h2>
+
+
+    <div
+      class="banner-preview"
+      [style.background-image]="
+        form.bannerImage
+          ? 'url(' + form.bannerImage + ')'
+          : 'none'
+      "
+    >
+
+      Event background preview
+
+    </div>
+
+
+    <label
+      class="btn secondary upload"
+    >
+
+      Upload background image
+
+      <input
+        type="file"
+        accept="image/*"
+        (change)="onBanner($event)"
+        hidden
+      />
+
+    </label>
+
+
+    <p class="help">
+      Use a clear landscape image.
+      It appears on student, admin and judge screens.
+    </p>
+
+  </section>
+
+
+  <!-- =================================================
+       USER INSTRUCTIONS
+  ================================================== -->
+
+  <section class="card full">
+
+    <h2>
+      User instructions
+    </h2>
+
+
+    <div class="form-grid">
+
+
+      <label>
+
+        English instructions
+
+        <textarea
+          [(ngModel)]="form.instructionsEn"
+          rows="6"
+          placeholder="Participant instructions"
+        ></textarea>
+
+      </label>
+
+
+      <label>
+
+        Tamil instructions
+
+        <textarea
+          [(ngModel)]="form.instructionsTa"
+          rows="6"
+          placeholder="பங்கேற்பாளர் வழிமுறைகள்"
+        ></textarea>
+
+      </label>
+
+
+    </div>
+
+
+    <p class="help">
+      Recommended wording:
+      Carry the participant pass to the event.
+      Reach the venue at least 30 minutes before your
+      first competition and bring only materials
+      permitted by the organiser.
+    </p>
+
+  </section>
+
+
+  <!-- =================================================
+       TERMS & CONDITIONS
+  ================================================== -->
+
+  <section class="card full">
+
+    <h2>
+      Terms & conditions
+    </h2>
+
+
+    <div class="form-grid">
+
+
+      <label>
+
+        English terms
+
+        <textarea
+          [(ngModel)]="form.termsEn"
+          rows="7"
+          placeholder="Event terms and conditions"
+        ></textarea>
+
+      </label>
+
+
+      <label>
+
+        Tamil terms
+
+        <textarea
+          [(ngModel)]="form.termsTa"
+          rows="7"
+          placeholder="நிகழ்வு விதிமுறைகள்"
+        ></textarea>
+
+      </label>
+
+
+    </div>
+
+
+    <p class="help">
+      Do not mention manual organiser approval.
+      Paid online registrations are confirmed after
+      successful payment.
+    </p>
+
+  </section>
+
+
+  <!-- =================================================
+       TEST DATA
+       ONLY SHOW IN DEMO MODE
+  ================================================== -->
+
+  @if (store.demo) {
+
+    <section
+      class="card full danger-zone"
+    >
+
+      <h2>
+        Test data
+      </h2>
+
+
+      <p>
+        Use reset only when you want to remove
+        test registrations, judges, marks and
+        temporary admin changes.
+      </p>
+
+
+      @if (!confirmReset()) {
+
+        <button
+          type="button"
+          class="btn danger"
+          (click)="confirmReset.set(true)"
+        >
+          Reset test data
+        </button>
+
+      } @else {
+
+        <div class="actions">
+
+          <button
+            type="button"
+            class="btn secondary"
+            (click)="confirmReset.set(false)"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="btn danger"
+            (click)="reset()"
+          >
+            Confirm reset
+          </button>
+
+        </div>
+
+      }
+
+    </section>
+
+  }
+
+
+</div>

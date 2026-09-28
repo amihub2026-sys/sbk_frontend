@@ -1,0 +1,2457 @@
+@if (resource() === "competitions") {
+  <div class="page-heading">
+    <div>
+      <span class="eyebrow">
+        COMPETITION MANAGEMENT
+      </span>
+
+      <h1>
+        Competitions
+      </h1>
+
+      <p>
+        Create, edit and manage competitions dynamically.
+        Age categories, fees, capacity, schedule and status can be updated
+        from the admin panel.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="btn"
+      (click)="newCompetition()"
+    >
+      + Add Competition
+    </button>
+  </div>
+
+  @if (error()) {
+    <p class="error">
+      {{ error() }}
+    </p>
+  }
+
+  <!-- =====================================================
+       COMPETITION LIST
+  ====================================================== -->
+
+  <div class="competition-admin-grid">
+
+    @for (
+      c of store.state().competitions;
+      track c.id
+    ) {
+
+      <article class="competition-admin-card">
+
+        <div
+          class="thumb"
+          [style.background-image]="
+            c.image
+              ? 'linear-gradient(0deg,#0f352dcf,#0f352d12),url(' + c.image + ')'
+              : 'linear-gradient(135deg,#123d34,#245f50)'
+          "
+        >
+          <span>
+            {{ c.kind }}
+          </span>
+
+          <h3>
+            {{ c.name }}
+          </h3>
+
+          <small>
+            {{ c.tamil }}
+          </small>
+        </div>
+
+
+        <div class="meta">
+
+          <div>
+            <span>
+              Age groups
+            </span>
+
+            <b>
+              {{ competitionCategoryNames(c) }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Fee
+            </span>
+
+            <b>
+              {{
+                c.fee
+                  | currency:
+                      "INR":
+                      "symbol":
+                      "1.0-0"
+              }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Capacity
+            </span>
+
+            <b>
+              {{ c.capacity }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Registered
+            </span>
+
+            <b>
+              {{ c.registeredCount || 0 }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Available
+            </span>
+
+            <b>
+              {{ store.remaining(c) }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Status
+            </span>
+
+            <b>
+              {{ c.status }}
+            </b>
+          </div>
+
+
+          <div>
+            <span>
+              Slot
+            </span>
+
+            <b>
+              @if (store.slot(c.slotId); as s) {
+                {{ s.name }}
+              } @else {
+                Not assigned
+              }
+            </b>
+          </div>
+
+
+          <div class="competition-card-actions">
+
+            <button
+              type="button"
+              class="btn secondary small"
+              (click)="editCompetition(c)"
+            >
+              Edit
+            </button>
+
+
+            <button
+              type="button"
+              class="btn danger small"
+              (click)="deleteCompetition(c)"
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    } @empty {
+
+      <div class="empty">
+        No competitions created yet.
+      </div>
+
+    }
+
+  </div>
+
+
+  <!-- =====================================================
+       CREATE / EDIT COMPETITION
+  ====================================================== -->
+
+  @if (editingCompetition(); as c) {
+
+    <div class="modal-backdrop">
+
+      <section class="drawer">
+
+        <header>
+
+          <div>
+
+            <span class="eyebrow">
+              {{
+                c.id === "new"
+                  ? "CREATE COMPETITION"
+                  : "EDIT COMPETITION"
+              }}
+            </span>
+
+
+            <h2>
+              {{
+                c.id === "new"
+                  ? "New Competition"
+                  : c.name
+              }}
+            </h2>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn secondary small"
+            (click)="editingCompetition.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <!-- =================================================
+             IMAGE
+        ================================================== -->
+
+        <div class="image-upload">
+
+          @if (c.image) {
+
+            <img
+              [src]="c.image"
+              alt="Competition preview"
+            />
+
+          }
+
+
+          <label class="btn secondary">
+
+            {{
+              c.image
+                ? "Change competition image"
+                : "Upload competition image"
+            }}
+
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onCompetitionImage($event)"
+              hidden
+            />
+
+          </label>
+
+
+          <small>
+            Upload image file only. Image URL is not required.
+          </small>
+
+        </div>
+
+
+        <!-- =================================================
+             BASIC DETAILS
+        ================================================== -->
+
+        <div class="form-grid">
+
+          <label>
+            Competition name
+
+            <input
+              [(ngModel)]="c.name"
+              placeholder="Example: Pot Painting"
+            />
+          </label>
+
+
+          <label>
+            Tamil name
+
+            <input
+              [(ngModel)]="c.tamil"
+              placeholder="Tamil competition name"
+            />
+          </label>
+
+
+          <label>
+            Competition type
+
+            <select
+              [(ngModel)]="c.kind"
+            >
+              <option value="Art">
+                Art
+              </option>
+
+              <option value="Writing">
+                Writing
+              </option>
+
+              <option value="Speaking">
+                Speaking
+              </option>
+
+              <option value="Quiz">
+                Quiz
+              </option>
+            </select>
+          </label>
+
+
+          <label>
+            Language
+
+            <input
+              [(ngModel)]="c.language"
+              placeholder="Tamil / English"
+            />
+          </label>
+
+
+          <label>
+            Fee (₹)
+
+            <input
+              type="number"
+              min="0"
+              step="1"
+              [(ngModel)]="c.fee"
+            />
+          </label>
+
+
+          <label>
+            Capacity
+
+            <input
+              type="number"
+              min="1"
+              step="1"
+              [(ngModel)]="c.capacity"
+            />
+          </label>
+
+
+          <label>
+            Slot / Venue
+
+            <select
+              [(ngModel)]="c.slotId"
+            >
+
+              <option value="">
+                Assign later
+              </option>
+
+              @for (
+                s of store.state().slots;
+                track s.id
+              ) {
+
+                <option [value]="s.id">
+
+                  {{ s.name }}
+
+                  @if (s.date) {
+                    · {{ s.date }}
+                  }
+
+                  @if (s.start) {
+                    · {{ s.start }}
+                  }
+
+                </option>
+
+              }
+
+            </select>
+          </label>
+
+
+          <label>
+            Status
+
+            <select
+              [(ngModel)]="c.status"
+            >
+              <option value="Open">
+                Open
+              </option>
+
+              <option value="Closed">
+                Closed
+              </option>
+            </select>
+          </label>
+
+
+          <label class="span2">
+            English instructions
+
+            <textarea
+              [(ngModel)]="c.instructions"
+              placeholder="Competition instructions"
+            ></textarea>
+          </label>
+
+
+          <label class="span2">
+            Tamil instructions
+
+            <textarea
+              [(ngModel)]="c.instructionsTa"
+              placeholder="Tamil competition instructions"
+            ></textarea>
+          </label>
+
+        </div>
+
+
+        <!-- =================================================
+             AGE CATEGORIES
+        ================================================== -->
+
+        <h3>
+          Eligible age categories
+        </h3>
+
+
+        <p class="help">
+          Select all age categories that are allowed to participate
+          in this competition.
+        </p>
+
+
+        <div class="checkbox-grid">
+
+          @for (
+            cat of store.state().categories;
+            track cat.id
+          ) {
+
+            <label class="check-label">
+
+              <input
+                type="checkbox"
+                [checked]="c.categoryIds.includes(cat.id)"
+                (change)="toggleCat(cat.id)"
+              />
+
+
+              <span>
+                <b>
+                  {{ cat.name }}
+                </b>
+
+                <small>
+                  {{ store.categoryLabel(cat.id) }}
+                </small>
+              </span>
+
+            </label>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div class="actions end">
+
+          <button
+            type="button"
+            class="btn secondary"
+            (click)="editingCompetition.set(null)"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="btn"
+            (click)="saveCompetition()"
+          >
+            {{
+              c.id === "new"
+                ? "Create Competition"
+                : "Save Changes"
+            }}
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+}
+
+
+@if (resource() === "categories") {
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        AGE CATEGORY MANAGEMENT
+      </span>
+
+      <h1>
+        Age Categories
+      </h1>
+
+      <p>
+        Create, edit and manage age eligibility dynamically.
+        Categories are calculated using completed months from the
+        participant DOB and application date.
+      </p>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="btn"
+      (click)="newCategory()"
+    >
+      + Add Category
+    </button>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <!-- =====================================================
+       CATEGORY TABLE
+  ====================================================== -->
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Category
+          </th>
+
+          <th>
+            Exact age limit
+          </th>
+
+          <th>
+            Completed months
+          </th>
+
+          <th>
+            Competitions
+          </th>
+
+          <th>
+            Registrations
+          </th>
+
+          <th>
+            Actions
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          c of store.state().categories;
+          track c.id
+        ) {
+
+          <tr>
+
+            <!-- CATEGORY -->
+
+            <td>
+
+              <b>
+                {{ c.name }}
+              </b>
+
+              <span class="sub">
+                {{ c.nameTa }}
+              </span>
+
+            </td>
+
+
+            <!-- AGE LABEL -->
+
+            <td>
+
+              <b>
+                {{ store.categoryLabel(c.id) }}
+              </b>
+
+            </td>
+
+
+            <!-- MONTH RANGE -->
+
+            <td>
+
+              {{ c.minMonths }}
+
+              to &lt;
+
+              {{ c.maxMonths }}
+
+              months
+
+            </td>
+
+
+            <!-- COMPETITION COUNT -->
+
+            <td>
+
+              <b>
+                {{ competitionCountForCategory(c.id) }}
+              </b>
+
+              <span class="sub">
+                competitions
+              </span>
+
+            </td>
+
+
+            <!-- REGISTRATION COUNT -->
+
+            <td>
+
+              <b>
+                {{ categoryRegistrationCount(c.id) }}
+              </b>
+
+              <span class="sub">
+                participants
+              </span>
+
+            </td>
+
+
+            <!-- ACTIONS -->
+
+            <td>
+
+              <div class="competition-card-actions">
+
+                <button
+                  type="button"
+                  class="btn secondary small"
+                  (click)="editCategory(c)"
+                >
+                  Edit
+                </button>
+
+
+                <button
+                  type="button"
+                  class="btn danger small"
+                  (click)="deleteCategory(c)"
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+        } @empty {
+
+          <tr>
+
+            <td
+              colspan="6"
+              class="empty"
+            >
+              No age categories created yet.
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- =====================================================
+       CREATE / EDIT CATEGORY
+  ====================================================== -->
+
+  @if (
+    editingCategory();
+    as c
+  ) {
+
+    <div class="modal-backdrop">
+
+      <section class="drawer">
+
+        <!-- HEADER -->
+
+        <header>
+
+          <div>
+
+            <span class="eyebrow">
+
+              {{
+                c.id === "new"
+                  ? "CREATE AGE CATEGORY"
+                  : "EDIT AGE CATEGORY"
+              }}
+
+            </span>
+
+
+            <h2>
+
+              {{
+                c.id === "new"
+                  ? "New Age Category"
+                  : c.name
+              }}
+
+            </h2>
+
+          </div>
+
+
+          <button
+            type="button"
+            class="btn secondary small"
+            (click)="editingCategory.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <!-- =================================================
+             CATEGORY FORM
+        ================================================== -->
+
+        <div class="form-grid">
+
+          <!-- ENGLISH NAME -->
+
+          <label>
+
+            Category name
+
+            <input
+              [(ngModel)]="c.name"
+              placeholder="Example: Category XIII"
+            />
+
+          </label>
+
+
+          <!-- TAMIL NAME -->
+
+          <label>
+
+            Tamil name
+
+            <input
+              [(ngModel)]="c.nameTa"
+              placeholder="Tamil category name"
+            />
+
+          </label>
+
+
+          <!-- MIN MONTH -->
+
+          <label>
+
+            Minimum age
+            <small>
+              in completed months
+            </small>
+
+            <input
+              type="number"
+              min="0"
+              step="1"
+              [(ngModel)]="c.minMonths"
+              placeholder="Example: 48"
+            />
+
+          </label>
+
+
+          <!-- MAX MONTH -->
+
+          <label>
+
+            Maximum age
+            <small>
+              exclusive · in months
+            </small>
+
+            <input
+              type="number"
+              min="1"
+              step="1"
+              [(ngModel)]="c.maxMonths"
+              placeholder="Example: 72"
+            />
+
+          </label>
+
+        </div>
+
+
+        <!-- =================================================
+             RANGE PREVIEW
+        ================================================== -->
+
+        <div class="age-banner">
+
+          @if (
+            c.maxMonths > c.minMonths
+          ) {
+
+            <b>
+              Age range preview
+            </b>
+
+            <span>
+
+              {{
+                Math.floor(
+                  c.minMonths / 12
+                )
+              }}
+
+              years
+
+              {{
+                c.minMonths % 12
+              }}
+
+              months
+
+              to below
+
+              {{
+                Math.floor(
+                  c.maxMonths / 12
+                )
+              }}
+
+              years
+
+              {{
+                c.maxMonths % 12
+              }}
+
+              months
+
+            </span>
+
+          } @else {
+
+            <span>
+              Maximum age must be greater than minimum age.
+            </span>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             SAFETY NOTE
+        ================================================== -->
+
+        @if (
+          c.id !== "new"
+        ) {
+
+          <div class="payment-confirmation pending">
+
+            <b>
+              Category is connected to event eligibility
+            </b>
+
+            <span>
+              Changing the age range affects future participant
+              category calculations. Existing registrations keep
+              their saved category.
+            </span>
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             ACTIONS
+        ================================================== -->
+
+        <div class="actions end">
+
+          <button
+            type="button"
+            class="btn secondary"
+            (click)="editingCategory.set(null)"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="button"
+            class="btn"
+            (click)="saveCategory()"
+          >
+
+            {{
+              c.id === "new"
+                ? "Create Category"
+                : "Save Changes"
+            }}
+
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  }
+
+}
+
+
+@if (resource() === "slots") {
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        EVENT SCHEDULE
+      </span>
+
+
+      <h1>
+        Slots & venues
+      </h1>
+
+
+      <p>
+        Create the real event date, time and venue slots,
+        then assign each competition.
+      </p>
+
+    </div>
+
+
+    <button
+      class="btn"
+      (click)="newSlot()"
+    >
+      + Add slot
+    </button>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Slot</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Venue</th>
+          <th></th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+
+        @for (s of store.state().slots; track s.id) {
+
+          <tr>
+
+            <td>
+              {{ s.name }}
+            </td>
+
+
+            <td>
+              {{ s.date || "Not set" }}
+            </td>
+
+
+            <td>
+              {{ s.start || "—" }}
+              –
+              {{ s.end || "—" }}
+            </td>
+
+
+            <td>
+              {{ s.venue || "Not set" }}
+            </td>
+
+
+            <td>
+              <button
+                class="btn secondary small"
+                (click)="editSlot(s)"
+              >
+                Edit
+              </button>
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  @if (editingSlot(); as s) {
+
+    <div class="modal-backdrop">
+
+      <section class="drawer">
+
+        <header>
+
+          <h2>
+            Slot / Venue
+          </h2>
+
+
+          <button
+            class="btn secondary small"
+            (click)="editingSlot.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <label>
+          Slot name
+
+          <input
+            [(ngModel)]="s.name"
+          />
+        </label>
+
+
+        <label>
+          Date
+
+          <input
+            type="date"
+            [(ngModel)]="s.date"
+          />
+        </label>
+
+
+        <div class="form-grid">
+
+          <label>
+            Start
+
+            <input
+              type="time"
+              [(ngModel)]="s.start"
+            />
+          </label>
+
+
+          <label>
+            End
+
+            <input
+              type="time"
+              [(ngModel)]="s.end"
+            />
+          </label>
+
+        </div>
+
+
+        <label>
+          Venue
+
+          <input
+            [(ngModel)]="s.venue"
+          />
+        </label>
+
+<div class="actions end">
+
+  <button
+    type="button"
+    class="btn secondary"
+    (click)="editingSlot.set(null)"
+  >
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="btn"
+    (click)="saveSlot()"
+  >
+    {{
+      s.id === "new"
+        ? "Create Slot"
+        : "Save Changes"
+    }}
+  </button>
+
+</div>
+
+      </section>
+
+    </div>
+
+  }
+
+}
+
+
+@if (resource() === "judges") {
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        JUDGE ACCESS
+      </span>
+
+
+      <h1>
+        Judges
+      </h1>
+
+
+      <p>
+        Create judge login details and assign only the competitions
+        they are allowed to mark.
+      </p>
+
+    </div>
+
+
+    <button
+      class="btn"
+      (click)="newJudge()"
+    >
+      + Add judge
+    </button>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Judge</th>
+          <th>Email</th>
+          <th>Assigned competitions</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+
+        @for (j of store.state().judges; track j.id) {
+
+          <tr>
+
+            <td>
+              <b>
+                {{ j.name }}
+              </b>
+
+              <span class="sub">
+                {{ j.phone }}
+              </span>
+            </td>
+
+
+            <td>
+              {{ j.email }}
+            </td>
+
+
+            <td>
+              {{ j.competitionIds.length }}
+            </td>
+
+
+            <td>
+              <span
+                class="pill"
+                [class.green]="j.active"
+              >
+                {{
+                  j.active
+                    ? "Active"
+                    : "Inactive"
+                }}
+              </span>
+            </td>
+
+
+            <td>
+              <button
+                class="btn secondary small"
+                (click)="editJudge(j)"
+              >
+                Edit
+              </button>
+            </td>
+
+          </tr>
+
+        } @empty {
+
+          <tr>
+
+            <td
+              colspan="5"
+              class="empty"
+            >
+              No judges created yet.
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  @if (editingJudge(); as j) {
+
+    <div class="modal-backdrop">
+
+      <section class="drawer">
+
+        <header>
+
+          <h2>
+            Judge account
+          </h2>
+
+
+          <button
+            class="btn secondary small"
+            (click)="editingJudge.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <div class="form-grid">
+
+          <label>
+            Name
+
+            <input
+              [(ngModel)]="j.name"
+            />
+          </label>
+
+
+          <label>
+            Phone
+
+            <input
+              [(ngModel)]="j.phone"
+              maxlength="10"
+            />
+          </label>
+
+
+          <label class="span2">
+            Email
+
+            <input
+              type="email"
+              [(ngModel)]="j.email"
+            />
+          </label>
+
+
+          <label>
+            Temporary password
+
+            <input
+              [(ngModel)]="j.temporaryPassword"
+            />
+          </label>
+
+
+          <label class="check-label">
+
+            <input
+              type="checkbox"
+              [(ngModel)]="j.active"
+            />
+
+            Active login
+
+          </label>
+
+        </div>
+
+
+        <h3>
+          Assigned competitions
+        </h3>
+
+
+        <div class="checkbox-grid">
+
+          @for (c of store.state().competitions; track c.id) {
+
+            <label class="check-label">
+
+              <input
+                type="checkbox"
+                [checked]="j.competitionIds.includes(c.id)"
+                (change)="toggleJudgeCompetition(c.id)"
+              />
+
+              {{ c.name }}
+
+            </label>
+
+          }
+
+        </div>
+
+
+      <div class="actions end">
+
+  <button
+    type="button"
+    class="btn secondary"
+    (click)="editingJudge.set(null)"
+  >
+    Cancel
+  </button>
+
+  <button
+    type="button"
+    class="btn"
+    (click)="saveJudge()"
+  >
+    {{
+      j.id === "new"
+        ? "Create Judge"
+        : "Save Changes"
+    }}
+  </button>
+
+</div>
+
+      </section>
+
+    </div>
+
+  }
+
+}
+
+
+@if (resource() === "offline") {
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        PAPER APPLICATION
+      </span>
+
+
+      <h1>
+        Paper / cash registration
+      </h1>
+
+
+      <p>
+        Enter a paper application received at the office.
+        Online and paper entries share the same registration-number sequence.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <section class="card offline-form">
+
+    <div class="form-grid">
+
+      <label>
+        Application / form date
+
+        <input
+          type="date"
+          [(ngModel)]="offline.applicationDate"
+        />
+      </label>
+
+
+      <label>
+        Date of birth
+
+        <input
+          type="date"
+          [(ngModel)]="offline.dob"
+        />
+      </label>
+
+
+      <label>
+        Student name
+
+        <input
+          [(ngModel)]="offline.name"
+        />
+      </label>
+
+
+      <label>
+        Father's name
+
+        <input
+          [(ngModel)]="offline.fatherName"
+        />
+      </label>
+
+
+      <label class="span2">
+        School name
+
+        <input
+          [(ngModel)]="offline.school"
+        />
+      </label>
+
+
+      <label>
+        Email
+
+        <input
+          type="email"
+          [(ngModel)]="offline.email"
+        />
+      </label>
+
+
+      <label>
+        Phone
+
+        <input
+          [(ngModel)]="offline.phone"
+          maxlength="10"
+        />
+      </label>
+
+    </div>
+
+
+    <div class="offline-photo">
+
+      <div>
+
+        <b>
+          Student photo (optional)
+        </b>
+
+
+        <p class="help">
+          Upload only if a photo was supplied with the paper application.
+        </p>
+
+      </div>
+
+
+      @if (offline.photo) {
+
+        <img
+          [src]="offline.photo"
+          alt="Student photo"
+        />
+
+
+        <button
+          type="button"
+          class="btn ghost small"
+          (click)="offline.photo = ''"
+        >
+          Remove
+        </button>
+
+      } @else {
+
+        <label class="btn secondary">
+
+          Upload photo
+
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onOfflinePhoto($event)"
+            hidden
+          />
+
+        </label>
+
+      }
+
+    </div>
+
+
+    <div class="age-banner">
+
+      @if (offlineCategory(); as c) {
+
+        <b>
+          {{ c.name }}
+        </b>
+
+
+        <span>
+
+          {{
+            store.ageLabel(
+              offline.dob,
+              offline.applicationDate
+            )
+          }}
+
+          ·
+
+          {{ store.categoryLabel(c.id) }}
+
+        </span>
+
+      } @else {
+
+        <span>
+          Enter DOB and form date to calculate category.
+        </span>
+
+      }
+
+    </div>
+
+
+    <h3>
+      Eligible competitions · maximum
+      {{ store.settings().maxEvents }}
+    </h3>
+
+
+    <div class="offline-comps">
+
+      @for (c of offlineEligible(); track c.id) {
+
+        <label
+          [class.selected]="
+            offline.competitionIds.includes(c.id)
+          "
+        >
+
+          <input
+            type="checkbox"
+            [checked]="
+              offline.competitionIds.includes(c.id)
+            "
+            [disabled]="
+              !offline.competitionIds.includes(c.id) &&
+              offline.competitionIds.length >= store.settings().maxEvents
+            "
+            (change)="toggleOffline(c.id)"
+          />
+
+
+          <span>
+            {{ c.name }}
+
+            <small>
+              {{ c.tamil }}
+            </small>
+          </span>
+
+
+          <b>
+            {{
+              c.fee
+                | currency:
+                    "INR":
+                    "symbol":
+                    "1.0-0"
+            }}
+          </b>
+
+        </label>
+
+      }
+
+    </div>
+
+
+    <div class="cash-payment-box">
+
+      <div class="cash-payment-head">
+
+        <div>
+
+          <span class="eyebrow">
+            CASH PAYMENT
+          </span>
+
+
+          <h3>
+            Payment received
+          </h3>
+
+
+          <p class="help">
+            Enter the actual amount collected from the participant.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <label>
+          Amount paid (₹)
+
+          <input
+            type="number"
+            min="0"
+            step="1"
+            placeholder="Enter amount received"
+            [(ngModel)]="offline.amountPaid"
+          />
+        </label>
+
+
+        <label class="cash">
+
+          <input
+            type="checkbox"
+            [(ngModel)]="offline.cashPaid"
+          />
+
+          <span>
+            Cash payment received and verified
+          </span>
+
+        </label>
+
+      </div>
+
+
+      @if (offline.cashPaid) {
+
+        <div class="payment-confirmation success">
+
+          <b>
+            ✓ Verified cash payment
+          </b>
+
+
+          <span>
+            After saving, this registration will automatically become
+            Paid, Approved and Confirmed.
+          </span>
+
+        </div>
+
+      } @else {
+
+        <div class="payment-confirmation pending">
+
+          <b>
+            Payment not verified
+          </b>
+
+
+          <span>
+            The registration will remain pending for admin review.
+          </span>
+
+        </div>
+
+      }
+
+    </div>
+
+
+    <p class="help">
+
+      @if (offline.cashPaid) {
+
+        Verified cash registrations are approved immediately
+        and the participant pass becomes available.
+
+      } @else {
+
+        Unverified cash registrations remain pending for admin review.
+
+      }
+
+      The registration number is generated from the same sequence
+      used for online registrations.
+
+    </p>
+
+
+    <button
+      type="button"
+      class="btn"
+      (click)="saveOffline()"
+    >
+      Create paper registration
+    </button>
+
+  </section>
+
+}
+
+
+@if (resource() === "check-in") {
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        EVENT DAY
+      </span>
+
+
+      <h1>
+        Participant check-in
+      </h1>
+
+
+      <p>
+        Use camera QR scan, USB scanner, or application number.
+        All methods use the same dynamic registration data.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <section class="card checkin-card">
+
+    <div class="checkin-methods">
+
+      <button
+        class="btn"
+        type="button"
+        (click)="cameraOpen() ? stopCamera() : startCamera()"
+      >
+        {{
+          cameraOpen()
+            ? "Close camera"
+            : "Scan with camera"
+        }}
+      </button>
+
+
+      <span>
+        or
+      </span>
+
+
+      <small>
+        USB scanner / manual registration number
+      </small>
+
+    </div>
+
+
+    @if (cameraOpen()) {
+
+      <div class="camera-box">
+
+        <video
+          id="checkin-camera"
+          playsinline
+          muted
+        ></video>
+
+
+        <p>
+          {{ cameraMessage() }}
+        </p>
+
+      </div>
+
+    }
+
+
+    <form
+      class="checkin"
+      (ngSubmit)="lookupCheckin()"
+    >
+
+      <label>
+        QR token / Registration number
+
+        <input
+          name="token"
+          [(ngModel)]="token"
+          required
+          autofocus
+          placeholder="Scan QR or enter 26SBK01"
+        />
+      </label>
+
+
+      <button class="btn">
+        Find participant
+      </button>
+
+    </form>
+
+  </section>
+
+
+  @if (checkinCandidate(); as r) {
+
+    <div
+      class="modal-backdrop"
+      (click)="checkinCandidate.set(null)"
+    >
+
+      <section
+        class="drawer checkin-drawer"
+        (click)="$event.stopPropagation()"
+      >
+
+        <header class="drawer-head">
+
+          <div>
+
+            <span class="eyebrow">
+              VERIFY BEFORE CHECK-IN
+            </span>
+
+
+            <h2>
+              {{ r.applicationNo }}
+            </h2>
+
+          </div>
+
+
+          <button
+            class="icon-close"
+            (click)="checkinCandidate.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <div class="drawer-body">
+
+          <div class="participant-summary">
+
+            @if (r.photo) {
+
+              <img
+                [src]="r.photo"
+                alt="Student photo"
+              />
+
+            }
+
+
+            <div>
+
+              <b>
+                {{ r.name }}
+              </b>
+
+
+              <span>
+                {{ r.school }}
+              </span>
+
+
+              <small>
+                {{ store.category(r.categoryId)?.name }}
+              </small>
+
+            </div>
+
+
+            <span class="pill green">
+              Approved
+            </span>
+
+          </div>
+
+
+          <div class="detail-grid">
+
+            <div>
+              <span>
+                Father
+              </span>
+
+              <b>
+                {{ r.fatherName }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                DOB
+              </span>
+
+              <b>
+                {{ r.dob }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Phone
+              </span>
+
+              <b>
+                {{ r.phone }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Payment
+              </span>
+
+              <b>
+                {{ r.paymentMethod }}
+                ·
+                {{ r.payment }}
+              </b>
+            </div>
+
+          </div>
+
+
+          <h3>
+            Competitions
+          </h3>
+
+
+          <div class="selected-events">
+
+            @for (id of r.competitionIds; track id) {
+
+              @if (store.competition(id); as c) {
+
+                <div>
+
+                  <img
+                    [src]="c.image"
+                    alt=""
+                  />
+
+
+                  <span>
+
+                    <b>
+                      {{ c.name }}
+                    </b>
+
+
+                    <small>
+                      {{ c.tamil }}
+                    </small>
+
+
+                    <small>
+
+                      @if (store.slot(c.slotId); as sl) {
+
+                        {{ sl.date || "Date TBA" }}
+                        ·
+                        {{ sl.start || "Time TBA" }}
+                        ·
+                        {{ sl.venue || "Venue TBA" }}
+
+                      }
+
+                    </small>
+
+                  </span>
+
+                </div>
+
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <footer class="drawer-actions">
+
+          <button
+            class="btn secondary"
+            (click)="checkinCandidate.set(null)"
+          >
+            Cancel
+          </button>
+
+
+          <button
+            class="btn"
+            (click)="confirmCheckIn()"
+          >
+            Confirm check-in
+          </button>
+
+        </footer>
+
+      </section>
+
+    </div>
+
+  }
+
+
+  <section class="card recent-checkins">
+
+    <div class="section-head">
+
+      <h2>
+        Recent check-ins
+      </h2>
+
+
+      <span class="pill green">
+        India time · AM/PM
+      </span>
+
+    </div>
+
+
+    @for (r of recentCheckins(); track r.id) {
+
+      <button
+        type="button"
+        class="checkin-row"
+        (click)="openCheckin(r)"
+      >
+
+        <span>
+
+          <b>
+            {{ r.applicationNo }} · {{ r.name }}
+          </b>
+
+
+          <small>
+            {{ r.school }}
+            ·
+            {{ store.category(r.categoryId)?.name }}
+          </small>
+
+        </span>
+
+
+        <time>
+          {{ store.formatIndiaDateTime(r.checkedInAt) }}
+        </time>
+
+
+        <strong>
+          View details →
+        </strong>
+
+      </button>
+
+    } @empty {
+
+      <p class="muted">
+        No participants checked in yet.
+      </p>
+
+    }
+
+  </section>
+
+
+  @if (selectedCheckin(); as r) {
+
+    <div
+      class="modal-backdrop"
+      (click)="selectedCheckin.set(null)"
+    >
+
+      <section
+        class="drawer checkin-drawer"
+        (click)="$event.stopPropagation()"
+      >
+
+        <header class="drawer-head">
+
+          <div>
+
+            <span class="eyebrow">
+              CHECKED IN
+            </span>
+
+
+            <h2>
+              {{ r.applicationNo }}
+            </h2>
+
+          </div>
+
+
+          <button
+            class="icon-close"
+            (click)="selectedCheckin.set(null)"
+          >
+            ×
+          </button>
+
+        </header>
+
+
+        <div class="drawer-body">
+
+          <div class="participant-summary">
+
+            @if (r.photo) {
+
+              <img
+                [src]="r.photo"
+                alt="Student photo"
+              />
+
+            }
+
+
+            <div>
+
+              <b>
+                {{ r.name }}
+              </b>
+
+
+              <span>
+                {{ r.school }}
+              </span>
+
+
+              <small>
+                {{ store.formatIndiaDateTime(r.checkedInAt) }}
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="detail-grid">
+
+            <div>
+              <span>
+                Father
+              </span>
+
+              <b>
+                {{ r.fatherName }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                DOB
+              </span>
+
+              <b>
+                {{ r.dob }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Category
+              </span>
+
+              <b>
+                {{ store.category(r.categoryId)?.name }}
+                ·
+                {{ store.categoryLabel(r.categoryId) }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Phone
+              </span>
+
+              <b>
+                {{ r.phone }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Payment
+              </span>
+
+              <b>
+                {{ r.paymentMethod }}
+                ·
+                {{ r.payment }}
+              </b>
+            </div>
+
+
+            <div>
+              <span>
+                Approval
+              </span>
+
+              <b>
+                {{ r.approval }}
+              </b>
+            </div>
+
+          </div>
+
+
+          <h3>
+            Competitions
+          </h3>
+
+
+          <div class="selected-events">
+
+            @for (id of r.competitionIds; track id) {
+
+              @if (store.competition(id); as c) {
+
+                <div>
+
+                  <img
+                    [src]="c.image"
+                    alt=""
+                  />
+
+
+                  <span>
+
+                    <b>
+                      {{ c.name }}
+                    </b>
+
+
+                    <small>
+                      {{ c.tamil }}
+                    </small>
+
+
+                    <small>
+
+                      @if (store.slot(c.slotId); as s) {
+
+                        {{ s.date || "Date TBA" }}
+                        ·
+                        {{ s.start || "Time TBA" }}
+                        ·
+                        {{ s.venue || "Venue TBA" }}
+
+                      }
+
+                    </small>
+
+                  </span>
+
+                </div>
+
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <footer class="drawer-actions">
+
+          <button
+            class="btn secondary"
+            (click)="selectedCheckin.set(null)"
+          >
+            Close
+          </button>
+
+        </footer>
+
+      </section>
+
+    </div>
+
+  }
+
+}

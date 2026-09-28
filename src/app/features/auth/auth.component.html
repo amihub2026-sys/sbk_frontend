@@ -1,0 +1,14 @@
+<div class="auth-page" [style.background-image]="'linear-gradient(90deg,rgba(9,42,35,.93),rgba(9,42,35,.64)),url(' + store.settings().bannerImage + ')'">
+  <section class="auth-card">
+    <div class="eyebrow">{{ role === 'admin' ? 'ORGANISER ACCESS' : 'JUDGE ACCESS' }}</div>
+    <h1>{{ role === 'admin' ? 'Admin sign in' : 'Judge sign in' }}</h1>
+    <p>{{ role === 'admin' ? 'Manage registrations, competitions, event pass approvals and judges.' : 'View assigned participants and enter marks only.' }}</p>
+    <form (ngSubmit)="login()">
+      <label>Email address<input type="email" name="email" [(ngModel)]="email" required autocomplete="username" /></label>
+      <label>Password<input type="password" name="password" [(ngModel)]="password" required autocomplete="current-password" /></label>
+      <button class="btn" [disabled]="busy()">{{ busy() ? 'Signing in…' : 'Sign in →' }}</button>
+    </form>
+    @if(role==='judge'){<p class="preview-note">Judge accounts are created and assigned by Admin → Judges.</p>}
+    @if(error()){<p class="error">{{error()}}</p>}
+  </section>
+</div>

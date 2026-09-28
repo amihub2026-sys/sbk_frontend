@@ -1,0 +1,1978 @@
+/* =========================================================
+   DASHBOARD ROOT
+========================================================= */
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.dashboard-heading {
+  margin-bottom: 18px;
+}
+
+.dashboard-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  max-width: 760px;
+}
+
+
+/* =========================================================
+   DESKTOP TABS
+========================================================= */
+
+.dashboard-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  width: 100%;
+  overflow-x: auto;
+
+  padding: 6px;
+  margin-bottom: 20px;
+
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  scrollbar-width: thin;
+}
+
+.dashboard-tab {
+  flex: 1 0 auto;
+
+  min-height: 42px;
+
+  padding: 9px 14px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: transparent;
+  color: var(--muted);
+
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.dashboard-tab:hover {
+  background: #f2f7f4;
+  color: var(--green);
+}
+
+.dashboard-tab.active {
+  background: var(--green);
+  color: #fff;
+}
+
+.dashboard-tab:active {
+  transform: scale(0.98);
+}
+
+
+/* =========================================================
+   MOBILE VIEW SELECT
+========================================================= */
+
+.mobile-dashboard-switcher {
+  display: none;
+  margin-bottom: 10px;
+}
+
+.mobile-dashboard-switcher label {
+  display: grid;
+  gap: 6px;
+}
+
+.mobile-dashboard-switcher label > span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.mobile-dashboard-switcher select {
+  width: 100%;
+  height: 48px;
+
+  padding: 0 13px;
+
+  background: #fff;
+  color: inherit;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+
+  font: inherit;
+  font-weight: 700;
+
+  outline: none;
+}
+
+.mobile-dashboard-switcher select:focus {
+  border-color: var(--green);
+}
+
+.mobile-current-view {
+  display: none;
+}
+
+
+/* =========================================================
+   DASHBOARD PANEL
+========================================================= */
+
+.dashboard-panel {
+  min-width: 0;
+  animation: dashboardFade 0.2s ease;
+}
+
+@keyframes dashboardFade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.panel-heading h2 {
+  margin: 4px 0 0;
+}
+
+.panel-heading p {
+  margin: 5px 0 0;
+  color: var(--muted);
+  max-width: 780px;
+}
+
+.panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* =========================================================
+   COMMON CARDS
+========================================================= */
+
+.card {
+  margin-bottom: 18px;
+}
+
+.card .section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 14px;
+}
+
+.card h3 {
+  margin: 3px 0 0;
+}
+
+
+/* =========================================================
+   MAIN STAT CARDS
+========================================================= */
+
+.overview-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
+
+  margin-bottom: 20px;
+}
+
+.dashboard-stat {
+  min-width: 0;
+  min-height: 124px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 16px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.dashboard-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.05);
+}
+
+.dashboard-stat > span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.dashboard-stat > b {
+  margin: 8px 0 6px;
+
+  color: var(--green);
+
+  font-size: clamp(1.5rem, 2vw, 2.15rem);
+  line-height: 1;
+}
+
+.dashboard-stat small {
+  color: var(--muted);
+  font-size: 0.69rem;
+  line-height: 1.35;
+}
+
+.primary-stat {
+  background: #eef7f1;
+  border-color: #cbe2d3;
+}
+
+.money-stat {
+  background: #fff9eb;
+}
+
+
+/* =========================================================
+   QUICK ACCESS
+========================================================= */
+
+.quick-access-card {
+  margin-bottom: 18px;
+}
+
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  margin-top: 14px;
+}
+
+.quick-access-grid button {
+  min-height: 82px;
+
+  display: grid;
+  align-content: center;
+  gap: 4px;
+
+  text-align: left;
+
+  padding: 13px;
+
+  background: #f7faf8;
+  color: inherit;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+
+  font: inherit;
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.quick-access-grid button:hover {
+  background: #edf6f0;
+  border-color: var(--green);
+}
+
+.quick-access-grid button b {
+  color: var(--green);
+}
+
+.quick-access-grid button span {
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   OVERVIEW BOTTOM
+========================================================= */
+
+.overview-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px;
+}
+
+.compact-card {
+  margin-bottom: 0;
+}
+
+.compact-count-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.compact-count-grid > div {
+  display: grid;
+  gap: 3px;
+
+  padding: 10px;
+
+  background: #f6f8f7;
+  border-radius: 9px;
+}
+
+.compact-count-grid span {
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.compact-count-grid b {
+  color: var(--green);
+  font-size: 1.1rem;
+}
+
+.text-button {
+  border: 0;
+  background: transparent;
+
+  color: var(--green);
+
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.dashboard-filters {
+  margin-bottom: 18px;
+}
+
+.dashboard-filters .section-head {
+  margin-bottom: 14px;
+}
+
+.filter-grid,
+.result-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 11px;
+}
+
+.result-filter-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.competition-filter-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.filter-grid label,
+.result-filter-grid label,
+.category-filter-card label {
+  min-width: 0;
+
+  display: grid;
+  gap: 6px;
+}
+
+.filter-grid label > span,
+.result-filter-grid label > span,
+.category-filter-card label > span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.filter-grid select,
+.filter-grid input,
+.result-filter-grid select,
+.result-filter-grid input,
+.category-filter-card select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+
+  padding: 0 11px;
+
+  background: #fff;
+  color: inherit;
+
+  border: 1px solid var(--line);
+  border-radius: 9px;
+
+  font: inherit;
+  font-size: 0.78rem;
+
+  outline: none;
+}
+
+.filter-grid select:focus,
+.filter-grid input:focus,
+.result-filter-grid select:focus,
+.result-filter-grid input:focus,
+.category-filter-card select:focus {
+  border-color: var(--green);
+}
+
+.result-search-field {
+  grid-column: span 1;
+}
+
+.category-filter-card label {
+  max-width: 430px;
+}
+
+
+/* =========================================================
+   PARTICIPANT COUNTS
+========================================================= */
+
+.participant-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-wrap table {
+  width: 100%;
+  min-width: 780px;
+
+  border-collapse: collapse;
+}
+
+.table-wrap th {
+  padding: 11px 12px;
+
+  text-align: left;
+
+  color: var(--muted);
+
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  border-bottom: 1px solid var(--line);
+
+  white-space: nowrap;
+}
+
+.table-wrap td {
+  padding: 12px;
+
+  border-bottom: 1px solid var(--line);
+
+  vertical-align: middle;
+}
+
+.table-wrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table-wrap tbody tr:hover {
+  background: #f8faf9;
+}
+
+.sub {
+  display: block;
+
+  margin-top: 3px;
+
+  color: var(--muted);
+  font-size: 0.67rem;
+}
+
+
+/* =========================================================
+   CATEGORY MOBILE
+========================================================= */
+
+.mobile-category-view {
+  display: none;
+}
+
+.mobile-category-card {
+  padding: 13px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.mobile-category-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.mobile-category-card header > div {
+  display: grid;
+  gap: 2px;
+}
+
+.mobile-category-card header span {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.mobile-category-card header strong {
+  min-width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+
+  background: #edf7f0;
+  color: var(--green);
+
+  border-radius: 9px;
+
+  font-size: 1.05rem;
+}
+
+
+/* =========================================================
+   COMMON MOBILE DATA GRID
+========================================================= */
+
+.mobile-data-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.mobile-data-grid > span {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+
+  padding: 9px;
+
+  background: #f6f8f7;
+
+  border-radius: 8px;
+}
+
+.mobile-data-grid small {
+  color: var(--muted);
+  font-size: 0.63rem;
+  line-height: 1.2;
+}
+
+.mobile-data-grid b {
+  overflow-wrap: anywhere;
+
+  color: var(--green);
+  font-size: 0.82rem;
+}
+
+
+/* =========================================================
+   COMPETITION ACCORDIONS
+========================================================= */
+
+.competition-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.competition-summary-card {
+  min-width: 0;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  overflow: hidden;
+}
+
+.competition-summary-card[open] {
+  border-color: #bcd9c6;
+}
+
+.competition-summary-card summary {
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 14px;
+
+  cursor: pointer;
+}
+
+.competition-summary-card summary::-webkit-details-marker {
+  display: none;
+}
+
+.competition-summary-card summary > div:first-child {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+}
+
+.competition-summary-card summary b {
+  overflow-wrap: anywhere;
+}
+
+.competition-summary-card summary small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.competition-summary-right {
+  flex: 0 0 auto;
+
+  display: grid;
+
+  text-align: center;
+}
+
+.competition-summary-right strong {
+  color: var(--green);
+  font-size: 1.3rem;
+}
+
+.competition-summary-right span {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.competition-expanded {
+  padding: 0 14px 14px;
+
+  border-top: 1px solid var(--line);
+}
+
+.competition-expanded .mobile-data-grid {
+  margin-top: 13px;
+}
+
+.competition-category-breakdown {
+  margin-top: 14px;
+}
+
+.competition-category-breakdown h4 {
+  margin: 0 0 8px;
+}
+
+.category-breakdown-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding: 8px 0;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.category-breakdown-row:last-child {
+  border-bottom: 0;
+}
+
+.category-breakdown-row span {
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.category-breakdown-row b {
+  color: var(--green);
+}
+
+
+/* =========================================================
+   LIVE SUMMARY
+========================================================= */
+
+.live-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 9px;
+
+  margin-bottom: 17px;
+}
+
+.live-summary-strip > div {
+  min-width: 0;
+  min-height: 84px;
+
+  display: grid;
+  align-content: center;
+  gap: 4px;
+
+  padding: 11px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.live-summary-strip span {
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.live-summary-strip b {
+  color: var(--green);
+  font-size: 1.2rem;
+}
+
+
+/* =========================================================
+   LIVE EVENT ACCORDIONS
+========================================================= */
+
+.live-detail-list {
+  display: grid;
+  gap: 12px;
+}
+
+.live-competition-detail {
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  overflow: hidden;
+}
+
+.live-competition-detail[open] {
+  border-color: #bcd9c6;
+}
+
+.live-competition-detail > summary {
+  list-style: none;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 15px;
+
+  cursor: pointer;
+}
+
+.live-competition-detail > summary::-webkit-details-marker {
+  display: none;
+}
+
+.live-title {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+}
+
+.live-title > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+}
+
+.live-title > div > b {
+  overflow-wrap: anywhere;
+}
+
+.live-title > div > span {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.live-summary-numbers {
+  display: flex;
+  gap: 8px;
+}
+
+.live-summary-numbers > span {
+  min-width: 65px;
+
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+
+  padding: 7px 9px;
+
+  background: #f6f8f7;
+
+  border-radius: 8px;
+}
+
+.live-summary-numbers small {
+  color: var(--muted);
+  font-size: 0.58rem;
+}
+
+.live-summary-numbers b {
+  color: var(--green);
+}
+
+.live-detail-body {
+  display: grid;
+  gap: 14px;
+
+  padding: 15px;
+
+  border-top: 1px solid var(--line);
+
+  background: #fbfcfb;
+}
+
+.live-info-block {
+  padding: 14px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.live-info-block h4 {
+  margin: 0 0 11px;
+}
+
+
+/* =========================================================
+   JUDGES
+========================================================= */
+
+.judge-mini-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  padding: 10px 0;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.judge-mini-row:last-child {
+  border-bottom: 0;
+}
+
+.judge-mini-row > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+}
+
+.judge-mini-row > div span,
+.judge-mini-row > span {
+  color: var(--muted);
+  font-size: 0.7rem;
+
+  overflow-wrap: anywhere;
+}
+
+
+/* =========================================================
+   LIVE CATEGORY CHIPS
+========================================================= */
+
+.category-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.category-chip-card {
+  min-width: 0;
+
+  display: grid;
+  gap: 3px;
+
+  padding: 10px;
+
+  background: #f6f8f7;
+
+  border-radius: 8px;
+}
+
+.category-chip-card span {
+  color: var(--muted);
+  font-size: 0.66rem;
+}
+
+.category-chip-card b {
+  color: var(--green);
+  font-size: 1.05rem;
+}
+
+.category-chip-card small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+
+/* =========================================================
+   LIVE STUDENT LIST
+========================================================= */
+
+.student-live-list {
+  display: grid;
+  gap: 10px;
+}
+
+.student-live-card {
+  min-width: 0;
+
+  padding: 12px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.student-live-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 11px;
+}
+
+.student-live-person {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.student-live-person img {
+  width: 44px;
+  height: 44px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  border: 1px solid var(--line);
+}
+
+.student-live-person > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+}
+
+.student-live-person b {
+  overflow-wrap: anywhere;
+}
+
+.student-live-person span,
+.student-live-person small {
+  color: var(--muted);
+  font-size: 0.67rem;
+
+  overflow-wrap: anywhere;
+}
+
+.student-mark-list {
+  display: grid;
+  gap: 7px;
+
+  margin-top: 10px;
+}
+
+.student-mark-list > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+
+  padding: 9px 10px;
+
+  background: #f7f9f8;
+
+  border-radius: 8px;
+}
+
+.student-mark-list span {
+  color: var(--muted);
+  font-size: 0.69rem;
+}
+
+.student-mark-list b {
+  color: var(--green);
+}
+
+
+/* =========================================================
+   SCHEDULE
+========================================================= */
+
+.schedule-status {
+  display: grid;
+  gap: 4px;
+
+  margin-top: 10px;
+  padding: 10px 11px;
+
+  background: #fff8e3;
+
+  border: 1px solid #ead6a5;
+  border-radius: 8px;
+}
+
+.schedule-status b {
+  color: #8a6116;
+}
+
+.schedule-status span {
+  color: var(--muted);
+  font-size: 0.69rem;
+}
+
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.dashboard-action-row {
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 5px;
+}
+
+
+/* =========================================================
+   RESULT FILTER QUICK BUTTONS
+========================================================= */
+
+.result-quick-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+
+  margin-top: 13px;
+}
+
+.result-quick-filters button {
+  padding: 7px 11px;
+
+  background: #f6f8f7;
+  color: var(--muted);
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.result-quick-filters button:hover,
+.result-quick-filters button.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+
+/* =========================================================
+   PRIZE POINTS
+========================================================= */
+
+.prize-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  margin-top: 13px;
+}
+
+.prize-grid > div {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+
+  padding: 16px 10px;
+
+  text-align: center;
+
+  background: #f7f9f8;
+
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.prize-grid span,
+.prize-grid small {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.prize-grid b {
+  color: var(--green);
+  font-size: 1.65rem;
+}
+
+
+/* =========================================================
+   RESULT COMPETITION ACCORDION
+========================================================= */
+
+.result-competition-list {
+  display: grid;
+  gap: 12px;
+}
+
+.result-competition-card {
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  overflow: hidden;
+}
+
+.result-competition-card > summary {
+  list-style: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  padding: 14px 15px;
+
+  cursor: pointer;
+}
+
+.result-competition-card > summary::-webkit-details-marker {
+  display: none;
+}
+
+.result-competition-card > summary > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+}
+
+.result-competition-card > summary > div span {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.result-competition-card > summary > strong {
+  color: var(--green);
+
+  font-size: 0.76rem;
+  white-space: nowrap;
+}
+
+.result-competition-body {
+  padding: 0 14px 14px;
+
+  border-top: 1px solid var(--line);
+}
+
+
+/* =========================================================
+   RESULT STUDENT CELL
+========================================================= */
+
+.result-student-cell {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.result-student-cell img {
+  width: 38px;
+  height: 38px;
+
+  flex: 0 0 auto;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  border: 1px solid var(--line);
+}
+
+.result-student-cell > span {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+}
+
+.result-student-cell small {
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.judge-score-mini {
+  display: grid;
+  gap: 2px;
+
+  margin-bottom: 5px;
+}
+
+.judge-score-mini small {
+  color: var(--green);
+  font-weight: 700;
+}
+
+.result-mark {
+  color: var(--green);
+  font-size: 1.05rem;
+}
+
+
+/* =========================================================
+   RESULT FULL DETAILS
+========================================================= */
+
+.result-detail-row td {
+  padding-top: 0 !important;
+}
+
+.student-result-details {
+  background: #f8faf9;
+
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.student-result-details > summary {
+  padding: 9px 11px;
+
+  color: var(--green);
+
+  font-size: 0.7rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.student-result-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+
+  padding: 12px;
+}
+
+.student-result-detail-grid > section {
+  min-width: 0;
+
+  padding: 12px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.student-result-detail-grid h4 {
+  margin: 0 0 10px;
+}
+
+.result-detail-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.result-detail-list > span {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+
+  padding: 8px;
+
+  background: #f7f9f8;
+
+  border-radius: 7px;
+}
+
+.result-detail-list small {
+  color: var(--muted);
+  font-size: 0.61rem;
+}
+
+.result-detail-list b {
+  overflow-wrap: anywhere;
+
+  font-size: 0.76rem;
+}
+
+.judge-result-card {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+
+  margin-bottom: 9px;
+}
+
+.judge-result-card > div {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+
+  padding: 8px;
+
+  background: #f7f9f8;
+
+  border-radius: 7px;
+}
+
+.judge-result-card small {
+  color: var(--muted);
+  font-size: 0.61rem;
+}
+
+.judge-result-card b {
+  overflow-wrap: anywhere;
+
+  font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   MOBILE RESULT CARDS
+========================================================= */
+
+.result-mobile-list {
+  display: none;
+}
+
+.mobile-result-card {
+  padding: 12px;
+
+  background: #fff;
+
+  border: 1px solid var(--line);
+  border-radius: 11px;
+}
+
+.mobile-result-card > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+
+  border-bottom: 1px solid var(--line);
+}
+
+.result-rank {
+  min-width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  background: #edf7f0;
+  color: var(--green);
+
+  border-radius: 50%;
+
+  font-weight: 800;
+}
+
+.mobile-result-details {
+  margin-top: 10px;
+
+  border: 1px solid var(--line);
+  border-radius: 8px;
+
+  overflow: hidden;
+}
+
+.mobile-result-details > summary {
+  padding: 10px;
+
+  background: #f7f9f8;
+  color: var(--green);
+
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.mobile-result-content {
+  padding: 10px;
+}
+
+.mobile-result-content > p {
+  display: grid;
+  gap: 2px;
+
+  margin: 0 0 8px;
+}
+
+.mobile-result-content small {
+  color: var(--muted);
+  font-size: 0.62rem;
+}
+
+.mobile-result-content b {
+  overflow-wrap: anywhere;
+
+  font-size: 0.76rem;
+}
+
+.mobile-result-content h4 {
+  margin: 14px 0 9px;
+}
+
+.mobile-judge-result {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+
+  padding: 9px;
+
+  background: #f7f9f8;
+
+  border-radius: 8px;
+}
+
+.mobile-judge-result p {
+  min-width: 0;
+
+  display: grid;
+  gap: 2px;
+
+  margin: 0;
+}
+
+
+/* =========================================================
+   PILLS
+========================================================= */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: fit-content;
+
+  padding: 5px 9px;
+
+  background: #f3f4f3;
+  color: inherit;
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  font-size: 0.65rem;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.pill.green {
+  background: #e7f4eb;
+  color: #23704d;
+  border-color: #cde4d5;
+}
+
+.pill.amber {
+  background: #fff3d7;
+  color: #946516;
+  border-color: #ead8ad;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+  padding: 18px;
+
+  text-align: center;
+
+  color: var(--muted);
+
+  background: #fafbfa;
+
+  border: 1px dashed var(--line);
+  border-radius: 9px;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1200px) {
+
+  .overview-stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .participant-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .result-filter-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .live-summary-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .category-chip-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+
+@media (max-width: 1000px) {
+
+  .quick-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .compact-count-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .result-filter-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .competition-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .student-result-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .live-competition-detail > summary {
+    grid-template-columns: 1fr;
+  }
+
+  .live-summary-numbers {
+    justify-content: flex-start;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+  :host {
+    overflow-x: hidden;
+  }
+
+  .desktop-dashboard-tabs {
+    display: none;
+  }
+
+  .mobile-dashboard-switcher {
+    display: block;
+  }
+
+  .mobile-current-view {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding: 9px 11px;
+    margin-bottom: 14px;
+
+    background: #edf7f0;
+
+    border: 1px solid #cce2d3;
+    border-radius: 9px;
+  }
+
+  .mobile-current-view span {
+    color: var(--muted);
+    font-size: 0.65rem;
+  }
+
+  .mobile-current-view b {
+    color: var(--green);
+    font-size: 0.78rem;
+  }
+
+  .dashboard-heading {
+    display: grid;
+    gap: 10px;
+  }
+
+  .dashboard-heading .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .panel-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .panel-actions {
+    width: 100%;
+  }
+
+  .panel-actions .btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .overview-stat-grid,
+  .participant-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .dashboard-stat {
+    min-height: 102px;
+    padding: 12px;
+  }
+
+  .dashboard-stat > span {
+    font-size: 0.65rem;
+  }
+
+  .dashboard-stat > b {
+    font-size: 1.35rem;
+  }
+
+  .dashboard-stat small {
+    font-size: 0.61rem;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .overview-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-grid,
+  .competition-filter-grid,
+  .result-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .desktop-category-view {
+    display: none;
+  }
+
+  .mobile-category-view {
+    display: grid;
+    gap: 9px;
+  }
+
+  .competition-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .live-summary-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .live-competition-detail > summary {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .live-title {
+    align-items: flex-start;
+  }
+
+  .live-summary-numbers {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .live-summary-numbers > span {
+    min-width: 0;
+  }
+
+  .mobile-data-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-chip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .student-live-head {
+    align-items: flex-start;
+  }
+
+  .judge-mini-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .result-desktop-table {
+    display: none;
+  }
+
+  .result-mobile-list {
+    display: grid;
+    gap: 10px;
+
+    margin-top: 12px;
+  }
+
+  .prize-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .dashboard-action-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+  .dashboard-heading h1 {
+    font-size: 1.7rem;
+  }
+
+  .dashboard-heading p {
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  .mobile-dashboard-switcher select {
+    height: 46px;
+  }
+
+  .overview-stat-grid,
+  .participant-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dashboard-stat {
+    min-height: 98px;
+    padding: 10px;
+  }
+
+  .dashboard-stat > b {
+    overflow-wrap: anywhere;
+    font-size: 1.25rem;
+  }
+
+  .quick-access-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-access-grid button {
+    min-height: 68px;
+  }
+
+  .compact-count-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .card {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .live-summary-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .live-summary-strip > div {
+    min-height: 72px;
+  }
+
+  .live-title {
+    flex-direction: column;
+  }
+
+  .student-live-head {
+    flex-direction: column;
+  }
+
+  .student-live-person {
+    width: 100%;
+  }
+
+  .category-chip-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .prize-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prize-grid > div {
+    padding: 12px;
+  }
+
+  .result-competition-card > summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mobile-judge-result {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .result-quick-filters {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+
+    padding-bottom: 3px;
+  }
+
+  .result-quick-filters button {
+    flex: 0 0 auto;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .overview-stat-grid,
+  .participant-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-stat {
+    min-height: 86px;
+  }
+
+  .compact-count-grid,
+  .mobile-data-grid,
+  .live-summary-strip,
+  .category-chip-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .live-summary-numbers {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .mobile-judge-result {
+    grid-template-columns: 1fr;
+  }
+}

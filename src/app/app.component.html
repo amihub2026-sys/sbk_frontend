@@ -1,0 +1,23 @@
+<a href="#main" class="skip">Skip to content</a>
+@if (!isWorkspace && !isLogin) {
+  <header class="public-header no-print">
+    <a class="brand" routerLink="/register">
+      <span class="brand-mark">CT</span>
+      <span><b>{{ store.settings().title }}</b><small>SBK VIBGYOR SCHOOL</small></span>
+    </a>
+    <nav>
+      <a routerLink="/find-pass">Find my pass / பாஸ்</a>
+      <a href="circular.pdf" target="_blank" rel="noopener">Circular ↗</a>
+    </nav>
+  </header>
+}
+<main id="main"><router-outlet /></main>
+@if (!isWorkspace && !isLogin) {
+  <footer class="public-footer no-print">
+    <div><b>{{ store.settings().titleTa }}</b><p>Presented by {{ store.settings().presenters }}</p></div>
+    <small>For event support: {{ store.settings().contact || "Contact number will be updated by the organiser" }}</small>
+  </footer>
+}
+@if (store.notice()) {
+  <div class="toast no-print" role="status"><span>✓ {{ store.notice() }}</span><button (click)="store.notice.set('')">×</button></div>
+}

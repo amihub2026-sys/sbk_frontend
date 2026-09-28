@@ -1,0 +1,3060 @@
+<!-- =====================================================
+     PAGE HEADING
+====================================================== -->
+
+<div class="page-heading dashboard-heading">
+
+  <div>
+    <span class="eyebrow">EVENT CONTROL</span>
+
+    <h1>Dashboard</h1>
+
+    <p>
+      Complete participant, competition, live-event,
+      payment, judging and result control.
+    </p>
+  </div>
+
+
+  <a
+    routerLink="/admin/offline-registration"
+    class="btn"
+  >
+    + Direct / Paper Entry
+  </a>
+
+</div>
+
+
+<!-- =====================================================
+     DESKTOP TABS
+====================================================== -->
+
+<nav class="dashboard-tabs desktop-dashboard-tabs">
+
+  @for (
+    view of dashboardViews;
+    track view.id
+  ) {
+
+    <button
+      type="button"
+      class="dashboard-tab"
+      [class.active]="activeView() === view.id"
+      (click)="setView(view.id)"
+    >
+      {{ view.label }}
+    </button>
+
+  }
+
+</nav>
+
+
+<!-- =====================================================
+     MOBILE VIEW SELECTOR
+====================================================== -->
+
+<div class="mobile-dashboard-switcher">
+
+  <label>
+
+    <span>Dashboard View</span>
+
+    <select
+      [value]="activeView()"
+      (change)="setView($any($event.target).value)"
+    >
+
+      @for (
+        view of dashboardViews;
+        track view.id
+      ) {
+
+        <option [value]="view.id">
+          {{ view.label }}
+        </option>
+
+      }
+
+    </select>
+
+  </label>
+
+</div>
+
+
+<div class="mobile-current-view">
+
+  <span>Viewing</span>
+
+  <b>
+    {{ currentViewLabel() }}
+  </b>
+
+</div>
+
+
+<!-- =====================================================
+     OVERVIEW
+====================================================== -->
+
+@if (isView("overview")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+        <span class="eyebrow">OVERVIEW</span>
+        <h2>Event Summary</h2>
+      </div>
+
+    </div>
+
+
+    <div class="overview-stat-grid">
+
+      <article class="dashboard-stat primary-stat">
+
+        <span>Total Participants</span>
+
+        <b>
+          {{ totalParticipants() }}
+        </b>
+
+        <small>
+          Online + direct entries
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Online Registrations</span>
+
+        <b>
+          {{ onlineRegistrations() }}
+        </b>
+
+        <small>
+          Website registrations
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Direct Entries</span>
+
+        <b>
+          {{ directRegistrations() }}
+        </b>
+
+        <small>
+          Paper / cash entries
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat money-stat">
+
+        <span>Total Collected</span>
+
+        <b>
+          {{
+            totalCollected()
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+        </b>
+
+        <small>
+          All paid registrations
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Checked In</span>
+
+        <b>
+          {{ checkedIn() }}
+        </b>
+
+        <small>
+          Event venue check-in
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Not Checked In</span>
+
+        <b>
+          {{ notCheckedIn() }}
+        </b>
+
+        <small>
+          Yet to arrive
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Total Competitions</span>
+
+        <b>
+          {{ totalCompetitions() }}
+        </b>
+
+        <small>
+          Competition master
+        </small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Marks Submitted</span>
+
+        <b>
+          {{ marksSubmittedTotal() }}
+        </b>
+
+        <small>
+          Evaluation progress
+        </small>
+
+      </article>
+
+    </div>
+
+
+    <!-- QUICK ACCESS -->
+
+    <section class="card quick-access-card">
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">
+            QUICK ACCESS
+          </span>
+
+          <h3>
+            Open Dashboard Section
+          </h3>
+        </div>
+
+      </div>
+
+
+      <div class="quick-access-grid">
+
+        <button
+          type="button"
+          (click)="setView('participants')"
+        >
+          <b>Participants</b>
+          <span>
+            Online, direct and check-in details
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          (click)="setView('categories')"
+        >
+          <b>Categories</b>
+          <span>
+            Category-wise student counts
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          (click)="setView('competitions')"
+        >
+          <b>Competitions</b>
+          <span>
+            Competition-wise registration
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          (click)="setView('live')"
+        >
+          <b>Live Event</b>
+          <span>
+            Attendance and competition progress
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          (click)="setView('payments')"
+        >
+          <b>Payments</b>
+          <span>
+            Online and direct collections
+          </span>
+        </button>
+
+
+        <button
+          type="button"
+          (click)="setView('results')"
+        >
+          <b>Marks / Results</b>
+          <span>
+            Student, judge and mark details
+          </span>
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- QUICK LIVE COUNTS -->
+
+    <div class="overview-bottom-grid">
+
+      <section class="card compact-card">
+
+        <div class="section-head">
+
+          <div>
+            <span class="eyebrow">
+              EVENT ATTENDANCE
+            </span>
+
+            <h3>Current Status</h3>
+          </div>
+
+          <a routerLink="/admin/check-in">
+            Check-in →
+          </a>
+
+        </div>
+
+
+        <div class="compact-count-grid">
+
+          <div>
+            <span>Checked In</span>
+            <b>{{ checkedIn() }}</b>
+          </div>
+
+          <div>
+            <span>Present</span>
+            <b>
+              {{ competitionAttendanceTotals().present }}
+            </b>
+          </div>
+
+          <div>
+            <span>Absent</span>
+            <b>
+              {{ competitionAttendanceTotals().absent }}
+            </b>
+          </div>
+
+          <div>
+            <span>Pending</span>
+            <b>
+              {{ competitionAttendanceTotals().notMarked }}
+            </b>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="card compact-card">
+
+        <div class="section-head">
+
+          <div>
+            <span class="eyebrow">
+              EVALUATION
+            </span>
+
+            <h3>Marks Status</h3>
+          </div>
+
+          <button
+            type="button"
+            class="text-button"
+            (click)="setView('results')"
+          >
+            View Results →
+          </button>
+
+        </div>
+
+
+        <div class="compact-count-grid">
+
+          <div>
+            <span>Competitions</span>
+            <b>{{ totalCompetitions() }}</b>
+          </div>
+
+          <div>
+            <span>Completed</span>
+            <b>{{ completedCompetitions() }}</b>
+          </div>
+
+          <div>
+            <span>Marks Entered</span>
+            <b>{{ marksSubmittedTotal() }}</b>
+          </div>
+
+          <div>
+            <span>Marks Pending</span>
+            <b>{{ marksPendingTotal() }}</b>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     PARTICIPANTS
+====================================================== -->
+
+@if (isView("participants")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+        <span class="eyebrow">PARTICIPANTS</span>
+
+        <h2>
+          Participant Overview
+        </h2>
+
+        <p>
+          Filter participant counts by category,
+          registration source, payment and check-in.
+        </p>
+      </div>
+
+    </div>
+
+
+    <section class="card dashboard-filters">
+
+      <div class="section-head">
+
+        <h3>Participant Filters</h3>
+
+        <button
+          type="button"
+          class="btn secondary small"
+          (click)="resetFilters()"
+        >
+          Reset
+        </button>
+
+      </div>
+
+
+      <div class="filter-grid">
+
+        <label>
+
+          <span>Category</span>
+
+          <select
+            [value]="selectedCategory()"
+            (change)="selectedCategory.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Categories
+            </option>
+
+            @for (
+              category of categories();
+              track category.id
+            ) {
+
+              <option [value]="category.id">
+
+                {{ category.name }}
+                ·
+                {{ store.categoryLabel(category.id) }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          <span>Registration Source</span>
+
+          <select
+            [value]="selectedSource()"
+            (change)="selectedSource.set($any($event.target).value)"
+          >
+
+            <option value="">
+              Online + Direct
+            </option>
+
+            <option value="Online">
+              Online
+            </option>
+
+            <option value="Paper">
+              Direct / Paper
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          <span>Payment</span>
+
+          <select
+            [value]="selectedPayment()"
+            (change)="selectedPayment.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Payments
+            </option>
+
+            <option value="Paid">
+              Paid
+            </option>
+
+            <option value="Pending">
+              Pending
+            </option>
+
+            <option value="Failed">
+              Failed
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          <span>Check-in</span>
+
+          <select
+            [value]="selectedAttendance()"
+            (change)="selectedAttendance.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Participants
+            </option>
+
+            <option value="Checked In">
+              Checked In
+            </option>
+
+            <option value="Not Checked In">
+              Not Checked In
+            </option>
+
+          </select>
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <div class="overview-stat-grid participant-stats">
+
+      <article class="dashboard-stat primary-stat">
+
+        <span>Total Participants</span>
+
+        <b>
+          {{ totalParticipants() }}
+        </b>
+
+        <small>Filtered count</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Online</span>
+
+        <b>
+          {{ onlineRegistrations() }}
+        </b>
+
+        <small>Website registrations</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Direct Entry</span>
+
+        <b>
+          {{ directRegistrations() }}
+        </b>
+
+        <small>Paper / cash</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Confirmed</span>
+
+        <b>
+          {{ confirmedRegistrations() }}
+        </b>
+
+        <small>Valid registrations</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Checked In</span>
+
+        <b>
+          {{ checkedIn() }}
+        </b>
+
+        <small>Arrived</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Not Checked In</span>
+
+        <b>
+          {{ notCheckedIn() }}
+        </b>
+
+        <small>Yet to arrive</small>
+
+      </article>
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     CATEGORY VIEW
+====================================================== -->
+
+@if (isView("categories")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          CATEGORY ANALYSIS
+        </span>
+
+        <h2>
+          Category-wise Student Count
+        </h2>
+
+        <p>
+          Category I through Category XII participant overview.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <section class="card category-filter-card">
+
+      <label>
+
+        <span>Category Filter</span>
+
+        <select
+          [value]="selectedCategory()"
+          (change)="selectedCategory.set($any($event.target).value)"
+        >
+
+          <option value="">
+            All Categories
+          </option>
+
+          @for (
+            category of categories();
+            track category.id
+          ) {
+
+            <option [value]="category.id">
+
+              {{ category.name }}
+              ·
+              {{ store.categoryLabel(category.id) }}
+
+            </option>
+
+          }
+
+        </select>
+
+      </label>
+
+    </section>
+
+
+    <!-- DESKTOP -->
+
+    <section class="card desktop-category-view">
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+              <th>Category</th>
+              <th>Age</th>
+              <th>Total</th>
+              <th>Online</th>
+              <th>Direct</th>
+              <th>Checked In</th>
+              <th>Not Checked In</th>
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            @for (
+              stat of categoryStats();
+              track stat.category.id
+            ) {
+
+              <tr>
+
+                <td>
+                  <b>
+                    {{ stat.category.name }}
+                  </b>
+                </td>
+
+                <td>
+                  {{ store.categoryLabel(stat.category.id) }}
+                </td>
+
+                <td>
+                  <b>{{ stat.total }}</b>
+                </td>
+
+                <td>
+                  {{ stat.online }}
+                </td>
+
+                <td>
+                  {{ stat.direct }}
+                </td>
+
+                <td>
+                  {{ stat.checkedIn }}
+                </td>
+
+                <td>
+                  {{ stat.notCheckedIn }}
+                </td>
+
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+
+    <!-- MOBILE -->
+
+    <div class="mobile-category-view">
+
+      @for (
+        stat of categoryStats();
+        track stat.category.id
+      ) {
+
+        <article class="mobile-category-card">
+
+          <header>
+
+            <div>
+
+              <b>
+                {{ stat.category.name }}
+              </b>
+
+              <span>
+                {{ store.categoryLabel(stat.category.id) }}
+              </span>
+
+            </div>
+
+            <strong>
+              {{ stat.total }}
+            </strong>
+
+          </header>
+
+
+          <div class="mobile-data-grid">
+
+            <span>
+              <small>Online</small>
+              <b>{{ stat.online }}</b>
+            </span>
+
+            <span>
+              <small>Direct</small>
+              <b>{{ stat.direct }}</b>
+            </span>
+
+            <span>
+              <small>Checked In</small>
+              <b>{{ stat.checkedIn }}</b>
+            </span>
+
+            <span>
+              <small>Not Checked In</small>
+              <b>{{ stat.notCheckedIn }}</b>
+            </span>
+
+          </div>
+
+        </article>
+
+      }
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     COMPETITIONS
+====================================================== -->
+
+@if (isView("competitions")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          COMPETITION ANALYSIS
+        </span>
+
+        <h2>
+          Competition-wise Student Count
+        </h2>
+
+        <p>
+          Open a competition to view attendance,
+          marks and category-wise student count.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <section class="card dashboard-filters">
+
+      <div class="section-head">
+
+        <h3>Competition Filters</h3>
+
+        <button
+          type="button"
+          class="btn secondary small"
+          (click)="resetFilters()"
+        >
+          Reset
+        </button>
+
+      </div>
+
+
+      <div class="filter-grid competition-filter-grid">
+
+        <label>
+
+          <span>Competition</span>
+
+          <select
+            [value]="selectedCompetition()"
+            (change)="selectedCompetition.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Competitions
+            </option>
+
+            @for (
+              competition of competitions();
+              track competition.id
+            ) {
+
+              <option [value]="competition.id">
+                {{ competition.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          <span>Status</span>
+
+          <select
+            [value]="selectedCompetitionStatus()"
+            (change)="selectedCompetitionStatus.set($any($event.target).value)"
+          >
+
+            <option value="">
+              Open + Closed
+            </option>
+
+            <option value="Open">
+              Open
+            </option>
+
+            <option value="Closed">
+              Closed
+            </option>
+
+          </select>
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <div class="competition-summary-grid">
+
+      @for (
+        stat of liveCompetitionStats();
+        track stat.competition.id
+      ) {
+
+        <details class="competition-summary-card">
+
+          <summary>
+
+            <div>
+
+              <b>
+                {{ stat.competition.name }}
+              </b>
+
+              <small>
+                {{ stat.competition.tamil }}
+              </small>
+
+            </div>
+
+
+            <div class="competition-summary-right">
+
+              <strong>
+                {{ stat.total }}
+              </strong>
+
+              <span>Students</span>
+
+            </div>
+
+          </summary>
+
+
+          <div class="competition-expanded">
+
+            <div class="mobile-data-grid">
+
+              <span>
+                <small>Online</small>
+                <b>{{ stat.online }}</b>
+              </span>
+
+              <span>
+                <small>Direct</small>
+                <b>{{ stat.direct }}</b>
+              </span>
+
+              <span>
+                <small>Present</small>
+                <b>{{ stat.present }}</b>
+              </span>
+
+              <span>
+                <small>Absent</small>
+                <b>{{ stat.absent }}</b>
+              </span>
+
+              <span>
+                <small>Attendance Pending</small>
+                <b>{{ stat.notMarked }}</b>
+              </span>
+
+              <span>
+                <small>Marks Submitted</small>
+                <b>{{ stat.marksSubmitted }}</b>
+              </span>
+
+            </div>
+
+
+            <div class="competition-category-breakdown">
+
+              <h4>
+                Category-wise Students
+              </h4>
+
+
+              @for (
+                item of competitionCategoryStats();
+                track item.competition.id
+              ) {
+
+                @if (
+                  item.competition.id ===
+                  stat.competition.id
+                ) {
+
+                  @for (
+                    row of item.categories;
+                    track row.category.id
+                  ) {
+
+                    <div class="category-breakdown-row">
+
+                      <span>
+                        {{ row.category.name }}
+                      </span>
+
+                      <b>
+                        {{ row.total }}
+                      </b>
+
+                    </div>
+
+                  }
+
+                }
+
+              }
+
+            </div>
+
+          </div>
+
+        </details>
+
+      }
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     LIVE EVENT
+====================================================== -->
+
+@if (isView("live")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          LIVE EVENT CONTROL
+        </span>
+
+        <h2>
+          Category-wise Competition Updates
+        </h2>
+
+        <p>
+          Choose a category first. Only competitions available
+          for that category will appear.
+        </p>
+
+      </div>
+
+
+      <div class="panel-actions">
+
+        <a
+          routerLink="/admin/check-in"
+          class="btn secondary small"
+        >
+          Event Check-in
+        </a>
+
+        <a
+          routerLink="/admin/marks"
+          class="btn small"
+        >
+          Marks
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- LIVE FILTERS -->
+
+    <section class="card dashboard-filters live-filter-card">
+
+      <div class="section-head">
+
+        <div>
+          <span class="eyebrow">
+            LIVE FILTER
+          </span>
+
+          <h3>
+            Find Competition / Student
+          </h3>
+        </div>
+
+
+        <button
+          type="button"
+          class="btn secondary small"
+          (click)="resetLiveFilters()"
+        >
+          Reset
+        </button>
+
+      </div>
+
+
+      <div class="filter-grid">
+
+        <!-- CATEGORY -->
+
+        <label>
+
+          <span>Category</span>
+
+          <select
+            [value]="liveCategoryId()"
+            (change)="setLiveCategory($any($event.target).value)"
+          >
+
+            <option value="">
+              All Categories
+            </option>
+
+            @for (
+              category of categories();
+              track category.id
+            ) {
+
+              <option [value]="category.id">
+
+                {{ category.name }}
+                ·
+                {{ store.categoryLabel(category.id) }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <!-- COMPETITION -->
+
+        <label>
+
+          <span>Competition</span>
+
+          <select
+            [value]="liveCompetitionId()"
+            (change)="liveCompetitionId.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Relevant Competitions
+            </option>
+
+            @for (
+              competition of liveCompetitionOptions();
+              track competition.id
+            ) {
+
+              <option [value]="competition.id">
+                {{ competition.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <!-- STATUS -->
+
+        <label>
+
+          <span>Live Status</span>
+
+          <select
+            [value]="liveStage()"
+            (change)="liveStage.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Statuses
+            </option>
+
+            <option value="Not started">
+              Not Started
+            </option>
+
+            <option value="Attendance">
+              Attendance
+            </option>
+
+            <option value="Evaluation">
+              Evaluation
+            </option>
+
+            <option value="Completed">
+              Completed
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <!-- SEARCH -->
+
+        <label>
+
+          <span>Student Search</span>
+
+          <input
+            type="search"
+            placeholder="Name / application no / school"
+            [value]="liveSearch()"
+            (input)="liveSearch.set($any($event.target).value)"
+          />
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <!-- LIVE TOTALS -->
+
+    <div class="live-summary-strip">
+
+      <div>
+        <span>Competitions</span>
+        <b>
+          {{ liveEventTotals().competitions }}
+        </b>
+      </div>
+
+      <div>
+        <span>Students</span>
+        <b>
+          {{ liveEventTotals().students }}
+        </b>
+      </div>
+
+      <div>
+        <span>Present</span>
+        <b>
+          {{ liveEventTotals().present }}
+        </b>
+      </div>
+
+      <div>
+        <span>Absent</span>
+        <b>
+          {{ liveEventTotals().absent }}
+        </b>
+      </div>
+
+      <div>
+        <span>Attendance Pending</span>
+        <b>
+          {{ liveEventTotals().attendancePending }}
+        </b>
+      </div>
+
+      <div>
+        <span>Marks Submitted</span>
+        <b>
+          {{ liveEventTotals().marksSubmitted }}
+        </b>
+      </div>
+
+      <div>
+        <span>Marks Pending</span>
+        <b>
+          {{ liveEventTotals().marksPending }}
+        </b>
+      </div>
+
+    </div>
+
+
+    <!-- LIVE COMPETITIONS -->
+
+    <div class="live-detail-list">
+
+      @for (
+        stat of liveEventStats();
+        track stat.competition.id
+      ) {
+
+        <details class="live-competition-detail">
+
+          <summary>
+
+            <div class="live-title">
+
+              <div>
+
+                <b>
+                  {{ stat.competition.name }}
+                </b>
+
+                <span>
+                  {{ stat.competition.tamil }}
+                </span>
+
+              </div>
+
+
+              <span
+                class="pill"
+                [class.green]="stat.stage === 'Completed'"
+                [class.amber]="stat.stage !== 'Completed'"
+              >
+                {{ stat.stage }}
+              </span>
+
+            </div>
+
+
+            <div class="live-summary-numbers">
+
+              <span>
+                <small>Students</small>
+                <b>{{ stat.total }}</b>
+              </span>
+
+              <span>
+                <small>Present</small>
+                <b>{{ stat.present }}</b>
+              </span>
+
+              <span>
+                <small>Marks</small>
+                <b>{{ stat.marksSubmitted }}</b>
+              </span>
+
+            </div>
+
+          </summary>
+
+
+          <div class="live-detail-body">
+
+            <!-- SCHEDULE -->
+
+            <section class="live-info-block">
+
+              <h4>
+                Competition Schedule
+              </h4>
+
+
+              @if (stat.slot) {
+
+                <div class="mobile-data-grid">
+
+                  <span>
+                    <small>Date</small>
+                    <b>
+                      {{ stat.slot.date || "TBA" }}
+                    </b>
+                  </span>
+
+                  <span>
+                    <small>Time</small>
+                    <b>
+                      {{ stat.slot.start || "TBA" }}
+                      -
+                      {{ stat.slot.end || "TBA" }}
+                    </b>
+                  </span>
+
+                  <span>
+                    <small>Venue</small>
+                    <b>
+                      {{ stat.slot.venue || "TBA" }}
+                    </b>
+                  </span>
+
+                </div>
+
+              } @else {
+
+                <div class="schedule-status">
+
+                  <b>
+                    Schedule not assigned
+                  </b>
+
+                  <span>
+                    Date, time and venue will be announced.
+                  </span>
+
+                </div>
+
+              }
+
+            </section>
+
+
+            <!-- JUDGES -->
+
+            <section class="live-info-block">
+
+              <h4>
+                Assigned Judges
+              </h4>
+
+
+              @for (
+                judge of stat.assignedJudges;
+                track judge.id
+              ) {
+
+                <div class="judge-mini-row">
+
+                  <div>
+                    <b>
+                      {{ judge.name }}
+                    </b>
+
+                    <span>
+                      {{ judge.email }}
+                    </span>
+                  </div>
+
+                  <span>
+                    {{ judge.phone }}
+                  </span>
+
+                </div>
+
+              } @empty {
+
+                <div class="empty">
+                  No judge assigned.
+                </div>
+
+              }
+
+            </section>
+
+
+            <!-- CATEGORY BREAKDOWN -->
+
+            <section class="live-info-block">
+
+              <h4>
+                Category-wise Students
+              </h4>
+
+
+              <div class="category-chip-grid">
+
+                @for (
+                  item of stat.categoryBreakdown;
+                  track item.category.id
+                ) {
+
+                  <div class="category-chip-card">
+
+                    <span>
+                      {{ item.category.name }}
+                    </span>
+
+                    <b>
+                      {{ item.count }}
+                    </b>
+
+                    <small>
+                      Present {{ item.present }}
+                    </small>
+
+                  </div>
+
+                }
+
+              </div>
+
+            </section>
+
+
+            <!-- STUDENTS -->
+
+            <section class="live-info-block">
+
+              <h4>
+                Student Details
+              </h4>
+
+
+              <div class="student-live-list">
+
+                @for (
+                  participant of stat.participants;
+                  track participant.registration.id
+                ) {
+
+                  <article class="student-live-card">
+
+                    <div class="student-live-head">
+
+                      <div class="student-live-person">
+
+                        @if (
+                          participant.registration.photo
+                        ) {
+
+                          <img
+                            [src]="participant.registration.photo"
+                            alt="Student"
+                          />
+
+                        }
+
+
+                        <div>
+
+                          <b>
+                            {{ participant.registration.name }}
+                          </b>
+
+                          <span>
+                            {{ participant.registration.applicationNo }}
+                          </span>
+
+                          <small>
+                            {{ participant.registration.school }}
+                          </small>
+
+                        </div>
+
+                      </div>
+
+
+                      <span
+                        class="pill"
+                        [class.green]="participant.attendance === 'Present'"
+                        [class.amber]="participant.attendance === 'Not marked'"
+                      >
+                        {{ participant.attendance }}
+                      </span>
+
+                    </div>
+
+
+                    <div class="mobile-data-grid">
+
+                      <span>
+                        <small>Category</small>
+
+                        <b>
+                          {{
+                            categoryName(
+                              participant.registration.categoryId
+                            )
+                          }}
+                        </b>
+                      </span>
+
+
+                      <span>
+                        <small>Phone</small>
+
+                        <b>
+                          {{ participant.registration.phone }}
+                        </b>
+                      </span>
+
+
+                      <span>
+                        <small>Mark Status</small>
+
+                        <b>
+                          {{
+                            participant.markSubmitted
+                              ? "Submitted"
+                              : "Pending"
+                          }}
+                        </b>
+                      </span>
+
+
+                      <span>
+                        <small>Average Mark</small>
+
+                        <b>
+                          {{
+                            participant.averageMark !== null
+                              ? participant.averageMark
+                              : "—"
+                          }}
+                        </b>
+                      </span>
+
+                    </div>
+
+
+                    @if (participant.marks.length) {
+
+                      <div class="student-mark-list">
+
+                        @for (
+                          mark of participant.marks;
+                          track mark.id
+                        ) {
+
+                          <div>
+
+                            <span>
+                              Judge:
+                              <b>
+                                {{ judgeName(mark.judgeId) }}
+                              </b>
+                            </span>
+
+                            <span>
+                              Mark:
+                              <b>
+                                {{ mark.mark }}
+                              </b>
+                            </span>
+
+                            @if (mark.notes) {
+
+                              <span>
+                                Note:
+                                {{ mark.notes }}
+                              </span>
+
+                            }
+
+                          </div>
+
+                        }
+
+                      </div>
+
+                    }
+
+                  </article>
+
+                } @empty {
+
+                  <div class="empty">
+                    No participants match this filter.
+                  </div>
+
+                }
+
+              </div>
+
+            </section>
+
+          </div>
+
+        </details>
+
+      } @empty {
+
+        <div class="card empty">
+          No live competition data matches the selected filters.
+        </div>
+
+      }
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     PAYMENTS
+====================================================== -->
+
+@if (isView("payments")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          PAYMENTS
+        </span>
+
+        <h2>
+          Payment Overview
+        </h2>
+
+        <p>
+          Online and direct payment collection summary.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <div class="overview-stat-grid">
+
+      <article class="dashboard-stat money-stat">
+
+        <span>Total Collected</span>
+
+        <b>
+          {{
+            totalCollected()
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+        </b>
+
+        <small>All paid registrations</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Online Collection</span>
+
+        <b>
+          {{
+            onlineCollected()
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+        </b>
+
+        <small>Online payment</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Direct Collection</span>
+
+        <b>
+          {{
+            directCollected()
+              | currency: "INR" : "symbol" : "1.0-0"
+          }}
+        </b>
+
+        <small>Cash / paper entries</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Paid</span>
+
+        <b>
+          {{ paidRegistrations() }}
+        </b>
+
+        <small>Successful payments</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Pending</span>
+
+        <b>
+          {{ pendingPayments() }}
+        </b>
+
+        <small>Awaiting payment</small>
+
+      </article>
+
+
+      <article class="dashboard-stat">
+
+        <span>Failed</span>
+
+        <b>
+          {{ failedPayments() }}
+        </b>
+
+        <small>Failed payments</small>
+
+      </article>
+
+    </div>
+
+
+    <div class="dashboard-action-row">
+
+      <a
+        routerLink="/admin/registrations"
+        class="btn"
+      >
+        Open Full Payment Details
+      </a>
+
+    </div>
+
+  </section>
+
+}
+
+
+<!-- =====================================================
+     MARKS / RESULTS
+====================================================== -->
+
+@if (isView("results")) {
+
+  <section class="dashboard-panel">
+
+    <div class="panel-heading">
+
+      <div>
+
+        <span class="eyebrow">
+          MARKS & RESULTS
+        </span>
+
+        <h2>
+          Complete Competition Results
+        </h2>
+
+        <p>
+          Category, competition, student, judge,
+          attendance, mark and result details.
+        </p>
+
+      </div>
+
+
+      <a
+        routerLink="/admin/marks"
+        class="btn"
+      >
+        Open Marks Entry
+      </a>
+
+    </div>
+
+
+    <!-- =================================================
+         RESULT FILTERS
+    ================================================== -->
+
+    <section class="card dashboard-filters result-filter-card">
+
+      <div class="section-head">
+
+        <div>
+
+          <span class="eyebrow">
+            RESULT FILTERS
+          </span>
+
+          <h3>
+            Find Result
+          </h3>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="btn secondary small"
+          (click)="resetResultFilters()"
+        >
+          Reset
+        </button>
+
+      </div>
+
+
+      <div class="result-filter-grid">
+
+        <!-- CATEGORY -->
+
+        <label>
+
+          <span>Category</span>
+
+          <select
+            [value]="resultCategoryId()"
+            (change)="setResultCategory($any($event.target).value)"
+          >
+
+            <option value="">
+              All Categories
+            </option>
+
+            @for (
+              category of categories();
+              track category.id
+            ) {
+
+              <option [value]="category.id">
+
+                {{ category.name }}
+                ·
+                {{ store.categoryLabel(category.id) }}
+
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <!-- COMPETITION -->
+
+        <label>
+
+          <span>Competition</span>
+
+          <select
+            [value]="resultCompetitionId()"
+            (change)="setResultCompetition($any($event.target).value)"
+          >
+
+            <option value="">
+              All Relevant Competitions
+            </option>
+
+            @for (
+              competition of resultCompetitionOptions();
+              track competition.id
+            ) {
+
+              <option [value]="competition.id">
+                {{ competition.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <!-- JUDGE -->
+
+        <label>
+
+          <span>Judge</span>
+
+          <select
+            [value]="resultJudgeId()"
+            (change)="resultJudgeId.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All Judges
+            </option>
+
+            @for (
+              judge of resultJudgeOptions();
+              track judge.id
+            ) {
+
+              <option [value]="judge.id">
+                {{ judge.name }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <!-- STATUS -->
+
+        <label>
+
+          <span>Result Status</span>
+
+          <select
+            [value]="resultStatus()"
+            (change)="resultStatus.set($any($event.target).value)"
+          >
+
+            <option value="">
+              All
+            </option>
+
+            <option value="Marked">
+              Marks Submitted
+            </option>
+
+            <option value="Pending">
+              Marks Pending
+            </option>
+
+            <option value="Present">
+              Present
+            </option>
+
+            <option value="Absent">
+              Absent
+            </option>
+
+            <option value="Top 3">
+              Top 3 Winners
+            </option>
+
+          </select>
+
+        </label>
+
+
+        <!-- SEARCH -->
+
+        <label class="result-search-field">
+
+          <span>Student Search</span>
+
+          <input
+            type="search"
+            placeholder="Name / application no / school / phone"
+            [value]="resultSearch()"
+            (input)="resultSearch.set($any($event.target).value)"
+          />
+
+        </label>
+
+      </div>
+
+
+      <!-- QUICK FILTER BUTTONS -->
+
+      <div class="result-quick-filters">
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === ''"
+          (click)="resultStatus.set('')"
+        >
+          All
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === 'Marked'"
+          (click)="resultStatus.set('Marked')"
+        >
+          Marks Submitted
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === 'Pending'"
+          (click)="resultStatus.set('Pending')"
+        >
+          Marks Pending
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === 'Present'"
+          (click)="resultStatus.set('Present')"
+        >
+          Present
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === 'Absent'"
+          (click)="resultStatus.set('Absent')"
+        >
+          Absent
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="resultStatus() === 'Top 3'"
+          (click)="resultStatus.set('Top 3')"
+        >
+          Top 3
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         RESULT SUMMARY
+    ================================================== -->
+
+    <div class="live-summary-strip result-summary-strip">
+
+      <div>
+        <span>Total Entries</span>
+        <b>
+          {{ resultSummary().total }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Present</span>
+        <b>
+          {{ resultSummary().present }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Absent</span>
+        <b>
+          {{ resultSummary().absent }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Attendance Pending</span>
+        <b>
+          {{ resultSummary().attendancePending }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Marks Submitted</span>
+        <b>
+          {{ resultSummary().marked }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Marks Pending</span>
+        <b>
+          {{ resultSummary().pending }}
+        </b>
+      </div>
+
+
+      <div>
+        <span>Top 3 Entries</span>
+        <b>
+          {{ resultSummary().winners }}
+        </b>
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PRIZE POINT RULE
+    ================================================== -->
+
+    <section class="card prize-card">
+
+      <div class="section-head">
+
+        <div>
+
+          <span class="eyebrow">
+            CLIENT POINT RULE
+          </span>
+
+          <h3>
+            Prize Points
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      <div class="prize-grid">
+
+        <div>
+          <span>1st Prize</span>
+          <b>{{ prizePoints.first }}</b>
+          <small>Points</small>
+        </div>
+
+
+        <div>
+          <span>2nd Prize</span>
+          <b>{{ prizePoints.second }}</b>
+          <small>Points</small>
+        </div>
+
+
+        <div>
+          <span>3rd Prize</span>
+          <b>{{ prizePoints.third }}</b>
+          <small>Points</small>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =================================================
+         COMPETITION RESULT GROUPS
+    ================================================== -->
+
+    <div class="result-competition-list">
+
+      @for (
+        group of resultCompetitionGroups();
+        track group.competition?.id
+      ) {
+
+        <details
+          class="result-competition-card"
+          open
+        >
+
+          <summary>
+
+            <div>
+
+              <b>
+                {{ group.competition?.name }}
+              </b>
+
+              <span>
+                {{ group.competition?.tamil }}
+              </span>
+
+            </div>
+
+
+            <strong>
+              {{ group.participants.length }}
+              students
+            </strong>
+
+          </summary>
+
+
+          <div class="result-competition-body">
+
+            <!-- DESKTOP TABLE -->
+
+            <div class="result-desktop-table">
+
+              <div class="table-wrap">
+
+                <table>
+
+                  <thead>
+
+                    <tr>
+                      <th>Student</th>
+                      <th>Category</th>
+                      <th>Attendance</th>
+                      <th>Judge</th>
+                      <th>Mark</th>
+                      <th>Rank</th>
+                      <th>Prize</th>
+                    </tr>
+
+                  </thead>
+
+
+                  <tbody>
+
+                    @for (
+                      row of group.participants;
+                      track row.registration.id
+                    ) {
+
+                      <tr>
+
+                        <!-- STUDENT -->
+
+                        <td>
+
+                          <div class="result-student-cell">
+
+                            @if (row.registration.photo) {
+
+                              <img
+                                [src]="row.registration.photo"
+                                alt="Student"
+                              />
+
+                            }
+
+
+                            <span>
+
+                              <b>
+                                {{ row.registration.name }}
+                              </b>
+
+                              <small>
+                                {{ row.registration.applicationNo }}
+                                ·
+                                {{ row.registration.school }}
+                              </small>
+
+                            </span>
+
+                          </div>
+
+                        </td>
+
+
+                        <!-- CATEGORY -->
+
+                        <td>
+
+                          <b>
+                            {{ row.category?.name }}
+                          </b>
+
+                          <span class="sub">
+                            {{
+                              store.categoryLabel(
+                                row.registration.categoryId
+                              )
+                            }}
+                          </span>
+
+                        </td>
+
+
+                        <!-- ATTENDANCE -->
+
+                        <td>
+
+                          <span
+                            class="pill"
+                            [class.green]="row.attendance === 'Present'"
+                            [class.amber]="row.attendance === 'Not marked'"
+                          >
+                            {{ row.attendance }}
+                          </span>
+
+                        </td>
+
+
+                        <!-- JUDGE -->
+
+                        <td>
+
+                          @if (row.markDetails.length) {
+
+                            @for (
+                              detail of row.markDetails;
+                              track detail.score.id
+                            ) {
+
+                              <div class="judge-score-mini">
+
+                                <b>
+                                  {{
+                                    detail.judge?.name ||
+                                    "Judge"
+                                  }}
+                                </b>
+
+                                <small>
+                                  {{ detail.score.mark }}
+                                </small>
+
+                              </div>
+
+                            }
+
+                          } @else {
+
+                            @for (
+                              judge of row.assignedJudges;
+                              track judge.id
+                            ) {
+
+                              <div class="judge-score-mini">
+
+                                <b>
+                                  {{ judge.name }}
+                                </b>
+
+                                <small>
+                                  Pending
+                                </small>
+
+                              </div>
+
+                            } @empty {
+
+                              <span>—</span>
+
+                            }
+
+                          }
+
+                        </td>
+
+
+                        <!-- MARK -->
+
+                        <td>
+
+                          @if (
+                            row.averageMark !== null
+                          ) {
+
+                            <b class="result-mark">
+                              {{ row.averageMark }}
+                            </b>
+
+                          } @else {
+
+                            <span class="pill amber">
+                              Pending
+                            </span>
+
+                          }
+
+                        </td>
+
+
+                        <!-- RANK -->
+
+                        <td>
+
+                          @if (row.rank) {
+
+                            <b>
+                              #{{ row.rank }}
+                            </b>
+
+                          } @else {
+
+                            —
+                          }
+
+                        </td>
+
+
+                        <!-- PRIZE -->
+
+                        <td>
+
+                          @if (row.prize) {
+
+                            <span class="pill green">
+                              {{ row.prize }}
+                              ·
+                              {{ row.prizePoints }}
+                              pts
+                            </span>
+
+                          } @else {
+
+                            —
+                          }
+
+                        </td>
+
+                      </tr>
+
+
+                      <!-- FULL DETAILS -->
+
+                      <tr class="result-detail-row">
+
+                        <td colspan="7">
+
+                          <details class="student-result-details">
+
+                            <summary>
+                              View full student & judge details
+                            </summary>
+
+
+                            <div class="student-result-detail-grid">
+
+                              <!-- STUDENT DETAILS -->
+
+                              <section>
+
+                                <h4>
+                                  Student Details
+                                </h4>
+
+
+                                <div class="result-detail-list">
+
+                                  <span>
+                                    <small>Application No</small>
+                                    <b>
+                                      {{ row.registration.applicationNo }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Name</small>
+                                    <b>
+                                      {{ row.registration.name }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Father Name</small>
+                                    <b>
+                                      {{ row.registration.fatherName }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>School</small>
+                                    <b>
+                                      {{ row.registration.school }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Phone</small>
+                                    <b>
+                                      {{ row.registration.phone }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Email</small>
+                                    <b>
+                                      {{ row.registration.email }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Category</small>
+                                    <b>
+                                      {{ row.category?.name }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Competition</small>
+                                    <b>
+                                      {{ row.competition.name }}
+                                    </b>
+                                  </span>
+
+                                  <span>
+                                    <small>Attendance</small>
+                                    <b>
+                                      {{ row.attendance }}
+                                    </b>
+                                  </span>
+
+                                </div>
+
+                              </section>
+
+
+                              <!-- JUDGE / MARK -->
+
+                              <section>
+
+                                <h4>
+                                  Judge & Mark Details
+                                </h4>
+
+
+                                @for (
+                                  detail of row.markDetails;
+                                  track detail.score.id
+                                ) {
+
+                                  <div class="judge-result-card">
+
+                                    <div>
+
+                                      <small>Judge</small>
+
+                                      <b>
+                                        {{
+                                          detail.judge?.name ||
+                                          "Unknown Judge"
+                                        }}
+                                      </b>
+
+                                    </div>
+
+
+                                    <div>
+
+                                      <small>Judge Email</small>
+
+                                      <b>
+                                        {{
+                                          detail.judge?.email ||
+                                          "—"
+                                        }}
+                                      </b>
+
+                                    </div>
+
+
+                                    <div>
+
+                                      <small>Judge Phone</small>
+
+                                      <b>
+                                        {{
+                                          detail.judge?.phone ||
+                                          "—"
+                                        }}
+                                      </b>
+
+                                    </div>
+
+
+                                    <div>
+
+                                      <small>Mark</small>
+
+                                      <b class="result-mark">
+                                        {{ detail.score.mark }}
+                                      </b>
+
+                                    </div>
+
+
+                                    <div>
+
+                                      <small>Notes</small>
+
+                                      <b>
+                                        {{
+                                          detail.score.notes ||
+                                          "No notes"
+                                        }}
+                                      </b>
+
+                                    </div>
+
+
+                                    <div>
+
+                                      <small>Saved At</small>
+
+                                      <b>
+                                        {{
+                                          store.formatIndiaDateTime(
+                                            detail.score.savedAt
+                                          )
+                                        }}
+                                      </b>
+
+                                    </div>
+
+                                  </div>
+
+                                } @empty {
+
+                                  <div class="empty">
+                                    No mark submitted yet.
+
+                                    @if (
+                                      row.assignedJudges.length
+                                    ) {
+
+                                      <br />
+
+                                      Assigned judge:
+
+                                      @for (
+                                        judge of row.assignedJudges;
+                                        track judge.id
+                                      ) {
+
+                                        <b>
+                                          {{ judge.name }}
+                                        </b>
+
+                                      }
+
+                                    }
+
+                                  </div>
+
+                                }
+
+                              </section>
+
+                            </div>
+
+                          </details>
+
+                        </td>
+
+                      </tr>
+
+                    }
+
+                  </tbody>
+
+                </table>
+
+              </div>
+
+            </div>
+
+
+            <!-- MOBILE RESULT CARDS -->
+
+            <div class="result-mobile-list">
+
+              @for (
+                row of group.participants;
+                track row.registration.id
+              ) {
+
+                <article class="mobile-result-card">
+
+                  <header>
+
+                    <div class="student-live-person">
+
+                      @if (row.registration.photo) {
+
+                        <img
+                          [src]="row.registration.photo"
+                          alt="Student"
+                        />
+
+                      }
+
+
+                      <div>
+
+                        <b>
+                          {{ row.registration.name }}
+                        </b>
+
+                        <span>
+                          {{ row.registration.applicationNo }}
+                        </span>
+
+                        <small>
+                          {{ row.registration.school }}
+                        </small>
+
+                      </div>
+
+                    </div>
+
+
+                    @if (row.rank) {
+
+                      <span class="result-rank">
+                        #{{ row.rank }}
+                      </span>
+
+                    }
+
+                  </header>
+
+
+                  <div class="mobile-data-grid">
+
+                    <span>
+                      <small>Category</small>
+                      <b>
+                        {{ row.category?.name }}
+                      </b>
+                    </span>
+
+                    <span>
+                      <small>Attendance</small>
+                      <b>
+                        {{ row.attendance }}
+                      </b>
+                    </span>
+
+                    <span>
+                      <small>Average Mark</small>
+
+                      <b>
+                        {{
+                          row.averageMark !== null
+                            ? row.averageMark
+                            : "Pending"
+                        }}
+                      </b>
+
+                    </span>
+
+                    <span>
+                      <small>Prize</small>
+
+                      <b>
+                        {{
+                          row.prize ||
+                          "—"
+                        }}
+                      </b>
+
+                    </span>
+
+                  </div>
+
+
+                  <details class="mobile-result-details">
+
+                    <summary>
+                      Full Details
+                    </summary>
+
+
+                    <div class="mobile-result-content">
+
+                      <p>
+                        <small>Father Name</small>
+                        <b>
+                          {{ row.registration.fatherName }}
+                        </b>
+                      </p>
+
+                      <p>
+                        <small>Phone</small>
+                        <b>
+                          {{ row.registration.phone }}
+                        </b>
+                      </p>
+
+                      <p>
+                        <small>Email</small>
+                        <b>
+                          {{ row.registration.email }}
+                        </b>
+                      </p>
+
+                      <p>
+                        <small>Competition</small>
+                        <b>
+                          {{ row.competition.name }}
+                        </b>
+                      </p>
+
+
+                      <h4>
+                        Judge Details
+                      </h4>
+
+
+                      @for (
+                        detail of row.markDetails;
+                        track detail.score.id
+                      ) {
+
+                        <div class="mobile-judge-result">
+
+                          <p>
+                            <small>Judge</small>
+                            <b>
+                              {{
+                                detail.judge?.name ||
+                                "Unknown Judge"
+                              }}
+                            </b>
+                          </p>
+
+                          <p>
+                            <small>Phone</small>
+                            <b>
+                              {{
+                                detail.judge?.phone ||
+                                "—"
+                              }}
+                            </b>
+                          </p>
+
+                          <p>
+                            <small>Mark</small>
+                            <b>
+                              {{ detail.score.mark }}
+                            </b>
+                          </p>
+
+                          <p>
+                            <small>Notes</small>
+                            <b>
+                              {{
+                                detail.score.notes ||
+                                "No notes"
+                              }}
+                            </b>
+                          </p>
+
+                        </div>
+
+                      } @empty {
+
+                        <p>
+                          No marks submitted yet.
+                        </p>
+
+                      }
+
+                    </div>
+
+                  </details>
+
+                </article>
+
+              }
+
+            </div>
+
+          </div>
+
+        </details>
+
+      } @empty {
+
+        <div class="card empty">
+          No result records match the selected filters.
+        </div>
+
+      }
+
+    </div>
+
+  </section>
+
+}

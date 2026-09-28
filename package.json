@@ -1,0 +1,36 @@
+{
+  "name": "sbk-chithiram-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ng serve --host 0.0.0.0 --port 4200",
+    "dev": "node scripts/dev.mjs",
+    "build": "ng build",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "test:rules": "node --import tsx --test tests/*.test.ts",
+    "build:api": "ng build --configuration production,api",
+    "start:api": "ng serve --configuration api --proxy-config proxy.conf.json --port 4200"
+  },
+  "dependencies": {
+    "@angular/animations": "~20.3.0",
+    "@angular/common": "~20.3.0",
+    "@angular/compiler": "~20.3.0",
+    "@angular/core": "~20.3.0",
+    "@angular/forms": "~20.3.0",
+    "@angular/platform-browser": "~20.3.0",
+    "@angular/router": "~20.3.0",
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.1",
+    "qrcode": "^1.5.4",
+    "@zxing/browser": "^0.1.5"
+  },
+  "devDependencies": {
+    "@angular/build": "~20.3.0",
+    "@angular/cli": "~20.3.0",
+    "@angular/compiler-cli": "~20.3.0",
+    "typescript": "~5.9.2",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.20.0",
+    "@types/node": "^24.0.0"
+  }
+}

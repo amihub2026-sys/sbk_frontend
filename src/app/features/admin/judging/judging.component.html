@@ -1,0 +1,984 @@
+@if (isJudge()) {
+
+  <div class="judge-page">
+
+    <header
+      class="judge-top"
+      [style.background-image]="
+        'linear-gradient(90deg,rgba(12,50,41,.96),rgba(12,50,41,.78)),url('
+        + store.settings().bannerImage
+        + ')'
+      "
+    >
+
+      <div>
+
+        <b>
+          {{ store.settings().title }}
+        </b>
+
+        <small>
+          JUDGE WORKSPACE
+        </small>
+
+      </div>
+
+
+      <div>
+
+        <span>
+          {{ currentJudge()?.name }}
+        </span>
+
+        <button
+          type="button"
+          (click)="logout()"
+        >
+          Sign out
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <main class="judge-main">
+
+      <div class="page-heading">
+
+        <div>
+
+          <span class="eyebrow">
+            REGISTERED PARTICIPANTS
+          </span>
+
+          <h1>
+            Enter competition marks
+          </h1>
+
+          <p>
+            Eligible participants from competitions
+            assigned to this judge are shown.
+          </p>
+
+        </div>
+
+
+        <span class="pill green">
+          Mark only · 0–100
+        </span>
+
+      </div>
+
+
+      @if (error()) {
+
+        <p class="error">
+          {{ error() }}
+        </p>
+
+      }
+
+
+      <div class="judge-guide">
+
+        <b>
+          Judge instructions:
+        </b>
+
+        Select assigned competition →
+        verify student →
+        enter final mark →
+        Save.
+
+      </div>
+
+
+      <section class="filter-card">
+
+        <label>
+
+          Assigned competition
+
+          <select
+            [ngModel]="selectedCompetition()"
+            (ngModelChange)="changeCompetition($event)"
+          >
+
+            @for (
+              c of assigned();
+              track c.id
+            ) {
+
+              <option
+                [value]="c.id"
+              >
+                {{ c.name }}
+                ·
+                {{ c.tamil }}
+              </option>
+
+            }
+
+          </select>
+
+        </label>
+
+
+        <label>
+
+          Search participant
+
+          <input
+            type="search"
+            [ngModel]="search()"
+            (ngModelChange)="search.set($event)"
+            placeholder="Registration no, name or school"
+          />
+
+        </label>
+
+      </section>
+
+
+      @if (
+        assigned().length === 0
+      ) {
+
+        <div class="empty card">
+          No competition is assigned to this judge.
+        </div>
+
+      } @else {
+
+
+        <div class="participant-count">
+
+          <h2>
+            {{ participants().length }}
+            participants
+          </h2>
+
+        </div>
+
+
+        <div class="judge-table desktop-judge">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Registration No</th>
+
+                <th>Student</th>
+
+                <th>Father</th>
+
+                <th>School</th>
+
+                <th>Category</th>
+
+                <th>Mark / 100</th>
+
+                <th>Action</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              @for (
+                r of participants();
+                track r.id
+              ) {
+
+                <tr>
+
+                  <td>
+                    <b>
+                      {{ r.applicationNo }}
+                    </b>
+                  </td>
+
+
+                  <td>
+                    {{ r.name }}
+                  </td>
+
+
+                  <td>
+                    {{ r.fatherName }}
+                  </td>
+
+
+                  <td>
+                    {{ r.school }}
+                  </td>
+
+
+                  <td>
+
+                    {{
+                      store.category(
+                        r.categoryId
+                      )?.name
+                    }}
+
+                    <span class="sub">
+
+                      {{
+                        store.categoryLabel(
+                          r.categoryId
+                        )
+                      }}
+
+                    </span>
+
+                  </td>
+
+
+                  <td>
+
+                    @if (
+                      isEditing(r)
+                    ) {
+
+                      <input
+                        class="mark-input"
+                        type="number"
+                        min="0"
+                        max="100"
+                        [ngModel]="markFor(r)"
+                        (ngModelChange)="setDraft(r.id, $event)"
+                      />
+
+                    } @else {
+
+                      <b class="saved-mark">
+
+                        {{
+                          scoreFor(r)?.mark
+                        }}
+                        / 100
+
+                      </b>
+
+
+                      <small class="saved-at">
+
+                        Saved
+
+                        {{
+                          store.formatIndiaDateTime(
+                            scoreFor(r)?.savedAt
+                          )
+                        }}
+
+                      </small>
+
+                    }
+
+                  </td>
+
+
+                  <td>
+
+                    @if (
+                      isEditing(r)
+                    ) {
+
+                      <div class="row-actions">
+
+                        <button
+                          type="button"
+                          class="btn small"
+                          (click)="save(r)"
+                        >
+
+                          {{
+                            scoreFor(r)
+                              ? "Update mark"
+                              : "Save mark"
+                          }}
+
+                        </button>
+
+
+                        @if (
+                          scoreFor(r)
+                        ) {
+
+                          <button
+                            type="button"
+                            class="btn secondary small"
+                            (click)="cancelEdit(r)"
+                          >
+                            Cancel
+                          </button>
+
+                        }
+
+                      </div>
+
+                    } @else {
+
+                      <button
+                        type="button"
+                        class="btn secondary small"
+                        (click)="startEdit(r)"
+                      >
+                        Edit
+                      </button>
+
+                    }
+
+                  </td>
+
+                </tr>
+
+              } @empty {
+
+                <tr>
+
+                  <td
+                    colspan="7"
+                    class="empty"
+                  >
+                    No eligible participants
+                    for this competition.
+                  </td>
+
+                </tr>
+
+              }
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+
+        <div class="judge-mobile">
+
+          @for (
+            r of participants();
+            track r.id
+          ) {
+
+            <article>
+
+              <header>
+
+                <b>
+                  {{ r.applicationNo }}
+                </b>
+
+                <span>
+
+                  {{
+                    store.category(
+                      r.categoryId
+                    )?.name
+                  }}
+
+                </span>
+
+              </header>
+
+
+              <h3>
+                {{ r.name }}
+              </h3>
+
+
+              <p>
+
+                {{ r.school }}
+
+                · Father:
+                {{ r.fatherName }}
+
+              </p>
+
+
+              @if (
+                isEditing(r)
+              ) {
+
+                <div class="mark-row">
+
+                  <label>
+
+                    Mark / 100
+
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      [ngModel]="markFor(r)"
+                      (ngModelChange)="setDraft(r.id, $event)"
+                    />
+
+                  </label>
+
+
+                  <button
+                    type="button"
+                    class="btn"
+                    (click)="save(r)"
+                  >
+
+                    {{
+                      scoreFor(r)
+                        ? "Update"
+                        : "Save"
+                    }}
+
+                  </button>
+
+
+                  @if (
+                    scoreFor(r)
+                  ) {
+
+                    <button
+                      type="button"
+                      class="btn secondary"
+                      (click)="cancelEdit(r)"
+                    >
+                      Cancel
+                    </button>
+
+                  }
+
+                </div>
+
+              } @else {
+
+                <div class="mobile-saved">
+
+                  <div>
+
+                    <small>
+                      Final mark
+                    </small>
+
+                    <b>
+
+                      {{
+                        scoreFor(r)?.mark
+                      }}
+                      / 100
+
+                    </b>
+
+                  </div>
+
+
+                  <button
+                    type="button"
+                    class="btn secondary"
+                    (click)="startEdit(r)"
+                  >
+                    Edit mark
+                  </button>
+
+                </div>
+
+              }
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    </main>
+
+  </div>
+
+}
+
+
+@else {
+
+  <!-- =========================================
+       ADMIN MARKS
+  ========================================== -->
+
+  <div class="page-heading">
+
+    <div>
+
+      <span class="eyebrow">
+        COMPETITION ATTENDANCE & MARKS
+      </span>
+
+      <h1>
+        Marks & Rankings
+      </h1>
+
+      <p>
+        View competition-wise and category-wise
+        attendance, marks, average score and rank.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  @if (error()) {
+
+    <p class="error">
+      {{ error() }}
+    </p>
+
+  }
+
+
+  <!-- =========================================
+       FILTERS
+  ========================================== -->
+
+  <section
+    class="filter-card admin-mark-filter"
+  >
+
+    <label>
+
+      Competition
+
+      <select
+        [ngModel]="selectedCompetition()"
+        (ngModelChange)="changeCompetition($event)"
+      >
+
+        @for (
+          c of assigned();
+          track c.id
+        ) {
+
+          <option
+            [value]="c.id"
+          >
+
+            {{ c.name }}
+            ·
+            {{ c.tamil }}
+
+          </option>
+
+        }
+
+      </select>
+
+    </label>
+
+
+    <label>
+
+      Category
+
+      <select
+        [ngModel]="selectedCategory()"
+        (ngModelChange)="changeCategory($event)"
+      >
+
+        <option value="">
+          All Categories
+        </option>
+
+
+        @for (
+          category of availableCategories();
+          track category.id
+        ) {
+
+          <option
+            [value]="category.id"
+          >
+
+            {{ category.name }}
+            ·
+            {{ store.categoryLabel(category.id) }}
+
+          </option>
+
+        }
+
+      </select>
+
+    </label>
+
+  </section>
+
+
+  <div class="judge-guide">
+
+    <b>
+      Ranking rule:
+    </b>
+
+    Rank is calculated separately for each
+    competition and each age category.
+
+    If multiple judges give marks,
+    the participant's average mark is used.
+
+  </div>
+
+
+  <!-- =========================================
+       RESULTS TABLE
+  ========================================== -->
+
+  <div class="table-wrap">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Rank
+          </th>
+
+          <th>
+            Registration
+          </th>
+
+          <th>
+            Student
+          </th>
+
+          <th>
+            School
+          </th>
+
+          <th>
+            Category
+          </th>
+
+          <th>
+            Attendance
+          </th>
+
+          <th>
+            Judge Marks
+          </th>
+
+          <th>
+            Average
+          </th>
+
+          <th>
+            Updated
+          </th>
+
+          <th>
+            Action
+          </th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody>
+
+        @for (
+          r of adminParticipants();
+          track r.id
+        ) {
+
+          <tr>
+
+            <!-- RANK -->
+
+            <td>
+
+              @if (
+                adminRank(r);
+                as rank
+              ) {
+
+                <span
+                  class="pill"
+                  [class.green]="rank === 1"
+                  [class.amber]="rank === 2 || rank === 3"
+                >
+
+                  {{ rankLabel(rank) }}
+
+                </span>
+
+              } @else {
+
+                —
+
+              }
+
+            </td>
+
+
+            <!-- REGISTRATION -->
+
+            <td>
+
+              <b>
+                {{ r.applicationNo }}
+              </b>
+
+            </td>
+
+
+            <!-- STUDENT -->
+
+            <td>
+              {{ r.name }}
+            </td>
+
+
+            <!-- SCHOOL -->
+
+            <td>
+              {{ r.school }}
+            </td>
+
+
+            <!-- CATEGORY -->
+
+            <td>
+
+              <b>
+
+                {{
+                  store.category(
+                    r.categoryId
+                  )?.name
+                }}
+
+              </b>
+
+              <span class="sub">
+
+                {{
+                  store.categoryLabel(
+                    r.categoryId
+                  )
+                }}
+
+              </span>
+
+            </td>
+
+
+            <!-- ATTENDANCE -->
+
+            <td>
+
+              @if (
+                adminScores(r).length
+              ) {
+
+                <span class="pill green">
+                  Present
+                </span>
+
+              } @else {
+
+                <span
+                  class="pill"
+                  [class.red]="
+                    attendance(r) ===
+                    'Absent'
+                  "
+                  [class.amber]="
+                    attendance(r) ===
+                    'Not marked'
+                  "
+                >
+
+                  {{ attendance(r) }}
+
+                </span>
+
+              }
+
+            </td>
+
+
+            <!-- JUDGE MARKS -->
+
+            <td>
+
+              @if (
+                adminScores(r).length
+              ) {
+
+                <div class="judge-score-list">
+
+                  @for (
+                    s of adminScores(r);
+                    track s.id
+                  ) {
+
+                    <span>
+
+                      <b>
+
+                        {{
+                          store.judge(
+                            s.judgeId
+                          )?.name ||
+                          "Judge"
+                        }}:
+
+                      </b>
+
+                      {{ s.mark }}
+                      / 100
+
+                    </span>
+
+                  }
+
+                </div>
+
+              } @else {
+
+                —
+
+              }
+
+            </td>
+
+
+            <!-- AVERAGE -->
+
+            <td>
+
+              @if (
+                adminAverage(r) !== null
+              ) {
+
+                <b>
+
+                  {{
+                    adminAverage(r)
+                      ?.toFixed(2)
+                  }}
+
+                </b>
+
+                / 100
+
+              } @else {
+
+                —
+
+              }
+
+            </td>
+
+
+            <!-- UPDATED -->
+
+            <td>
+
+              @if (
+                adminScores(r).length
+              ) {
+
+                {{
+                  store.formatIndiaDateTime(
+                    adminScores(r)[0].savedAt
+                  )
+                }}
+
+              } @else {
+
+                —
+
+              }
+
+            </td>
+
+
+            <!-- ACTION -->
+
+            <td>
+
+              @if (
+                !adminScores(r).length
+              ) {
+
+                @if (
+                  attendance(r) ===
+                  "Absent"
+                ) {
+
+                  <button
+                    type="button"
+                    class="btn secondary small"
+                    (click)="clearAttendance(r)"
+                  >
+                    Undo absent
+                  </button>
+
+                } @else {
+
+                  <button
+                    type="button"
+                    class="btn danger small"
+                    (click)="markAbsent(r)"
+                  >
+                    Mark absent
+                  </button>
+
+                }
+
+              } @else {
+
+                —
+
+              }
+
+            </td>
+
+          </tr>
+
+        } @empty {
+
+          <tr>
+
+            <td
+              colspan="10"
+              class="empty"
+            >
+
+              No eligible participants
+              for this competition/category.
+
+            </td>
+
+          </tr>
+
+        }
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+}

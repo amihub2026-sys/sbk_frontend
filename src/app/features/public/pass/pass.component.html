@@ -1,0 +1,483 @@
+<div
+  class="pass-page"
+  [style.background-image]="
+    'linear-gradient(180deg,rgba(245,247,244,.90),rgba(245,247,244,.98)),url(' +
+    store.settings().bannerImage +
+    ')'
+  "
+>
+  <div class="container">
+
+    <!-- =====================================================
+         FIND REGISTRATION
+    ====================================================== -->
+
+    @if (!store.activePass()) {
+      <section class="lookup card">
+
+        <span class="eyebrow">
+          PARTICIPANT ACCESS
+        </span>
+
+        <h1>
+          Find my registration / பதிவு தேடல்
+        </h1>
+
+        <p>
+          Enter your application number and registered mobile number.
+        </p>
+
+
+        <form
+          (ngSubmit)="find()"
+          class="form-grid"
+        >
+
+          <label>
+            Application number
+
+            <input
+              name="application"
+              [(ngModel)]="applicationNo"
+              required
+              autocomplete="off"
+              placeholder="26SBK01"
+            />
+          </label>
+
+
+          <label>
+            Registered mobile number
+
+            <input
+              name="phone"
+              [(ngModel)]="phone"
+              required
+              maxlength="10"
+              inputmode="numeric"
+              autocomplete="tel"
+              placeholder="10 digit mobile"
+            />
+          </label>
+
+
+          <button
+            class="btn span2"
+            type="submit"
+            [disabled]="busy()"
+          >
+            {{
+              busy()
+                ? "Checking…"
+                : "Find Registration →"
+            }}
+          </button>
+
+        </form>
+
+
+        @if (error()) {
+          <p class="error">
+            {{ error() }}
+          </p>
+        }
+
+      </section>
+    }
+
+
+    <!-- =====================================================
+         REGISTRATION / PASS
+    ====================================================== -->
+
+    @else if (store.activePass(); as r) {
+
+      <div class="pass-actions no-print">
+
+        <a
+          routerLink="/find-pass"
+          class="btn secondary"
+          (click)="store.activePass.set(null)"
+        >
+          ← Find another
+        </a>
+
+
+        <button
+          class="btn"
+          type="button"
+          (click)="print()"
+        >
+          Print / Save
+          {{ passReady(r) ? "pass" : "receipt" }}
+        </button>
+
+      </div>
+
+
+      <section
+        class="event-pass"
+        [class.pending]="!passReady(r)"
+      >
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="pass-top">
+
+          <div>
+
+            <small>
+              SBK VIBGYOR SCHOOL &
+              STAR GURU CHARITABLE FOUNDATION
+            </small>
+
+            <h1>
+              {{ store.settings().titleTa }}
+            </h1>
+
+            <h2>
+              {{ store.settings().title }}
+            </h2>
+
+          </div>
+
+
+          <span
+            class="status"
+            [class.approved]="passReady(r)"
+          >
+            {{
+              passReady(r)
+                ? "REGISTRATION PASS"
+                : "PAYMENT PENDING"
+            }}
+          </span>
+
+        </div>
+
+
+        <!-- =================================================
+             PARTICIPANT + QR
+        ================================================== -->
+
+        <div
+          class="pass-grid"
+          [class.no-qr]="!passReady(r)"
+        >
+
+          <div class="identity">
+
+            <span class="eyebrow">
+              APPLICATION NUMBER
+            </span>
+
+            <strong class="application-no">
+              {{ r.applicationNo }}
+            </strong>
+
+
+            <div class="person-head">
+
+              @if (r.photo) {
+                <img
+                  [src]="r.photo"
+                  alt="Student photo"
+                />
+              }
+
+
+              <div>
+
+                <h2>
+                  {{ r.name }}
+                </h2>
+
+                <p>
+                  {{ r.school }}
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <!-- =============================================
+                 PARTICIPANT DETAILS
+            ============================================== -->
+
+            <div class="detail-grid">
+
+              <div>
+                <span>Father</span>
+
+                <b>
+                  {{ r.fatherName }}
+                </b>
+              </div>
+
+
+              <div>
+                <span>Category</span>
+
+                <b>
+                  @if (store.category(r.categoryId); as category) {
+                    {{ category.name }}
+                    ·
+                    {{ store.categoryLabel(r.categoryId) }}
+                  } @else {
+                    Category details unavailable
+                  }
+                </b>
+              </div>
+
+
+              <div>
+                <span>DOB</span>
+
+                <b>
+                  {{ r.dob | date: "d MMM y" }}
+                </b>
+              </div>
+
+
+              <div>
+                <span>Payment</span>
+
+                <b>
+                  {{ r.paymentMethod }}
+                  ·
+                  {{ r.payment }}
+                  ·
+                  {{
+                    r.total
+                      | currency: "INR" : "symbol" : "1.0-0"
+                  }}
+                </b>
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <!-- =============================================
+               CONFIRMED QR
+          ============================================== -->
+
+          @if (passReady(r)) {
+
+            <div class="qr-box">
+
+              @if (qr()) {
+
+                <img
+                  [src]="qr()"
+                  alt="Participant QR code"
+                />
+
+                <small>
+                  Show this QR during event check-in
+                </small>
+
+              } @else {
+
+                <small>
+                  Preparing QR…
+                </small>
+
+              }
+
+            </div>
+
+          }
+
+
+          <!-- =============================================
+               PAYMENT PENDING
+          ============================================== -->
+
+          @else {
+
+            <div class="receipt-status">
+
+              <span>⏳</span>
+
+              <b>
+                Payment pending
+              </b>
+
+              <p>
+                Your registration has been created.
+                Complete the payment to confirm the
+                registration and receive the participant QR.
+              </p>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             COMPETITIONS
+        ================================================== -->
+
+        <div class="competitions">
+
+          <h3>
+            Competitions / போட்டிகள்
+          </h3>
+
+
+          @for (id of r.competitionIds; track id) {
+
+            @if (store.competition(id); as c) {
+
+              <article>
+
+                @if (c.image) {
+                  <img
+                    [src]="c.image"
+                    [alt]="c.name"
+                  />
+                }
+
+
+                <div>
+
+                  <b>
+                    {{ c.name }}
+                  </b>
+
+                  <span>
+                    {{ c.tamil }}
+                  </span>
+
+
+                  <small>
+
+                    {{
+                      store.slot(c.slotId)?.date ||
+                      store.settings().date ||
+                      "Date will be announced"
+                    }}
+
+                    ·
+
+                    {{
+                      store.slot(c.slotId)?.start ||
+                      "Time will be announced"
+                    }}
+
+                    ·
+
+                    {{
+                      store.slot(c.slotId)?.venue ||
+                      store.settings().venue ||
+                      "Venue will be announced"
+                    }}
+
+                  </small>
+
+                </div>
+
+              </article>
+
+            }
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             CONFIRMED MESSAGE
+        ================================================== -->
+
+        @if (passReady(r)) {
+
+          <div class="approved-note">
+
+            <b>
+              ✓ Registration confirmed
+            </b>
+
+            <p>
+              Your payment has been confirmed and your
+              registration is successful.
+            </p>
+
+            <p>
+              Competition date, time and venue will be
+              announced by the organiser when the schedule
+              is finalised.
+            </p>
+
+
+            @if (store.settings().instructionsEn) {
+              <p>
+                {{ store.settings().instructionsEn }}
+              </p>
+            }
+
+
+            @if (store.settings().instructionsTa) {
+              <p>
+                {{ store.settings().instructionsTa }}
+              </p>
+            }
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             PENDING MESSAGE
+        ================================================== -->
+
+        @else {
+
+          <div class="pending-note">
+
+            <b>
+              Complete your payment
+            </b>
+
+            <p>
+              After successful payment, your registration
+              will be confirmed automatically and the QR
+              pass will become available.
+            </p>
+
+          </div>
+
+        }
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <footer>
+
+          <span>
+            Registered email:
+            {{ r.email }}
+          </span>
+
+          <span>
+            Email pass:
+            {{ r.emailStatus }}
+          </span>
+
+        </footer>
+
+      </section>
+    }
+
+  </div>
+</div>
