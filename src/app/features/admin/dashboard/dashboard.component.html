@@ -1851,20 +1851,22 @@
       </article>
 
 
-      <article class="dashboard-stat">
+<article class="dashboard-stat">
 
-        <span>Direct Collection</span>
+  <span>Cash Collection</span>
 
-        <b>
-          {{
-            directCollected()
-              | currency: "INR" : "symbol" : "1.0-0"
-          }}
-        </b>
+  <b>
+    {{
+      cashCollected()
+        | currency: "INR" : "symbol" : "1.0-0"
+    }}
+  </b>
 
-        <small>Cash / paper entries</small>
+  <small>
+    Verified cash payments
+  </small>
 
-      </article>
+</article>
 
 
       <article class="dashboard-stat">

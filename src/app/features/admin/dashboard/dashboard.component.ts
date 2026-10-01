@@ -490,81 +490,88 @@ export class DashboardComponent {
     );
 
 
-  totalCollected =
-    computed(
-      () =>
-        this.filteredRegistrations()
-          .filter(
-            (registration) =>
-              registration.payment ===
+/**
+ * ======================================================
+ * PAYMENT COLLECTIONS
+ * ======================================================
+ */
+
+/**
+ * ONLINE COLLECTION
+ *
+ * Only real online payments.
+ */
+onlineCollected =
+  computed(
+    () =>
+      this.filteredRegistrations()
+        .filter(
+          (registration) =>
+            registration.paymentMethod ===
+              "Online" &&
+            registration.payment ===
               "Paid",
-          )
-          .reduce(
-            (
-              total,
-              registration,
-            ) =>
-              total +
-              Number(
+        )
+        .reduce(
+          (
+            total,
+            registration,
+          ) =>
+            total +
+            Number(
+              registration.amountPaid ||
                 registration.total ||
-                  0,
-              ),
-            0,
-          ),
-    );
+                0,
+            ),
+          0,
+        ),
+  );
 
 
-  onlineCollected =
-    computed(
-      () =>
-        this.filteredRegistrations()
-          .filter(
-            (registration) =>
-              registration.source ===
-                "Online" &&
-              registration.payment ===
-                "Paid",
-          )
-          .reduce(
-            (
-              total,
-              registration,
-            ) =>
-              total +
-              Number(
-                registration.total ||
-                  0,
-              ),
-            0,
-          ),
-    );
+/**
+ * CASH COLLECTION
+ *
+ * Includes:
+ * - Public student cash registrations
+ * - Paper / direct cash registrations
+ */
+cashCollected =
+  computed(
+    () =>
+      this.filteredRegistrations()
+        .filter(
+          (registration) =>
+            registration.paymentMethod ===
+              "Cash" &&
+            registration.payment ===
+              "Paid",
+        )
+        .reduce(
+          (
+            total,
+            registration,
+          ) =>
+            total +
+            Number(
+              registration.amountPaid ||
+                0,
+            ),
+          0,
+        ),
+  );
 
 
-  directCollected =
-    computed(
-      () =>
-        this.filteredRegistrations()
-          .filter(
-            (registration) =>
-              registration.source ===
-                "Paper" &&
-              registration.payment ===
-                "Paid",
-          )
-          .reduce(
-            (
-              total,
-              registration,
-            ) =>
-              total +
-              Number(
-                registration.total ||
-                  0,
-              ),
-            0,
-          ),
-    );
-
+/**
+ * TOTAL COLLECTION
+ *
+ * Online + Cash
+ */
+totalCollected =
+  computed(
+    () =>
+      this.onlineCollected() +
+      this.cashCollected(),
+  );
 
   /**
    * ======================================================

@@ -2146,21 +2146,36 @@
 
 
               <!-- AMOUNT -->
-              <td>
+        <!-- AMOUNT -->
+<td>
 
-                <strong>
+  @if (isCashApproved(r)) {
 
-                  {{
-                    r.total
-                      | currency:
-                          "INR":
-                          "symbol":
-                          "1.0-0"
-                  }}
+    <strong>
+      {{
+        r.amountPaid
+          | currency:
+              "INR":
+              "symbol":
+              "1.0-0"
+      }}
+    </strong>
 
-                </strong>
+  } @else {
 
-              </td>
+    <input
+      type="number"
+      min="0"
+      step="1"
+      class="cash-amount-input"
+      [ngModel]="r.amountPaid || 0"
+      (ngModelChange)="r.amountPaid = $event"
+      placeholder="Amount"
+    />
+
+  }
+
+</td>
 
 
               <!-- PAYMENT -->

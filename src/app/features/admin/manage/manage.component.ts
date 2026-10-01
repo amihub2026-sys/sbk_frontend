@@ -571,11 +571,21 @@ async approveStudentCash(
   }
 
 
-  const amount =
-    Number(
-      r.total || 0,
-    );
+const amount =
+  Number(
+    r.amountPaid || 0,
+  );
 
+if (
+  !Number.isFinite(amount) ||
+  amount <= 0
+) {
+  this.error.set(
+    "Enter the cash amount received before approving.",
+  );
+
+  return;
+}
 
   const confirmed =
     window.confirm(

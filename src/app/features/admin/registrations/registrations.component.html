@@ -308,14 +308,14 @@
     </thead>
 
 
-    <tbody>
+   <tbody>
 
-      @for (
-        r of rows();
-        track r.id
-      ) {
+  @for (
+    r of pagedRows();
+    track r.id
+  ) {
 
-        <tr>
+    <tr>
 
           <!-- REGISTRATION -->
 
@@ -510,7 +510,7 @@
 <div class="mobile-list">
 
   @for (
-    r of rows();
+    r of pagedRows();
     track r.id
   ) {
 
@@ -667,7 +667,81 @@
   }
 
 </div>
+@if (rows().length > pageSize) {
 
+  <div class="registration-pagination">
+
+    <div class="pagination-info">
+      Showing
+
+      <b>
+        {{
+          (currentPage() - 1) * pageSize + 1
+        }}
+      </b>
+
+      –
+
+      <b>
+        {{
+          Math.min(
+            currentPage() * pageSize,
+            rows().length
+          )
+        }}
+      </b>
+
+      of
+
+      <b>
+        {{ rows().length }}
+      </b>
+    </div>
+
+
+    <div class="pagination-buttons">
+
+      <button
+        type="button"
+        class="page-btn"
+        [disabled]="currentPage() === 1"
+        (click)="setPage(currentPage() - 1)"
+      >
+        ‹
+      </button>
+
+
+      @for (
+        pageNo of pageNumbers();
+        track pageNo
+      ) {
+
+        <button
+          type="button"
+          class="page-btn"
+          [class.active]="currentPage() === pageNo"
+          (click)="setPage(pageNo)"
+        >
+          {{ pageNo }}
+        </button>
+
+      }
+
+
+      <button
+        type="button"
+        class="page-btn"
+        [disabled]="currentPage() === totalPages()"
+        (click)="setPage(currentPage() + 1)"
+      >
+        ›
+      </button>
+
+    </div>
+
+  </div>
+
+}
 
 <!-- =====================================================
      MANAGE DRAWER

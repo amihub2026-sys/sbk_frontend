@@ -40,6 +40,8 @@ import { Registration } from "../../../core/models/event.models";
 })
 export class RegistrationsComponent {
 
+  readonly Math = Math;
+
   store = inject(EventStore);
 
   router = inject(Router);
@@ -427,7 +429,76 @@ private readonly openFromManageLink =
         .length,
   );
 
+page = signal(1);
 
+readonly pageSize = 10;
+totalPages = computed(
+  () =>
+    Math.max(
+      1,
+      Math.ceil(
+        this.rows().length /
+          this.pageSize,
+      ),
+    ),
+);
+currentPage = computed(
+  () =>
+    Math.min(
+      this.page(),
+      this.totalPages(),
+    ),
+);
+pagedRows = computed(
+  () => {
+
+    const page =
+      this.currentPage();
+
+    const start =
+      (page - 1) *
+      this.pageSize;
+
+    return this.rows().slice(
+      start,
+      start + this.pageSize,
+    );
+
+  },
+);
+pageNumbers = computed(
+  () =>
+    Array.from(
+      {
+        length:
+          this.totalPages(),
+      },
+      (_, index) =>
+        index + 1,
+    ),
+);
+setPage(
+  page: number,
+) {
+
+  const safePage =
+    Math.min(
+      Math.max(
+        1,
+        page,
+      ),
+      this.totalPages(),
+    );
+
+  this.page.set(
+    safePage,
+  );
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
   /**
    * ======================================================
    * CHECK WHETHER FILTER IS ACTIVE

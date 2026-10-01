@@ -994,33 +994,28 @@ async addPaperRegistration(
 
   }
 
-  async updateRegistration(record: Registration) {
+async updateRegistration(record: Registration) {
 
-    if (!this.demo) {
+  if (!this.demo) {
 
-      await firstValueFrom(
+    await firstValueFrom(
 
-        this.http.put(this.url(`/admin/registrations/${record.id}`), {
+    this.http.put(this.url(`/admin/registrations/${record.id}`), {
+  payment: record.payment,
+  cancelled: record.cancelled,
+  amountPaid: Number(record.amountPaid || 0),
+}),
 
-          payment: record.payment,
+    );
 
-          cancelled: record.cancelled,
+    await this.loadAdmin();
 
-        }),
-
-      );
-
-      await this.loadAdmin();
-
-      return;
-
-    }
-
-    this.replaceRegistration(record);
-
-    this.notify("Registration updated.");
-
+    return;
   }
+
+  this.replaceRegistration(record);
+  this.notify("Registration updated.");
+}
 
   async reviewRegistration(
 
