@@ -1433,10 +1433,6 @@ categoryRegistrationCount(
       );
 
 
-    this.cameraMessage
-      .set(
-        "Point the camera at the participant pass QR.",
-      );
 
 
     setTimeout(

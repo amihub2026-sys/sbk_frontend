@@ -103,14 +103,32 @@
         </a>
 
 
-        <button
-          class="btn"
-          type="button"
-          (click)="print()"
-        >
-          Print / Save
-          {{ passReady(r) ? "pass" : "receipt" }}
-        </button>
+      @if (passReady(r)) {
+
+  <button
+    class="btn"
+    type="button"
+    [disabled]="downloading()"
+    (click)="downloadPass()"
+  >
+    {{
+      downloading()
+        ? "Preparing PDF…"
+        : downloaded()
+          ? "Download pass again ↓"
+          : "Download pass ↓"
+    }}
+  </button>
+
+}
+
+<button
+  class="btn secondary"
+  type="button"
+  (click)="print()"
+>
+  Print / Save
+</button>
 
       </div>
 

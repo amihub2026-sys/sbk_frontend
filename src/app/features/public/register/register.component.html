@@ -1,106 +1,480 @@
-<section class="festival-hero" [style.background-image]="'linear-gradient(90deg,rgba(9,48,39,.92),rgba(9,48,39,.44)),url(' + store.settings().bannerImage + ')'">
+<section
+  class="festival-hero"
+  [style.background-image]="
+    'linear-gradient(90deg,rgba(9,48,39,.92),rgba(9,48,39,.44)),url(' +
+    store.settings().bannerImage +
+    ')'
+  "
+>
   <div class="hero-inner">
     <div>
-      <span class="eyebrow">SBK VIBGYOR SCHOOL · STAR GURU CHARITABLE FOUNDATION</span>
-      <h1>{{ store.settings().titleTa }}</h1><h2>{{ store.settings().title }}</h2>
-      <p>{{ t('Student Application Form','மாணவர் விண்ணப்பப் படிவம்') }}</p>
+      <span class="eyebrow"
+        >SBK VIBGYOR SCHOOL · STAR GURU CHARITABLE FOUNDATION</span
+      >
+      <h1>{{ store.settings().titleTa }}</h1>
+      <h2>{{ store.settings().title }}</h2>
+      <p>{{ t("Student Application Form", "மாணவர் விண்ணப்பப் படிவம்") }}</p>
     </div>
+ <div class="language-helper">
+
+  <img
+    src="/images/language-girl.png"
+    alt="Select your language"
+    class="language-girl"
+  />
+
+  <div class="language-actions">
+
+  
+
     <div class="lang-switch" aria-label="Language">
-      <button [class.active]="language()==='ta'" (click)="language.set('ta')">தமிழ்</button>
-      <button [class.active]="language()==='en'" (click)="language.set('en')">English</button>
+
+      <button
+        type="button"
+        [class.active]="language() === 'ta'"
+        (click)="language.set('ta')"
+      >
+        தமிழ்
+      </button>
+
+      <button
+        type="button"
+        [class.active]="language() === 'en'"
+        (click)="language.set('en')"
+      >
+        English
+      </button>
+
     </div>
+
+  </div>
+
+</div>
   </div>
 </section>
 
 <div class="container application-wrap">
   <div class="stepper no-print">
-    <div [class.active]="step()===1" [class.done]="step()>1"><b>1</b><span>{{t('Application','விண்ணப்பம்')}}</span></div>
-    <div [class.active]="step()===2" [class.done]="step()>2"><b>2</b><span>{{t('Review & Pay','சரிபார்த்து கட்டணம்')}}</span></div>
-    <div [class.active]="step()===3"><b>3</b><span>{{t('Receipt','பதிவு ரசீது')}}</span></div>
+    <div [class.active]="step() === 1" [class.done]="step() > 1">
+      <b>1</b><span>{{ t("Application", "விண்ணப்பம்") }}</span>
+    </div>
+    <div [class.active]="step() === 2" [class.done]="step() > 2">
+      <b>2</b><span>{{ t("Review & Pay", "சரிபார்த்து கட்டணம்") }}</span>
+    </div>
+    <div [class.active]="step() === 3">
+      <b>3</b><span>{{ t("Receipt", "பதிவு ரசீது") }}</span>
+    </div>
   </div>
 
-  @if(error()){<p class="error" role="alert">{{error()}}</p>}
+  @if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+  }
 
-  @if(step()===1){
+  @if (step() === 1) {
     <section class="form-panel">
-      <div class="section-title"><span>01</span><div><h2>{{t('Student details','மாணவர் விவரங்கள்')}}</h2><p>{{t('Enter details exactly as they should appear on the participant pass.','பங்கேற்பாளர் பாஸில் வர வேண்டிய விவரங்களை சரியாக உள்ளிடவும்.')}}</p></div></div>
-      <form [formGroup]="form" class="form-grid">
-        <label>{{t('Student name','மாணவர் பெயர்')}} *<input formControlName="name" autocomplete="name" placeholder="Student full name" />@if(invalid('name')){<small class="field-error">Required</small>}</label>
-        <label>{{t("Father's name",'தந்தையின் பெயர்')}} *<input formControlName="fatherName" placeholder="Father full name" />@if(invalid('fatherName')){<small class="field-error">Required</small>}</label>
-        <label class="span2">{{t('School name','பள்ளியின் பெயர்')}} *<input formControlName="school" placeholder="School name" /></label>
-        <label>{{t('Date of birth','பிறந்த தேதி')}} *<input type="date" formControlName="dob" [max]="applicationDate" /></label>
-        <div class="age-result" [class.ready]="category()">
-          <small>{{t('AGE CALCULATION','வயது கணக்கீடு')}}</small>
-          @if(category()){<strong>{{age()}}</strong><b>{{category()!.name}} · {{store.categoryLabel(category()!.id)}}</b>}@else{<span>{{t('Choose DOB to calculate category','வயது பிரிவை கணக்கிட பிறந்த தேதியை தேர்வு செய்யவும்')}}</span>}
+      <div class="section-title">
+        <span>01</span>
+        <div>
+          <h2>{{ t("Student details", "மாணவர் விவரங்கள்") }}</h2>
+          <p>
+            {{
+              t(
+                "Enter details exactly as they should appear on the participant pass.",
+                "பங்கேற்பாளர் பாஸில் வர வேண்டிய விவரங்களை சரியாக உள்ளிடவும்."
+              )
+            }}
+          </p>
         </div>
-        <label>{{t('Email ID','மின்னஞ்சல்')}} *<input type="email" formControlName="email" autocomplete="email" placeholder="parent@example.com" /></label>
-        <label>{{t('Mobile number','தொலைபேசி எண்')}} *<input type="tel" formControlName="phone" maxlength="10" inputmode="numeric" autocomplete="tel-national" placeholder="10 digit mobile number" /></label>
+      </div>
+      <form [formGroup]="form" class="form-grid">
+        <label
+          >{{ t("Student name", "மாணவர் பெயர்") }} *<input
+            formControlName="name"
+            autocomplete="name"
+            placeholder="Student full name"
+          />
+          @if (invalid("name")) {
+            <small class="field-error">Required</small>
+          }
+        </label>
+        <label
+          >{{ t("Father's name", "தந்தையின் பெயர்") }} *<input
+            formControlName="fatherName"
+            placeholder="Father full name"
+          />
+          @if (invalid("fatherName")) {
+            <small class="field-error">Required</small>
+          }
+        </label>
+        <label class="span2"
+          >{{ t("School name", "பள்ளியின் பெயர்") }} *<input
+            formControlName="school"
+            placeholder="School name"
+        /></label>
+        <label
+          >{{ t("Date of birth", "பிறந்த தேதி") }} *<input
+            type="date"
+            formControlName="dob"
+            [max]="applicationDate"
+        /></label>
+        <div class="age-result" [class.ready]="category()">
+          <small>{{ t("AGE CALCULATION", "வயது கணக்கீடு") }}</small>
+          @if (category()) {
+            <strong>{{ age() }}</strong
+            ><b
+              >{{ category()!.name }} ·
+              {{ store.categoryLabel(category()!.id) }}</b
+            >
+          } @else {
+            <span>{{
+              t(
+                "Choose DOB to calculate category",
+                "வயது பிரிவை கணக்கிட பிறந்த தேதியை தேர்வு செய்யவும்"
+              )
+            }}</span>
+          }
+        </div>
+        <label
+          >{{ t("Email ID", "மின்னஞ்சல்") }} *<input
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="parent@example.com"
+        /></label>
+        <label
+          >{{ t("Mobile number", "தொலைபேசி எண்") }} *<input
+            type="tel"
+            formControlName="phone"
+            maxlength="10"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            placeholder="10 digit mobile number"
+        /></label>
       </form>
 
       <div class="photo-block">
-        <div class="photo-copy"><b>{{t('Student photo (optional)','மாணவர் புகைப்படம் (விருப்பம்)')}}</b><p>{{t('Tap below on mobile to choose Camera or Gallery. This is not mandatory.','மொபைலில் கீழே அழுத்தி Camera அல்லது Gallery தேர்வு செய்யலாம். இது கட்டாயமல்ல.')}}</p></div>
-        @if(photo()){
-          <div class="photo-preview"><img [src]="photo()" alt="Student photo preview"/><div class="actions"><label class="btn secondary small">{{t('Change photo','புகைப்படத்தை மாற்றவும்')}}<input type="file" accept="image/*" (change)="onPhotoSelected($event)" hidden/></label><button type="button" class="btn ghost small" (click)="removePhoto()">{{t('Remove','நீக்கவும்')}}</button></div></div>
-        }@else{
-          <label class="photo-picker"><span class="photo-icon">📷</span><b>{{photoBusy()?t('Processing photo…','புகைப்படம் செயலாக்கப்படுகிறது…'):t('Add student photo','மாணவர் புகைப்படம் சேர்க்கவும்')}}</b><small>{{t('Camera / Gallery','Camera / Gallery')}}</small><input type="file" accept="image/*" (change)="onPhotoSelected($event)" hidden/></label>
+        <div class="photo-copy">
+          <b>{{
+            t("Student photo (optional)", "மாணவர் புகைப்படம் (விருப்பம்)")
+          }}</b>
+          <p>
+            {{
+              t(
+                "Tap below on mobile to choose Camera or Gallery. This is not mandatory.",
+                "மொபைலில் கீழே அழுத்தி Camera அல்லது Gallery தேர்வு செய்யலாம். இது கட்டாயமல்ல."
+              )
+            }}
+          </p>
+        </div>
+        @if (photo()) {
+          <div class="photo-preview">
+            <img [src]="photo()" alt="Student photo preview" />
+            <div class="actions">
+              <label class="btn secondary small"
+                >{{ t("Change photo", "புகைப்படத்தை மாற்றவும்")
+                }}<input
+                  type="file"
+                  accept="image/*"
+                  (change)="onPhotoSelected($event)"
+                  hidden /></label
+              ><button
+                type="button"
+                class="btn ghost small"
+                (click)="removePhoto()"
+              >
+                {{ t("Remove", "நீக்கவும்") }}
+              </button>
+            </div>
+          </div>
+        } @else {
+          <label class="photo-picker"
+            ><span class="photo-icon">📷</span
+            ><b>{{
+              photoBusy()
+                ? t("Processing photo…", "புகைப்படம் செயலாக்கப்படுகிறது…")
+                : t("Add student photo", "மாணவர் புகைப்படம் சேர்க்கவும்")
+            }}</b
+            ><small>{{ t("Camera / Gallery", "Camera / Gallery") }}</small
+            ><input
+              type="file"
+              accept="image/*"
+              (change)="onPhotoSelected($event)"
+              hidden
+          /></label>
         }
       </div>
     </section>
 
     <section class="form-panel competitions-panel">
-      <div class="section-title"><span>02</span><div><h2>{{t('Eligible competitions','தகுதியான போட்டிகள்')}}</h2><p>{{t('Only competitions allowed for the calculated age category are shown. Select a maximum of 2.','கணக்கிடப்பட்ட வயது பிரிவிற்கு தகுதியான போட்டிகள் மட்டும் காணப்படும். அதிகபட்சம் 2 தேர்வு செய்யவும்.')}}</p></div><strong class="count">{{selected().length}} / {{store.settings().maxEvents}}</strong></div>
-      @if(!category()){<div class="empty-state">{{t('Enter the date of birth above to see eligible competitions.','தகுதியான போட்டிகளை பார்க்க மேலே பிறந்த தேதியை உள்ளிடவும்.')}}</div>}
-      @if(category()){
+      <div class="section-title">
+        <span>02</span>
+        <div>
+          <h2>{{ t("Eligible competitions", "தகுதியான போட்டிகள்") }}</h2>
+          <p>
+            {{
+              t(
+                "Only competitions allowed for the calculated age category are shown. Select a maximum of 2.",
+                "கணக்கிடப்பட்ட வயது பிரிவிற்கு தகுதியான போட்டிகள் மட்டும் காணப்படும். அதிகபட்சம் 2 தேர்வு செய்யவும்."
+              )
+            }}
+          </p>
+        </div>
+        <strong class="count"
+          >{{ selected().length }} / {{ store.settings().maxEvents }}</strong
+        >
+      </div>
+      @if (!category()) {
+        <div class="empty-state">
+          {{
+            t(
+              "Enter the date of birth above to see eligible competitions.",
+              "தகுதியான போட்டிகளை பார்க்க மேலே பிறந்த தேதியை உள்ளிடவும்."
+            )
+          }}
+        </div>
+      }
+      @if (category()) {
         <div class="competition-grid">
-          @for(c of eligible();track c.id){
-            <button type="button" class="competition-card" [class.selected]="selected().includes(c.id)" [style.background-image]="'linear-gradient(0deg,rgba(6,34,29,.90),rgba(6,34,29,.14)),url(' + c.image + ')'" (click)="toggle(c.id)">
-              <span class="check">{{selected().includes(c.id)?'✓':'+'}}</span>
-              <div><small>{{c.language}}</small><h3>{{language()==='ta'?c.tamil:c.name}}</h3><p>{{language()==='ta'?c.name:c.tamil}}</p><b>{{c.fee | currency:'INR':'symbol':'1.0-0'}}</b></div>
+          @for (c of eligible(); track c.id) {
+            <button
+              type="button"
+              class="competition-card"
+              [class.selected]="selected().includes(c.id)"
+              [style.background-image]="
+                'linear-gradient(0deg,rgba(6,34,29,.90),rgba(6,34,29,.14)),url(' +
+                c.image +
+                ')'
+              "
+              (click)="toggle(c.id)"
+            >
+              <span class="check">{{
+                selected().includes(c.id) ? "✓" : "+"
+              }}</span>
+              <div>
+                <small>{{ c.language }}</small>
+                <h3>{{ language() === "ta" ? c.tamil : c.name }}</h3>
+                <p>{{ language() === "ta" ? c.name : c.tamil }}</p>
+                <b>{{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}</b>
+              </div>
             </button>
           }
         </div>
       }
-      <div class="instruction-box"><b>{{t('Important instructions','முக்கிய வழிமுறைகள்')}}</b><p>{{language()==='ta'?store.settings().instructionsTa:store.settings().instructionsEn}}</p></div>
-      <div class="actions end"><button class="btn" type="button" (click)="toReview()">{{t('Review application','விண்ணப்பத்தை சரிபார்க்கவும்')}} →</button></div>
+      <div class="instruction-box">
+        <b>{{ t("Important instructions", "முக்கிய வழிமுறைகள்") }}</b>
+        <p>
+          {{
+            language() === "ta"
+              ? store.settings().instructionsTa
+              : store.settings().instructionsEn
+          }}
+        </p>
+      </div>
+      <div class="actions end">
+        <button class="btn" type="button" (click)="toReview()">
+          {{ t("Review application", "விண்ணப்பத்தை சரிபார்க்கவும்") }} →
+        </button>
+      </div>
     </section>
   }
 
-  @if(step()===2){
+  @if (step() === 2) {
     <section class="review-layout">
       <div class="form-panel">
-        <div class="section-title"><span>03</span><div><h2>{{t('Review your application','விண்ணப்பத்தை சரிபார்க்கவும்')}}</h2><p>{{t('Check every detail before online payment.','ஆன்லைன் கட்டணத்திற்கு முன் அனைத்து விவரங்களையும் சரிபார்க்கவும்.')}}</p></div></div>
-        <div class="review-person">@if(photo()){<img [src]="photo()" alt="Student photo"/>}<div><b>{{form.controls.name.value}}</b><span>{{form.controls.school.value}}</span></div></div>
-        <div class="review-list">
-          <div><span>{{t('Student','மாணவர்')}}</span><b>{{form.controls.name.value}}</b></div>
-          <div><span>{{t('School','பள்ளி')}}</span><b>{{form.controls.school.value}}</b></div>
-          <div><span>{{t('DOB / Age','பிறந்த தேதி / வயது')}}</span><b>{{form.controls.dob.value}} · {{age()}}</b></div>
-          <div><span>{{t('Category','வயது பிரிவு')}}</span><b>{{category()?.name}} · {{category()?store.categoryLabel(category()!.id):''}}</b></div>
-          <div><span>{{t('Email','மின்னஞ்சல்')}}</span><b>{{form.controls.email.value}}</b></div>
+        <div class="section-title">
+          <span>03</span>
+          <div>
+            <h2>
+              {{ t("Review your application", "விண்ணப்பத்தை சரிபார்க்கவும்") }}
+            </h2>
+            <p>
+              {{
+                t(
+                  "Check every detail before online payment.",
+                  "ஆன்லைன் கட்டணத்திற்கு முன் அனைத்து விவரங்களையும் சரிபார்க்கவும்."
+                )
+              }}
+            </p>
+          </div>
         </div>
-        <h3>{{t('Selected competitions','தேர்ந்தெடுத்த போட்டிகள்')}}</h3>
-        @for(id of selected();track id){@if(store.competition(id);as c){<div class="fee-row"><span>{{language()==='ta'?c.tamil:c.name}}</span><b>{{c.fee | currency:'INR':'symbol':'1.0-0'}}</b></div>}}
-        <div class="fee-total"><span>{{t('Total online payment','மொத்த ஆன்லைன் கட்டணம்')}}</span><strong>{{total() | currency:'INR':'symbol':'1.0-0'}}</strong></div>
+        <div class="review-person">
+          @if (photo()) {
+            <img [src]="photo()" alt="Student photo" />
+          }
+          <div>
+            <b>{{ form.controls.name.value }}</b
+            ><span>{{ form.controls.school.value }}</span>
+          </div>
+        </div>
+        <div class="review-list">
+          <div>
+            <span>{{ t("Student", "மாணவர்") }}</span
+            ><b>{{ form.controls.name.value }}</b>
+          </div>
+          <div>
+            <span>{{ t("School", "பள்ளி") }}</span
+            ><b>{{ form.controls.school.value }}</b>
+          </div>
+          <div>
+            <span>{{ t("DOB / Age", "பிறந்த தேதி / வயது") }}</span
+            ><b>{{ form.controls.dob.value }} · {{ age() }}</b>
+          </div>
+          <div>
+            <span>{{ t("Category", "வயது பிரிவு") }}</span
+            ><b
+              >{{ category()?.name }} ·
+              {{ category() ? store.categoryLabel(category()!.id) : "" }}</b
+            >
+          </div>
+          <div>
+            <span>{{ t("Email", "மின்னஞ்சல்") }}</span
+            ><b>{{ form.controls.email.value }}</b>
+          </div>
+        </div>
+        <h3>{{ t("Selected competitions", "தேர்ந்தெடுத்த போட்டிகள்") }}</h3>
+        @for (id of selected(); track id) {
+          @if (store.competition(id); as c) {
+            <div class="fee-row">
+              <span>{{ language() === "ta" ? c.tamil : c.name }}</span
+              ><b>{{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}</b>
+            </div>
+          }
+        }
+        <div class="fee-total">
+          <span>{{ t("Total online payment", "மொத்த ஆன்லைன் கட்டணம்") }}</span
+          ><strong>{{ total() | currency: "INR" : "symbol" : "1.0-0" }}</strong>
+        </div>
       </div>
       <aside class="payment-card">
-        <span class="pill green">ONLINE PAYMENT ONLY</span><h2>{{t('Secure payment','பாதுகாப்பான கட்டணம்')}}</h2>
-        <p>{{t('After payment, your application number is generated. The final event pass becomes valid after organiser approval.','கட்டணத்திற்குப் பிறகு விண்ணப்ப எண் உருவாகும். ஏற்பாட்டாளர் அங்கீகாரத்திற்கு பிறகு இறுதி நிகழ்வு பாஸ் செல்லுபடியாகும்.')}}</p>
-        <div class="before-pay"><b>{{t('Before you pay','கட்டணம் செலுத்துவதற்கு முன்')}}</b><span>✓ {{t('Verify name, DOB and school','பெயர், பிறந்த தேதி, பள்ளியை சரிபார்க்கவும்')}}</span><span>✓ {{t('Maximum two eligible competitions','அதிகபட்சம் இரண்டு தகுதியான போட்டிகள்')}}</span><span>✓ {{t('Fee is non-editable after payment in this frontend flow','கட்டணத்திற்குப் பிறகு தேர்வு மாற்றம் நிர்வாகத்தின் மூலம் மட்டுமே')}}</span></div>
-        <label class="terms"><input type="checkbox" [(ngModel)]="consent" /> <span>{{t('I confirm the details are correct and accept the terms & conditions.','விவரங்கள் சரியானவை என்பதை உறுதிப்படுத்தி விதிமுறைகளை ஏற்கிறேன்.')}}</span></label>
-        <details><summary>{{t('Terms & conditions','விதிமுறைகள் மற்றும் நிபந்தனைகள்')}}</summary><p>{{language()==='ta'?store.settings().termsTa:store.settings().termsEn}}</p></details>
-        <button class="btn pay-btn" [disabled]="busy()" (click)="payAndRegister()">{{busy()?t('Processing…','செயலாக்கப்படுகிறது…'):t('Pay online & submit','ஆன்லைனில் கட்டணம் செலுத்தி சமர்ப்பிக்கவும்')}} · {{total() | currency:'INR':'symbol':'1.0-0'}}</button>
-        <button class="btn secondary" (click)="step.set(1)">← {{t('Edit application','விண்ணப்பத்தை திருத்தவும்')}}</button>
+        <span class="pill green">ONLINE PAYMENT ONLY</span>
+        <h2>{{ t("Secure payment", "பாதுகாப்பான கட்டணம்") }}</h2>
+        <p>
+          {{
+            t(
+              "After payment, your application number is generated. The final event pass becomes valid after organiser approval.",
+              "கட்டணத்திற்குப் பிறகு விண்ணப்ப எண் உருவாகும். ஏற்பாட்டாளர் அங்கீகாரத்திற்கு பிறகு இறுதி நிகழ்வு பாஸ் செல்லுபடியாகும்."
+            )
+          }}
+        </p>
+        <div class="before-pay">
+          <b>{{ t("Before you pay", "கட்டணம் செலுத்துவதற்கு முன்") }}</b
+          ><span
+            >✓
+            {{
+              t(
+                "Verify name, DOB and school",
+                "பெயர், பிறந்த தேதி, பள்ளியை சரிபார்க்கவும்"
+              )
+            }}</span
+          ><span
+            >✓
+            {{
+              t(
+                "Maximum two eligible competitions",
+                "அதிகபட்சம் இரண்டு தகுதியான போட்டிகள்"
+              )
+            }}</span
+          ><span
+            >✓
+            {{
+              t(
+                "Fee is non-editable after payment in this frontend flow",
+                "கட்டணத்திற்குப் பிறகு தேர்வு மாற்றம் நிர்வாகத்தின் மூலம் மட்டுமே"
+              )
+            }}</span
+          >
+        </div>
+        <label class="terms"
+          ><input type="checkbox" [(ngModel)]="consent" />
+          <span>{{
+            t(
+              "I confirm the details are correct and accept the terms & conditions.",
+              "விவரங்கள் சரியானவை என்பதை உறுதிப்படுத்தி விதிமுறைகளை ஏற்கிறேன்."
+            )
+          }}</span></label
+        >
+        <details>
+          <summary>
+            {{ t("Terms & conditions", "விதிமுறைகள் மற்றும் நிபந்தனைகள்") }}
+          </summary>
+          <p>
+            {{
+              language() === "ta"
+                ? store.settings().termsTa
+                : store.settings().termsEn
+            }}
+          </p>
+        </details>
+        <button
+          class="btn pay-btn"
+          [disabled]="busy()"
+          (click)="payAndRegister()"
+        >
+          {{
+            busy()
+              ? t("Processing…", "செயலாக்கப்படுகிறது…")
+              : t(
+                  "Pay online & submit",
+                  "ஆன்லைனில் கட்டணம் செலுத்தி சமர்ப்பிக்கவும்"
+                )
+          }}
+          · {{ total() | currency: "INR" : "symbol" : "1.0-0" }}
+        </button>
+        <button class="btn secondary" (click)="step.set(1)">
+          ← {{ t("Edit application", "விண்ணப்பத்தை திருத்தவும்") }}
+        </button>
       </aside>
     </section>
   }
 
-  @if(step()===3){
-    @if(store.activePass();as r){
+  @if (step() === 3) {
+    @if (store.activePass(); as r) {
       <section class="success-card">
-        <div class="success-icon">✓</div><span class="eyebrow">{{t('APPLICATION RECEIVED','விண்ணப்பம் பெறப்பட்டது')}}</span>
-        <h1>{{r.applicationNo}}</h1><p>{{t('Payment received. Your registration is waiting for organiser approval.','கட்டணம் பெறப்பட்டது. உங்கள் பதிவு ஏற்பாட்டாளர் அங்கீகாரத்திற்காக காத்திருக்கிறது.')}}</p>
-        <div class="success-meta"><div><span>{{t('Student','மாணவர்')}}</span><b>{{r.name}}</b></div><div><span>{{t('Category','வயது பிரிவு')}}</span><b>{{store.category(r.categoryId)?.name}}</b></div><div><span>{{t('Payment','கட்டணம்')}}</span><b>{{r.payment}}</b></div><div><span>{{t('Pass status','பாஸ் நிலை')}}</span><b>{{r.approval}}</b></div></div>
-        <div class="email-note">✉ {{t('After admin approval and slot assignment, the final event pass will be prepared for the registered email.','நிர்வாக அங்கீகாரம் மற்றும் நேர ஒதுக்கீட்டிற்குப் பிறகு இறுதி நிகழ்வு பாஸ் பதிவு செய்யப்பட்ட மின்னஞ்சலுக்கு தயாராகும்.')}}</div>
-        <div class="actions center"><button class="btn" (click)="viewPass()">{{t('View registration receipt','பதிவு ரசீதை பார்க்கவும்')}} →</button></div>
+        <div class="success-icon">✓</div>
+        <span class="eyebrow">{{
+          t("APPLICATION RECEIVED", "விண்ணப்பம் பெறப்பட்டது")
+        }}</span>
+        <h1>{{ r.applicationNo }}</h1>
+        <p>
+          {{
+            t(
+              "Payment received. Your registration is waiting for organiser approval.",
+              "கட்டணம் பெறப்பட்டது. உங்கள் பதிவு ஏற்பாட்டாளர் அங்கீகாரத்திற்காக காத்திருக்கிறது."
+            )
+          }}
+        </p>
+        <div class="success-meta">
+          <div>
+            <span>{{ t("Student", "மாணவர்") }}</span
+            ><b>{{ r.name }}</b>
+          </div>
+          <div>
+            <span>{{ t("Category", "வயது பிரிவு") }}</span
+            ><b>{{ store.category(r.categoryId)?.name }}</b>
+          </div>
+          <div>
+            <span>{{ t("Payment", "கட்டணம்") }}</span
+            ><b>{{ r.payment }}</b>
+          </div>
+          <div>
+            <span>{{ t("Pass status", "பாஸ் நிலை") }}</span
+            ><b>{{ r.approval }}</b>
+          </div>
+        </div>
+        <div class="email-note">
+          ✉
+          {{
+            t(
+              "After admin approval and slot assignment, the final event pass will be prepared for the registered email.",
+              "நிர்வாக அங்கீகாரம் மற்றும் நேர ஒதுக்கீட்டிற்குப் பிறகு இறுதி நிகழ்வு பாஸ் பதிவு செய்யப்பட்ட மின்னஞ்சலுக்கு தயாராகும்."
+            )
+          }}
+        </div>
+        <div class="actions center">
+          <button class="btn" (click)="viewPass()">
+            {{ t("View registration receipt", "பதிவு ரசீதை பார்க்கவும்") }} →
+          </button>
+        </div>
       </section>
     }
   }

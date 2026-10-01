@@ -1,23 +1,127 @@
-<a href="#main" class="skip">Skip to content</a>
+<a href="#main" class="skip">
+  Skip to content
+</a>
+
 @if (!isWorkspace && !isLogin) {
+
   <header class="public-header no-print">
-    <a class="brand" routerLink="/register">
-      <span class="brand-mark">CT</span>
-      <span><b>{{ store.settings().title }}</b><small>SBK VIBGYOR SCHOOL</small></span>
+
+    <a
+      class="brand brand-center-layout"
+      routerLink="/register"
+    >
+
+      <!-- LEFT LOGO -->
+      <img
+        src="/logos/sbk-logo.png"
+        alt="SBK Vibgyor School"
+        class="header-logo side-logo sbk-logo"
+      />
+
+      <!-- CENTER CONTENT -->
+      <div class="brand-copy-center">
+
+        <b>
+          {{ store.settings().title }}
+        </b>
+
+        <small>
+          SBK VIBGYOR SCHOOL
+
+          <span class="brand-divider">
+            •
+          </span>
+
+          STAR GURU
+        </small>
+
+      </div>
+
+      <!-- RIGHT LOGO -->
+      <img
+        src="/logos/star-guru-logo.png"
+        alt="Star Guru"
+        class="header-logo side-logo star-guru-logo"
+      />
+
     </a>
+
+
     <nav>
-      <a routerLink="/find-pass">Find my pass / பாஸ்</a>
-      <a href="circular.pdf" target="_blank" rel="noopener">Circular ↗</a>
+
+      <a routerLink="/find-pass">
+        Find my pass / பாஸ்
+      </a>
+
+      <a
+        href="circular.pdf"
+        target="_blank"
+        rel="noopener"
+      >
+        Circular ↗
+      </a>
+
     </nav>
+
   </header>
+
 }
-<main id="main"><router-outlet /></main>
+
+
+<main id="main">
+  <router-outlet />
+</main>
+
+
 @if (!isWorkspace && !isLogin) {
+
   <footer class="public-footer no-print">
-    <div><b>{{ store.settings().titleTa }}</b><p>Presented by {{ store.settings().presenters }}</p></div>
-    <small>For event support: {{ store.settings().contact || "Contact number will be updated by the organiser" }}</small>
+
+    <div>
+
+      <b>
+        {{ store.settings().titleTa }}
+      </b>
+
+      <p>
+        Presented by
+        {{ store.settings().presenters }}
+      </p>
+
+    </div>
+
+    <small>
+      For event support:
+      {{
+        store.settings().contact ||
+        "Contact number will be updated by the organiser"
+      }}
+    </small>
+
   </footer>
+
 }
+
+
 @if (store.notice()) {
-  <div class="toast no-print" role="status"><span>✓ {{ store.notice() }}</span><button (click)="store.notice.set('')">×</button></div>
+
+  <div
+    class="toast no-print"
+    role="status"
+  >
+
+    <span>
+      ✓ {{ store.notice() }}
+    </span>
+
+    <button
+      type="button"
+      (click)="store.notice.set('')"
+      aria-label="Close notification"
+    >
+      ×
+    </button>
+
+  </div>
+
 }
