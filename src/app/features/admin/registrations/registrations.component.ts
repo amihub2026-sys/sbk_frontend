@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   signal,
 } from "@angular/core";
@@ -13,6 +14,7 @@ import {
 } from "@angular/common";
 
 import {
+  ActivatedRoute,
   Router,
   RouterLink,
 } from "@angular/router";
@@ -42,7 +44,68 @@ export class RegistrationsComponent {
 
   router = inject(Router);
 
+route =
+  inject(ActivatedRoute);
 
+
+private manageLinkHandled =
+  false;
+
+
+private readonly openFromManageLink =
+  effect(() => {
+
+    if (
+      this.manageLinkHandled
+    ) {
+      return;
+    }
+
+
+    const registrationId =
+      this.route
+        .snapshot
+        .queryParamMap
+        .get("open");
+
+
+    if (!registrationId) {
+
+      this.manageLinkHandled =
+        true;
+
+      return;
+    }
+
+
+    const registration =
+      this.store
+        .registrations()
+        .find(
+          (item) =>
+            item.id ===
+            registrationId,
+        );
+
+
+    /*
+     * Admin state may still be loading.
+     * Keep waiting until registration exists.
+     */
+    if (!registration) {
+      return;
+    }
+
+
+    this.manageLinkHandled =
+      true;
+
+
+    this.open(
+      registration,
+    );
+
+  });
   /**
    * ======================================================
    * FILTERS

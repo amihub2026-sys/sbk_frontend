@@ -3,7 +3,10 @@ import { FormsModule } from "@angular/forms";
 import {
   CurrencyPipe,
 } from "@angular/common";
-import { ActivatedRoute } from "@angular/router";
+import {
+  ActivatedRoute,
+  Router,
+} from "@angular/router";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { EventStore } from "../../../core/services/event-store.service";
@@ -47,11 +50,14 @@ export class ManageComponent {
 
   readonly Math = Math;
 
-  store =
-    inject(EventStore);
+store =
+  inject(EventStore);
 
-  route =
-    inject(ActivatedRoute);
+route =
+  inject(ActivatedRoute);
+
+router =
+  inject(Router);
 
   destroyRef =
     inject(DestroyRef);
@@ -193,7 +199,23 @@ export class ManageComponent {
       );
   }
 
+manageCashStudent(
+  registration: Registration,
+) {
 
+  void this.router.navigate(
+    [
+      "/admin/registrations",
+    ],
+    {
+      queryParams: {
+        open:
+          registration.id,
+      },
+    },
+  );
+
+}
   /**
    * ======================================================
    * PAPER REGISTRATION CATEGORY
@@ -214,7 +236,447 @@ export class ManageComponent {
     );
   }
 
+/**
+ * ======================================================
+ * OFFLINE PAGE TABS
+ * ======================================================
+ */
 
+offlineView =
+  signal<"form" | "students">(
+    "form",
+  );
+
+
+cashStudentPage =
+  signal(1);
+
+
+cashApprovingId =
+  signal("");
+
+
+readonly cashStudentPageSize =
+  10;
+
+
+/**
+ * Change Paper / Cash admin tab.
+ */
+setOfflineView(
+  view: "form" | "students",
+) {
+
+  this.offlineView.set(
+    view,
+  );
+
+  this.cashStudentPage.set(
+    1,
+  );
+
+  this.error.set("");
+
+}
+
+
+/**
+ * ======================================================
+ * STUDENT PUBLIC CASH REGISTRATIONS
+ * ======================================================
+ *
+ * Public cash-registration page stores:
+ *
+ * source        = Online
+ * paymentMethod = Cash
+ *
+ * Admin-created Paper Entry uses:
+ *
+ * source        = Paper
+ * paymentMethod = Cash
+ *
+ * So this safely separates them.
+ */
+studentCashRegistrations() {
+
+  return this.store
+    .registrations()
+    .filter(
+      (r) =>
+        r.source === "Online" &&
+        r.paymentMethod === "Cash",
+    )
+    .slice()
+    .sort(
+      (
+        a,
+        b,
+      ) => {
+
+        const aNumber =
+          Number(
+            a.applicationNo
+              ?.match(/\d+$/)?.[0] ||
+              0,
+          );
+
+
+        const bNumber =
+          Number(
+            b.applicationNo
+              ?.match(/\d+$/)?.[0] ||
+              0,
+          );
+
+
+        return (
+          bNumber -
+          aNumber
+        );
+
+      },
+    );
+
+}
+
+
+/**
+ * Number waiting for cash / approval.
+ */
+pendingStudentCashCount() {
+
+  return this
+    .studentCashRegistrations()
+    .filter(
+      (r) =>
+        r.payment !== "Paid" ||
+        r.approval !== "Approved",
+    )
+    .length;
+
+}
+
+
+/**
+ * ======================================================
+ * PAGINATION
+ * ======================================================
+ */
+
+cashStudentTotalPages() {
+
+  return Math.max(
+    1,
+
+    Math.ceil(
+      this
+        .studentCashRegistrations()
+        .length /
+        this.cashStudentPageSize,
+    ),
+  );
+
+}
+
+
+cashStudentRows() {
+
+  const totalPages =
+    this.cashStudentTotalPages();
+
+
+  const page =
+    Math.min(
+      this.cashStudentPage(),
+      totalPages,
+    );
+
+
+  const start =
+    (page - 1) *
+    this.cashStudentPageSize;
+
+
+  return this
+    .studentCashRegistrations()
+    .slice(
+      start,
+      start +
+        this.cashStudentPageSize,
+    );
+
+}
+
+
+cashStudentPageNumbers() {
+
+  const total =
+    this.cashStudentTotalPages();
+
+
+  const current =
+    this.cashStudentPage();
+
+
+  let start =
+    Math.max(
+      1,
+      current - 2,
+    );
+
+
+  let end =
+    Math.min(
+      total,
+      start + 4,
+    );
+
+
+  if (
+    end - start < 4
+  ) {
+
+    start =
+      Math.max(
+        1,
+        end - 4,
+      );
+
+  }
+
+
+  return Array.from(
+    {
+      length:
+        end - start + 1,
+    },
+
+    (
+      _,
+      index,
+    ) =>
+      start + index,
+  );
+
+}
+
+
+setCashStudentPage(
+  page: number,
+) {
+
+  const total =
+    this.cashStudentTotalPages();
+
+
+  const safePage =
+    Math.max(
+      1,
+      Math.min(
+        page,
+        total,
+      ),
+    );
+
+
+  this.cashStudentPage.set(
+    safePage,
+  );
+
+
+  setTimeout(
+    () => {
+
+      document
+        .getElementById(
+          "student-cash-list",
+        )
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+
+    },
+    50,
+  );
+
+}
+
+
+/**
+ * Competition names for table.
+ */
+cashCompetitionNames(
+  r: Registration,
+) {
+
+  const names =
+    r.competitionIds
+      .map(
+        (id) =>
+          this.store
+            .competition(id)
+            ?.name,
+      )
+      .filter(
+        (
+          name,
+        ): name is string =>
+          !!name,
+      );
+
+
+  return names.length
+    ? names.join(", ")
+    : "—";
+
+}
+
+
+/**
+ * Already fully approved.
+ */
+isCashApproved(
+  r: Registration,
+) {
+
+  return (
+    r.payment === "Paid" &&
+    r.approval === "Approved"
+  );
+
+}
+
+
+/**
+ * ======================================================
+ * APPROVE STUDENT CASH REGISTRATION
+ * ======================================================
+ */
+async approveStudentCash(
+  r: Registration,
+) {
+
+  if (
+    this.cashApprovingId()
+  ) {
+    return;
+  }
+
+
+  if (
+    this.isCashApproved(r)
+  ) {
+    return;
+  }
+
+
+  const amount =
+    Number(
+      r.total || 0,
+    );
+
+
+  const confirmed =
+    window.confirm(
+      `Confirm cash payment for ${r.applicationNo}?\n\nStudent: ${r.name}\nAmount: ₹${amount}\n\nThis will mark the registration as Paid and Approved.`,
+    );
+
+
+  if (!confirmed) {
+    return;
+  }
+
+
+  this.error.set("");
+
+  this.cashApprovingId.set(
+    r.id,
+  );
+
+
+  try {
+
+    let current =
+      r;
+
+
+    /**
+     * Step 1:
+     * Mark payment as Paid.
+     */
+    if (
+      current.payment !== "Paid"
+    ) {
+
+      await this.store
+        .updateRegistration({
+          ...current,
+
+          payment:
+            "Paid",
+        });
+
+
+      current =
+        this.store
+          .registrations()
+          .find(
+            (item) =>
+              item.id === r.id,
+          ) || {
+            ...current,
+
+            payment:
+              "Paid",
+          };
+
+    }
+
+
+    /**
+     * Step 2:
+     * Approve registration.
+     *
+     * Backend then makes:
+     * registrationStatus = Confirmed
+     * passStatus = Generated
+     */
+    if (
+      current.approval !==
+      "Approved"
+    ) {
+
+      await this.store
+        .reviewRegistration(
+
+          current,
+
+          "Approved",
+
+          "Cash payment received and verified by admin.",
+
+        );
+
+    }
+
+  } catch (e) {
+
+    this.error.set(
+      e instanceof Error
+        ? e.message
+        : "Unable to approve cash registration.",
+    );
+
+  } finally {
+
+    this.cashApprovingId.set(
+      "",
+    );
+
+  }
+
+}
   /**
    * ======================================================
    * ELIGIBLE COMPETITIONS

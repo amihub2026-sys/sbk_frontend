@@ -1,0 +1,780 @@
+<div class="cash-page">
+
+  <!-- =====================================================
+       SUCCESS
+  ====================================================== -->
+  @if (submitted(); as r) {
+
+    <section class="success-card">
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+
+      <span class="eyebrow">
+        APPLICATION SUBMITTED
+      </span>
+
+
+      <h1>
+        Cash Registration Successful
+      </h1>
+
+
+      <p class="success-intro">
+        Your application has been created successfully.
+        Please pay the registration fee at the school
+        or event office.
+      </p>
+
+
+      <!-- APPLICATION NUMBER -->
+      <div class="application-number">
+
+        <span>
+          Application Number
+        </span>
+
+        <strong>
+          {{ r.applicationNo }}
+        </strong>
+
+      </div>
+
+
+      <!-- PAYMENT STATUS -->
+      <div class="pending-box">
+
+        <div class="pending-icon">
+          ₹
+        </div>
+
+        <div>
+
+          <b>
+            Cash Payment Pending
+          </b>
+
+          <p>
+            Your application has been registered,
+            but the payment has not yet been confirmed.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- DETAILS -->
+      <div class="success-details">
+
+        <div>
+
+          <span>
+            Student
+          </span>
+
+          <strong>
+            {{ cash.name }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Mobile Number
+          </span>
+
+          <strong>
+            {{ cash.phone }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Amount to Pay
+          </span>
+
+          <strong>
+            {{
+              totalFee()
+                | currency:
+                    "INR":
+                    "symbol":
+                    "1.0-0"
+            }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Payment
+          </span>
+
+          <strong class="status-pending">
+            Pending
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div class="important-note">
+
+        <strong>
+          Important
+        </strong>
+
+        <p>
+          Pay the cash at the school / event office.
+          Your participant pass will become available
+          only after the Admin verifies the cash payment.
+        </p>
+
+      </div>
+
+
+      <a
+        href="/find-pass"
+        class="find-pass-btn"
+      >
+        Check Registration Status
+      </a>
+
+    </section>
+
+  } @else {
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+    <section class="cash-hero">
+
+      <span class="eyebrow">
+        CHITHIRAM THIRUVILA
+      </span>
+
+
+      <h1>
+        Cash Registration
+      </h1>
+
+
+      <p>
+        Fill in the student details and choose the competitions.
+        After submitting, pay the registration fee
+        at the school / event office.
+      </p>
+
+
+      <div class="cash-info">
+
+        <div class="flow-item">
+          <span>1</span>
+          <b>Fill Application</b>
+        </div>
+
+        <div class="flow-item">
+          <span>2</span>
+          <b>Get Application Number</b>
+        </div>
+
+        <div class="flow-item">
+          <span>3</span>
+          <b>Pay Cash at Office</b>
+        </div>
+
+        <div class="flow-item">
+          <span>4</span>
+          <b>Admin Confirms & Pass Opens</b>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ERROR
+    ====================================================== -->
+    @if (error()) {
+
+      <div
+        class="error-message"
+        aria-live="polite"
+      >
+        {{ error() }}
+      </div>
+
+    }
+
+
+    <!-- =====================================================
+         STUDENT DETAILS
+    ====================================================== -->
+    <section class="form-card">
+
+      <div class="section-title">
+
+        <span class="step-number">
+          01
+        </span>
+
+        <div>
+
+          <span class="eyebrow">
+            STUDENT DETAILS
+          </span>
+
+          <h2>
+            Participant Information
+          </h2>
+
+        </div>
+
+      </div>
+
+
+      <div class="form-grid">
+
+
+        <!-- STUDENT NAME -->
+        <label>
+
+          <span>
+            Student Name *
+          </span>
+
+          <input
+            id="cash-student-name"
+            type="text"
+            [(ngModel)]="cash.name"
+            placeholder="Enter student name"
+          />
+
+        </label>
+
+
+        <!-- FATHER NAME -->
+        <label>
+
+          <span>
+            Father's Name *
+          </span>
+
+          <input
+            id="cash-father-name"
+            type="text"
+            [(ngModel)]="cash.fatherName"
+            placeholder="Enter father's name"
+          />
+
+        </label>
+
+
+        <!-- SCHOOL -->
+        <label class="span2">
+
+          <span>
+            School Name *
+          </span>
+
+          <input
+            id="cash-school"
+            type="text"
+            [(ngModel)]="cash.school"
+            placeholder="Enter school name"
+          />
+
+        </label>
+
+
+        <!-- DOB -->
+        <label>
+
+          <span>
+            Date of Birth *
+          </span>
+
+          <input
+            id="cash-dob"
+            type="date"
+            [(ngModel)]="cash.dob"
+            (ngModelChange)="onDobChange()"
+          />
+
+        </label>
+
+
+        <!-- AUTOMATIC CATEGORY -->
+        <div class="category-form-field">
+
+          <span class="category-field-label">
+            Age Category
+          </span>
+
+
+          @if (cashCategory(); as category) {
+
+            <div class="category-field-value">
+
+              <div class="category-ok">
+                ✓
+              </div>
+
+
+              <div class="category-field-copy">
+
+                <strong>
+                  {{ category.name }}
+                </strong>
+
+
+                <small>
+
+                  {{
+                    store.ageLabel(
+                      cash.dob,
+                      cash.applicationDate
+                    )
+                  }}
+
+                  ·
+
+                  {{
+                    store.categoryLabel(
+                      category.id
+                    )
+                  }}
+
+                </small>
+
+              </div>
+
+            </div>
+
+          } @else {
+
+            <div class="category-field-value empty">
+
+              <div class="category-ok empty">
+                ?
+              </div>
+
+
+              <div class="category-field-copy">
+
+                <strong>
+                  Select Date of Birth
+                </strong>
+
+                <small>
+                  Category will be calculated automatically
+                </small>
+
+              </div>
+
+            </div>
+
+          }
+
+        </div>
+
+
+        <!-- EMAIL -->
+        <label>
+
+          <span>
+            Email Address *
+          </span>
+
+          <input
+            id="cash-email"
+            type="email"
+            [(ngModel)]="cash.email"
+            placeholder="example@gmail.com"
+          />
+
+        </label>
+
+
+        <!-- PHONE -->
+        <label>
+
+          <span>
+            Mobile Number *
+          </span>
+
+          <input
+            id="cash-phone"
+            type="tel"
+            [(ngModel)]="cash.phone"
+            maxlength="10"
+            inputmode="numeric"
+            autocomplete="tel"
+            placeholder="10 digit mobile number"
+          />
+
+        </label>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PHOTO
+    ====================================================== -->
+    <section class="form-card">
+
+      <div class="section-title">
+
+        <span class="step-number">
+          02
+        </span>
+
+        <div>
+
+          <span class="eyebrow">
+            STUDENT PHOTO
+          </span>
+
+          <h2>
+            Upload Photo
+          </h2>
+
+          <p>
+            Student photo is optional.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="photo-upload">
+
+        @if (cash.photo) {
+
+          <div class="photo-preview">
+
+            <img
+              [src]="cash.photo"
+              alt="Student photo"
+            />
+
+
+            <button
+              type="button"
+              class="remove-photo"
+              (click)="cash.photo = ''"
+            >
+              Remove Photo
+            </button>
+
+          </div>
+
+        } @else {
+
+          <label class="upload-box">
+
+            <div class="upload-icon">
+              +
+            </div>
+
+
+            <strong>
+              Upload Student Photo
+            </strong>
+
+
+            <span>
+              JPG, PNG or image file
+            </span>
+
+
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onPhoto($event)"
+              hidden
+            />
+
+          </label>
+
+        }
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         COMPETITIONS
+    ====================================================== -->
+    <section
+      class="form-card"
+      id="cash-competitions"
+    >
+
+      <div class="section-title">
+
+        <span class="step-number">
+          03
+        </span>
+
+        <div>
+
+          <span class="eyebrow">
+            COMPETITIONS
+          </span>
+
+          <h2>
+            Choose Your Events
+          </h2>
+
+          <p>
+            You can select maximum
+            {{ store.settings().maxEvents }}
+            competitions.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      @if (cashCategory()) {
+
+        <div class="competition-grid">
+
+          @for (
+            c of cashEligible();
+            track c.id
+          ) {
+
+            <label
+              class="competition-card"
+              [class.selected]="
+                cash.competitionIds.includes(
+                  c.id
+                )
+              "
+            >
+
+              <input
+                type="checkbox"
+
+                [checked]="
+                  cash.competitionIds.includes(
+                    c.id
+                  )
+                "
+
+                [disabled]="
+                  !cash.competitionIds.includes(c.id) &&
+                  cash.competitionIds.length >=
+                    store.settings().maxEvents
+                "
+
+                (change)="
+                  toggleCompetition(c.id)
+                "
+              />
+
+
+              <div class="competition-info">
+
+                <strong>
+                  {{ c.name }}
+                </strong>
+
+
+                @if (c.tamil) {
+
+                  <span>
+                    {{ c.tamil }}
+                  </span>
+
+                }
+
+              </div>
+
+
+              <div class="competition-fee">
+
+                {{
+                  c.fee
+                    | currency:
+                        "INR":
+                        "symbol":
+                        "1.0-0"
+                }}
+
+              </div>
+
+            </label>
+
+          } @empty {
+
+            <div class="empty-competitions">
+
+              <strong>
+                No competitions available
+              </strong>
+
+              <p>
+                There are currently no open competitions
+                for this age category.
+              </p>
+
+            </div>
+
+          }
+
+        </div>
+
+      } @else {
+
+        <div class="empty-competitions">
+
+          <strong>
+            Select Date of Birth First
+          </strong>
+
+          <p>
+            Your eligible competitions will appear
+            after the age category is calculated.
+          </p>
+
+        </div>
+
+      }
+
+    </section>
+
+
+    <!-- =====================================================
+         PAYMENT SUMMARY
+    ====================================================== -->
+    <section class="payment-summary">
+
+      <div class="payment-summary-copy">
+
+        <span class="eyebrow">
+          CASH PAYMENT
+        </span>
+
+        <h2>
+          Registration Summary
+        </h2>
+
+        <p>
+          No online payment is required on this page.
+          Pay the amount directly at the school
+          or event office.
+        </p>
+
+      </div>
+
+
+      <div class="amount-box">
+
+        <span>
+          Amount to Pay
+        </span>
+
+        <strong>
+          {{
+            totalFee()
+              | currency:
+                  "INR":
+                  "symbol":
+                  "1.0-0"
+          }}
+        </strong>
+
+        <small>
+          Cash payment
+        </small>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         PAYMENT NOTICE
+    ====================================================== -->
+    <div class="payment-notice">
+
+      <div class="notice-icon">
+        !
+      </div>
+
+
+      <div>
+
+        <strong>
+          Payment remains Pending after submission
+        </strong>
+
+        <p>
+          Submitting this application does not mark
+          the payment as paid.
+          After the cash is received,
+          the Admin will verify and confirm
+          the registration.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUBMIT
+    ====================================================== -->
+    <div class="submit-section">
+
+      <button
+        type="button"
+        class="submit-btn"
+        [disabled]="busy()"
+        (click)="submit()"
+      >
+
+        @if (busy()) {
+
+          Submitting Registration...
+
+        } @else {
+
+          Submit Cash Registration
+
+        }
+
+      </button>
+
+
+      <p>
+        Please save your application number
+        after submitting.
+      </p>
+
+    </div>
+
+  }
+
+</div>

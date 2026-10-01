@@ -9,6 +9,13 @@ export const routes: Routes = [
     loadComponent: () => import("./features/public/register/register.component").then((m) => m.RegisterComponent),
   },
   {
+  path: "cash-registration",
+  title: "Cash Registration | Chithiram Thiruvila",
+  loadComponent: () =>
+    import("./features/public/cash-register/cash-register.component")
+      .then((m) => m.CashRegisterComponent),
+},
+  {
     path: "find-pass",
     title: "Find Participant Pass | Chithiram Thiruvila",
     loadComponent: () => import("./features/public/pass/pass.component").then((m) => m.PassComponent),

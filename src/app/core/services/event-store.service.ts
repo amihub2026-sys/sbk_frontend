@@ -627,7 +627,101 @@ export class EventStore {
     return r;
 
   }
+async registerCash(
+  student: Student,
+  ids: string[],
+  language: "ta" | "en",
+  applicationDate = indiaDate(),
+) {
+  if (!this.demo) {
+    const response = await firstValueFrom(
+      this.http.post<Registration>(
+        this.url("/registrations/cash"),
+        {
+          student,
+          competitionIds: ids,
+          language,
+          applicationDate,
+        },
+      ),
+    );
 
+    const r =
+      normalizeRegistration(response);
+
+    await this.ensureRegistrationReferences(
+      r,
+    );
+
+    this.activePass.set(r);
+
+    this.notify(
+      `Cash registration submitted as ${r.applicationNo}.`,
+    );
+
+    return r;
+  }
+
+
+  // DEMO MODE
+  if (!this.settings().registrationOpen) {
+    throw Error(
+      "Registration is currently closed.",
+    );
+  }
+
+
+  const r = this.makeRegistration(
+    student,
+    ids,
+    language,
+    applicationDate,
+    "Online",
+    "Cash",
+    "Pending",
+    "Pending",
+  );
+
+
+  const pending: Registration = {
+    ...r,
+
+    amountPaid: 0,
+
+    registrationStatus:
+      "Payment Pending",
+
+    paymentConfirmedAt: null,
+
+    passStatus:
+      "Pending",
+
+    passGeneratedAt: null,
+  };
+
+
+  this.state.update((s) => ({
+    ...s,
+
+    registrations: [
+      ...s.registrations,
+      pending,
+    ],
+  }));
+
+
+  this.activePass.set(
+    pending,
+  );
+
+
+  this.notify(
+    `Cash registration submitted as ${pending.applicationNo}.`,
+  );
+
+
+  return pending;
+}
   async completeOnlinePayment(id: string) {
     if (!this.demo) {
       const checkout = await firstValueFrom(

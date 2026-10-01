@@ -1498,7 +1498,58 @@
 
   </div>
 
+<!-- =====================================================
+     PAPER / CASH ADMIN TABS
+====================================================== -->
 
+<div class="offline-admin-tabs">
+
+  <button
+    type="button"
+    class="offline-admin-tab"
+    [class.active]="offlineView() === 'form'"
+    (click)="setOfflineView('form')"
+  >
+
+    <span class="offline-tab-icon">
+      +
+    </span>
+
+    <span>
+      <b>Registration Form</b>
+      <small>Manual paper / cash entry</small>
+    </span>
+
+  </button>
+
+
+  <button
+    type="button"
+    class="offline-admin-tab"
+    [class.active]="offlineView() === 'students'"
+    (click)="setOfflineView('students')"
+  >
+
+    <span class="offline-tab-icon">
+      ◎
+    </span>
+
+    <span>
+      <b>Student Registrations</b>
+      <small>Cash registrations from students</small>
+    </span>
+
+    @if (pendingStudentCashCount() > 0) {
+
+      <span class="offline-tab-count">
+        {{ pendingStudentCashCount() }}
+      </span>
+
+    }
+
+  </button>
+
+</div>
   @if (error()) {
 
     <p class="error">
@@ -1508,7 +1559,11 @@
   }
 
 
-  <section class="card offline-form">
+@if (
+  offlineView() === "form"
+) {
+
+<section class="card offline-form">
 
     <div class="form-grid">
 
@@ -1843,7 +1898,523 @@
     </button>
 
   </section>
+} @else {
 
+
+<!-- =====================================================
+     STUDENT PUBLIC CASH REGISTRATIONS
+====================================================== -->
+
+<section
+  class="card student-cash-panel"
+  id="student-cash-list"
+>
+
+  <div class="student-cash-head">
+
+    <div>
+
+      <span class="eyebrow">
+        STUDENT CASH APPLICATIONS
+      </span>
+
+      <h2>
+        Student Registrations
+      </h2>
+
+      <p>
+        Applications submitted directly by
+        students through the public cash-registration page.
+      </p>
+
+    </div>
+
+
+    <div class="student-cash-summary">
+
+      <div>
+
+        <span>
+          Total
+        </span>
+
+        <strong>
+          {{
+            studentCashRegistrations()
+              .length
+          }}
+        </strong>
+
+      </div>
+
+
+      <div class="pending">
+
+        <span>
+          Waiting
+        </span>
+
+        <strong>
+          {{
+            pendingStudentCashCount()
+          }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  @if (
+    studentCashRegistrations()
+      .length
+  ) {
+
+
+    <!-- ================================================
+         TABLE
+    ================================================= -->
+
+    <div class="student-cash-table-wrap">
+
+      <table class="student-cash-table">
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Application
+            </th>
+
+            <th>
+              Student
+            </th>
+
+            <th>
+              Category
+            </th>
+
+            <th>
+              Competition
+            </th>
+
+            <th>
+              Amount
+            </th>
+
+            <th>
+              Payment
+            </th>
+
+            <th>
+              Approval
+            </th>
+<th>
+  Manage
+</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          @for (
+            r of cashStudentRows();
+            track r.id
+          ) {
+
+            <tr>
+
+
+              <!-- APPLICATION -->
+              <td>
+
+                <strong class="cash-application-no">
+                  {{ r.applicationNo }}
+                </strong>
+
+                <small>
+                  {{ r.applicationDate }}
+                </small>
+
+              </td>
+
+
+              <!-- STUDENT -->
+              <td>
+
+                <div class="cash-student-cell">
+
+                  @if (r.photo) {
+
+                    <img
+                      [src]="r.photo"
+                      alt="Student"
+                    />
+
+                  } @else {
+
+                    <div class="cash-avatar">
+
+                      {{
+                        r.name
+                          .charAt(0)
+                          .toUpperCase()
+                      }}
+
+                    </div>
+
+                  }
+
+
+                  <span>
+
+                    <b>
+                      {{ r.name }}
+                    </b>
+
+                    <small>
+                      {{ r.school }}
+                    </small>
+
+                    <small>
+                      {{ r.phone }}
+                    </small>
+
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <!-- CATEGORY -->
+              <td>
+
+                <b>
+
+                  {{
+                    store
+                      .category(
+                        r.categoryId
+                      )
+                      ?.name ||
+                    "—"
+                  }}
+
+                </b>
+
+                <small>
+
+                  {{
+                    store
+                      .categoryLabel(
+                        r.categoryId
+                      )
+                  }}
+
+                </small>
+
+              </td>
+
+
+              <!-- COMPETITION -->
+              <td>
+
+                <b>
+                  {{
+                    r.competitionIds
+                      .length
+                  }}
+                  selected
+                </b>
+
+                <small>
+                  {{
+                    cashCompetitionNames(
+                      r
+                    )
+                  }}
+                </small>
+
+              </td>
+
+
+              <!-- AMOUNT -->
+              <td>
+
+                <strong>
+
+                  {{
+                    r.total
+                      | currency:
+                          "INR":
+                          "symbol":
+                          "1.0-0"
+                  }}
+
+                </strong>
+
+              </td>
+
+
+              <!-- PAYMENT -->
+              <td>
+
+                @if (
+                  r.payment === "Paid"
+                ) {
+
+                  <span class="cash-status paid">
+                    ✓ Cash Paid
+                  </span>
+
+                } @else {
+
+                  <span class="cash-status pending">
+                    Cash Pending
+                  </span>
+
+                }
+
+              </td>
+
+
+              <!-- APPROVAL -->
+              <td>
+
+                <button
+                  type="button"
+
+                  class="approval-toggle"
+
+                  [class.on]="
+                    isCashApproved(r)
+                  "
+
+                  [disabled]="
+                    cashApprovingId() === r.id ||
+                    isCashApproved(r)
+                  "
+
+                  (click)="
+                    approveStudentCash(r)
+                  "
+                >
+
+                  <span class="approval-toggle-track">
+
+                    <span class="approval-toggle-dot">
+                    </span>
+
+                  </span>
+
+
+                  <span>
+
+                    @if (
+                      cashApprovingId() ===
+                      r.id
+                    ) {
+
+                      Approving...
+
+                    } @else if (
+                      isCashApproved(r)
+                    ) {
+
+                      Approved
+
+                    } @else {
+
+                      Approve
+
+                    }
+
+                  </span>
+
+                </button>
+
+              </td>
+<!-- MANAGE -->
+<td>
+  <button
+    type="button"
+    class="btn secondary small"
+    (click)="manageCashStudent(r)"
+  >
+    Manage
+  </button>
+</td>
+
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- ================================================
+         PAGINATION
+    ================================================= -->
+
+    <div class="cash-pagination">
+
+      <div class="cash-pagination-info">
+
+        Showing
+
+        <b>
+
+          {{
+            (
+              cashStudentPage() -
+              1
+            ) *
+              cashStudentPageSize +
+            1
+          }}
+
+        </b>
+
+        –
+
+        <b>
+
+          {{
+            Math.min(
+              cashStudentPage() *
+                cashStudentPageSize,
+
+              studentCashRegistrations()
+                .length
+            )
+          }}
+
+        </b>
+
+        of
+
+        <b>
+          {{
+            studentCashRegistrations()
+              .length
+          }}
+        </b>
+
+      </div>
+
+
+      <div class="cash-pagination-buttons">
+
+        <button
+          type="button"
+
+          class="cash-page-btn"
+
+          [disabled]="
+            cashStudentPage() === 1
+          "
+
+          (click)="
+            setCashStudentPage(
+              cashStudentPage() - 1
+            )
+          "
+        >
+          ‹
+        </button>
+
+
+        @for (
+          page of cashStudentPageNumbers();
+          track page
+        ) {
+
+          <button
+            type="button"
+
+            class="cash-page-btn"
+
+            [class.active]="
+              cashStudentPage() ===
+              page
+            "
+
+            (click)="
+              setCashStudentPage(
+                page
+              )
+            "
+          >
+
+            {{ page }}
+
+          </button>
+
+        }
+
+
+        <button
+          type="button"
+
+          class="cash-page-btn"
+
+          [disabled]="
+            cashStudentPage() ===
+            cashStudentTotalPages()
+          "
+
+          (click)="
+            setCashStudentPage(
+              cashStudentPage() + 1
+            )
+          "
+        >
+          ›
+        </button>
+
+      </div>
+
+    </div>
+
+
+  } @else {
+
+
+    <div class="student-cash-empty">
+
+      <div>
+        ◎
+      </div>
+
+      <h3>
+        No student cash registrations
+      </h3>
+
+      <p>
+        Registrations submitted through the
+        public cash-registration page will appear here.
+      </p>
+
+    </div>
+
+
+  }
+
+</section>
+
+
+}
 }
 
 

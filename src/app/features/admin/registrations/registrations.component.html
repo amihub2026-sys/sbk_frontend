@@ -1189,12 +1189,11 @@
 
                 <b>
 
-                  {{
-                    r.source === "Online"
-                      ? "Backend confirmed"
-                      : "Admin cash verified"
-                  }}
-
+            {{
+  r.paymentMethod === "Cash"
+    ? "Admin cash verified"
+    : "Backend confirmed"
+}}
                 </b>
 
               </div>
@@ -1346,17 +1345,17 @@
 
             <p class="help">
 
-              @if (r.source === "Online") {
+        @if (r.paymentMethod === "Cash") {
 
-                Successful online payment confirms the registration automatically.
-                No manual payment approval is required.
+  Cash payment has been verified by the administrator.
+  The registration is now confirmed.
 
-              } @else {
+} @else {
 
-                Verified cash payment confirms the paper registration automatically.
-                No additional manual approval is required.
+  Successful online payment confirms the registration automatically.
+  No manual payment approval is required.
 
-              }
+}
 
             </p>
 
@@ -1468,12 +1467,11 @@
 
                 <b>
 
-                  {{
-                    r.source === "Online"
-                      ? "Automatically approved"
-                      : "Cash verified / approved"
-                  }}
-
+            {{
+  r.paymentMethod === "Cash"
+    ? "Cash verified / approved"
+    : "Automatically approved"
+}}
                 </b>
 
               </div>
@@ -1527,17 +1525,17 @@
 
             <p class="help">
 
-              @if (r.source === "Online") {
+          @if (r.paymentMethod === "Cash") {
 
-                This online registration was confirmed automatically after
-                successful payment. No manual admin approval is required.
+  This cash registration was confirmed after
+  the administrator verified the cash payment.
 
-              } @else {
+} @else {
 
-                This paper registration was confirmed automatically after
-                verified cash payment. No additional manual approval is required.
+  This online registration was confirmed automatically after
+  successful online payment.
 
-              }
+}
 
             </p>
 
@@ -1631,12 +1629,25 @@
             </p>
 
 
-            <p>
-              Email delivery will be enabled after SMTP configuration is added.
-              Registration and QR are already valid even if email delivery is
-              unavailable.
-            </p>
+          @if (
+  r.emailStatus === "Sent"
+) {
 
+  <p>
+    The participant pass email has been
+    successfully sent to the registered
+    email address.
+  </p>
+
+} @else {
+
+  <p>
+    The participant pass is ready.
+    Use the Send Pass Email button below
+    to send it to the registered email address.
+  </p>
+
+}
 
             <div class="email-state">
 
@@ -1707,20 +1718,47 @@
         }
 
 
-        @if (
-          r.approval === "Approved"
-        ) {
+  @if (
+  r.approval === "Approved" &&
+  r.emailStatus !== "Sent" &&
+  r.email
+) {
 
-          <button
-            type="button"
-            class="btn light-green"
-            disabled
-          >
-            Email setup pending
-          </button>
+  <button
+    type="button"
+    class="btn light-green"
+    (click)="emailPass()"
+  >
+    Send Pass Email
+  </button>
 
-        }
+} @else if (
+  r.approval === "Approved" &&
+  r.emailStatus === "Sent"
+) {
 
+  <button
+    type="button"
+    class="btn light-green"
+    disabled
+  >
+    ✓ Pass Email Sent
+  </button>
+
+} @else if (
+  r.approval === "Approved" &&
+  !r.email
+) {
+
+  <button
+    type="button"
+    class="btn secondary"
+    disabled
+  >
+    No Email Address
+  </button>
+
+}
       </footer>
 
     </section>
