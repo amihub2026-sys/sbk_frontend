@@ -1,3 +1,64 @@
+
+@if (admissionCardOpen() && step() === 1) {
+
+  <aside class="vijayadashami-admission no-print">
+
+    <button
+      type="button"
+      class="admission-close"
+      aria-label="Close admission notice"
+      (click)="closeAdmissionCard()"
+    >
+      ×
+    </button>
+
+
+    <div class="admission-heading">
+
+      <span>
+        VIJAYADASHAMI
+      </span>
+
+      <strong>
+        ADMISSIONS OPEN
+      </strong>
+
+      <small>
+        விஜயதசமி மாணவர் சேர்க்கை நடைபெறுகிறது
+      </small>
+
+    </div>
+
+
+    <img
+      src="/images/vijayadashami-admission.png"
+      alt="SBK Vibgyor Vijayadashami Admissions"
+      class="admission-poster"
+    />
+
+
+    <div class="admission-details">
+
+      <b>
+        SBK VIBGYOR KIDS PLAY SCHOOL
+      </b>
+
+      <p>
+        Begin your child's learning journey with us.
+      </p>
+
+      <a
+        href="tel:+919442101270"
+        class="admission-call"
+      >
+        ☎ 094421 01270
+      </a>
+
+    </div>
+
+  </aside>
+
+}
 <section
   class="festival-hero"
   [style.background-image]="

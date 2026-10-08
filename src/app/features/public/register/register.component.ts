@@ -31,6 +31,7 @@ export class RegisterComponent {
   error = signal("");
   busy = signal(false);
   selected = signal<string[]>([]);
+  admissionCardOpen = signal(true);
   language = signal<"ta" | "en">("ta");
   consent = false;
   applicationDate = indiaDate();
@@ -347,6 +348,9 @@ async payAndRegister() {
     this.busy.set(false);
 
   }
+}
+closeAdmissionCard() {
+  this.admissionCardOpen.set(false);
 }
   viewPass() {
     void this.router.navigate(["/pass"]);
