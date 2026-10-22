@@ -184,39 +184,32 @@ export class EventStore {
     this.state.set(normalizeState(publicState));
   }
 
-  async load() {
+async load() {
 
-    if (this.demo) return;
+  if (this.demo) return;
 
-    try {
+  this.loading.set(true);
 
-      const raw = sessionStorage.getItem("sbk-chithiram-session-v2");
+  try {
 
-      if (raw && JSON.parse(raw)?.role) return;
-
-    } catch {}
-
-    this.loading.set(true);
-
-    try {
-
-      this.state.set(
-
-        normalizeState(
-
-          await firstValueFrom(this.http.get<EventState>(this.url("/event"))),
-
+    const publicState =
+      await firstValueFrom(
+        this.http.get<EventState>(
+          this.url("/event"),
         ),
-
       );
 
-    } finally {
+    this.state.set(
+      normalizeState(publicState),
+    );
 
-      this.loading.set(false);
+  } finally {
 
-    }
+    this.loading.set(false);
 
   }
+
+}
 
   async loadAdmin() {
 
