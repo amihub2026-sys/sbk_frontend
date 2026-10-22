@@ -90,16 +90,27 @@
 
     </div>
 
-    <small>
-      For event support:
-      {{
-        store.settings().contact ||
-        "Contact number will be updated by the organiser"
-      }}
-    </small>
+<small>
+  For event support:
+  {{
+    store.settings().contact ||
+    "Contact number will be updated by the organiser"
+  }}
+</small>
 
-  </footer>
+<div class="footer-links">
+  <a routerLink="/privacy-policy">
+    Privacy Policy
+  </a>
 
+  <span>•</span>
+
+  <a routerLink="/terms">
+    Terms of Service
+  </a>
+</div>
+
+</footer>
 }
 
 

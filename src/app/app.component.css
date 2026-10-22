@@ -197,7 +197,33 @@
   color: #bcd0ca;
 }
 
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
+  margin-top: 8px;
+
+  font-size: 14px;
+}
+
+.footer-links a {
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-weight: 600;
+
+  transition: 0.25s ease;
+}
+
+.footer-links a:hover {
+  color: #c49334;
+}
+
+.footer-links span {
+  color: #7f9b92;
+}
 /* =========================================
    TOAST
 ========================================= */

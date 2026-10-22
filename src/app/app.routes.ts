@@ -63,5 +63,19 @@ export const routes: Routes = [
     title: "Judge Participants | Chithiram Thiruvila",
     loadComponent: () => import("./features/admin/judging/judging.component").then((m) => m.JudgingComponent),
   },
+  {
+  path: "privacy-policy",
+  title: "Privacy Policy | SBK VIBGYOR SCHOOL",
+  loadComponent: () =>
+    import("./features/public/privacy-policy/privacy-policy.component")
+      .then((m) => m.PrivacyPolicyComponent),
+},
+{
+  path: "terms",
+  title: "Terms of Service | SBK VIBGYOR SCHOOL",
+  loadComponent: () =>
+    import("./features/public/terms/terms.component")
+      .then((m) => m.TermsComponent),
+},
   { path: "**", redirectTo: "register" },
 ];
