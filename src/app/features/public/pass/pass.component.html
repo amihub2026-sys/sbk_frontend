@@ -147,39 +147,51 @@
              HEADER
         ================================================== -->
 
-        <div class="pass-top">
+   <div class="pass-top">
 
-          <div>
+  <div class="pass-brand">
 
-            <small>
-              SBK VIBGYOR SCHOOL &
-              STAR GURU CHARITABLE FOUNDATION
-            </small>
+    <img
+      src="/logos/star-guru-logo.png"
+      alt="Star Guru Charitable Foundation"
+      class="pass-star-guru-logo"
+    />
 
-            <h1>
-              {{ store.settings().titleTa }}
-            </h1>
+    <span class="pass-organised-by">
+      EVENT ORGANISED BY
+    </span>
 
-            <h2>
-              {{ store.settings().title }}
-            </h2>
+    <strong class="pass-organiser-name">
+      STAR GURU CHARITABLE FOUNDATION
+    </strong>
 
-          </div>
+    <h1>
+      {{ store.settings().titleTa }}
+    </h1>
+
+    <h2>
+      {{ store.settings().title }}
+    </h2>
+
+    <small class="pass-school-name">
+      In association with SBK VIBGYOR SCHOOL
+    </small>
+
+  </div>
 
 
-          <span
-            class="status"
-            [class.approved]="passReady(r)"
-          >
-            {{
-              passReady(r)
-                ? "REGISTRATION PASS"
-                : "PAYMENT PENDING"
-            }}
-          </span>
+  <span
+    class="status"
+    [class.approved]="passReady(r)"
+  >
+    {{
+      passReady(r)
+        ? "REGISTRATION PASS"
+        : "PAYMENT PENDING"
+    }}
+  </span>
 
-        </div>
-
+</div>
 
         <!-- =================================================
              PARTICIPANT + QR

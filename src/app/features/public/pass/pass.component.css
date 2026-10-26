@@ -226,7 +226,50 @@
   box-shadow:
     0 6px 18px rgba(0, 0, 0, 0.16);
 }
+.pass-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
 
+.pass-star-guru-logo {
+  width: 170px;
+  height: 78px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 4px;
+}
+
+.pass-organised-by {
+  color: #f4d98a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.3px;
+}
+
+.pass-organiser-name {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: .4px;
+}
+
+.pass-brand h1 {
+  margin: 8px 0 0;
+}
+
+.pass-brand h2 {
+  margin: 0;
+}
+
+.pass-school-name {
+  margin-top: 6px;
+  color: #dceae5 !important;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .4px;
+}
 
 /* =========================================
    WISH CONTENT
@@ -354,6 +397,22 @@
     padding: 22px 18px;
     display: block;
   }
+  .pass-star-guru-logo {
+  width: 135px;
+  height: 62px;
+}
+
+.pass-organiser-name {
+  font-size: 14px;
+}
+
+.pass-organised-by {
+  font-size: 8px;
+}
+
+.pass-school-name {
+  font-size: 8px;
+}
   .status {
     display: inline-block;
     margin-top: 14px;
