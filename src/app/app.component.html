@@ -15,8 +15,7 @@
       <div class="organiser-brand">
 
         <span class="organiser-label">
-          EVENT ORGANISED BY
-        </span>
+                  </span>
 
         <img
           src="/logos/star-guru-logo.png"
@@ -87,46 +86,60 @@
 
 @if (!isWorkspace && !isLogin) {
 
-  <footer class="public-footer no-print">
+<footer class="public-footer no-print">
 
-    <div>
+  <div class="footer-branding">
+
+    <!-- PRIMARY ORGANISER -->
+    <div class="footer-organiser">
+      <span>
+    
+      </span>
 
       <b>
-        {{ store.settings().titleTa }}
+        STAR GURU CHARITABLE FOUNDATION
       </b>
-
-      <p>
-        Presented by
-        {{ store.settings().presenters }}
-      </p>
-
     </div>
 
 
-    <small>
-      For event support:
-      {{
-        store.settings().contact ||
-        "Contact number will be updated by the organiser"
-      }}
-    </small>
+    <!-- SECONDARY SCHOOL -->
+    <div class="footer-school">
+      <span>
+       
+      </span>
 
-
-    <div class="footer-links">
-
-      <a routerLink="/privacy-policy">
-        Privacy Policy
-      </a>
-
-      <span>•</span>
-
-      <a routerLink="/terms">
-        Terms of Service
-      </a>
-
+      <strong>
+        SBK VIBGYOR SCHOOL
+      </strong>
     </div>
 
-  </footer>
+  </div>
+
+
+  <small>
+    For event support:
+    {{
+      store.settings().contact ||
+      "Contact number will be updated by the organiser"
+    }}
+  </small>
+
+
+  <div class="footer-links">
+
+    <a routerLink="/privacy-policy">
+      Privacy Policy
+    </a>
+
+    <span>•</span>
+
+    <a routerLink="/terms">
+      Terms of Service
+    </a>
+
+  </div>
+
+</footer>
 
 }
 
