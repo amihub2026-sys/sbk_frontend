@@ -13,6 +13,7 @@
     ====================================================== -->
 
     @if (!store.activePass()) {
+
       <section class="lookup card">
 
         <span class="eyebrow">
@@ -77,12 +78,15 @@
 
 
         @if (error()) {
+
           <p class="error">
             {{ error() }}
           </p>
+
         }
 
       </section>
+
     }
 
 
@@ -103,32 +107,33 @@
         </a>
 
 
-      @if (passReady(r)) {
+        @if (passReady(r)) {
 
-  <button
-    class="btn"
-    type="button"
-    [disabled]="downloading()"
-    (click)="downloadPass()"
-  >
-    {{
-      downloading()
-        ? "Preparing PDF…"
-        : downloaded()
-          ? "Download pass again ↓"
-          : "Download pass ↓"
-    }}
-  </button>
+          <button
+            class="btn"
+            type="button"
+            [disabled]="downloading()"
+            (click)="downloadPass()"
+          >
+            {{
+              downloading()
+                ? "Preparing PDF…"
+                : downloaded()
+                  ? "Download pass again ↓"
+                  : "Download pass ↓"
+            }}
+          </button>
 
-}
+        }
 
-<button
-  class="btn secondary"
-  type="button"
-  (click)="print()"
->
-  Print / Save
-</button>
+
+        <button
+          class="btn secondary"
+          type="button"
+          (click)="print()"
+        >
+          Print / Save
+        </button>
 
       </div>
 
@@ -199,10 +204,12 @@
             <div class="person-head">
 
               @if (r.photo) {
+
                 <img
                   [src]="r.photo"
                   alt="Student photo"
                 />
+
               }
 
 
@@ -228,40 +235,61 @@
             <div class="detail-grid">
 
               <div>
-                <span>Father</span>
+
+                <span>
+                  Father
+                </span>
 
                 <b>
                   {{ r.fatherName }}
                 </b>
+
               </div>
 
 
               <div>
-                <span>Category</span>
+
+                <span>
+                  Category
+                </span>
 
                 <b>
+
                   @if (store.category(r.categoryId); as category) {
+
                     {{ category.name }}
                     ·
                     {{ store.categoryLabel(r.categoryId) }}
+
                   } @else {
+
                     Category details unavailable
+
                   }
+
                 </b>
+
               </div>
 
 
               <div>
-                <span>DOB</span>
+
+                <span>
+                  DOB
+                </span>
 
                 <b>
                   {{ r.dob | date: "d MMM y" }}
                 </b>
+
               </div>
 
 
               <div>
-                <span>Payment</span>
+
+                <span>
+                  Payment
+                </span>
 
                 <b>
                   {{ r.paymentMethod }}
@@ -273,6 +301,7 @@
                       | currency: "INR" : "symbol" : "1.0-0"
                   }}
                 </b>
+
               </div>
 
             </div>
@@ -320,7 +349,9 @@
 
             <div class="receipt-status">
 
-              <span>⏳</span>
+              <span>
+                ⏳
+              </span>
 
               <b>
                 Payment pending
@@ -357,10 +388,12 @@
               <article>
 
                 @if (c.image) {
+
                   <img
                     [src]="c.image"
                     [alt]="c.name"
                   />
+
                 }
 
 
@@ -412,6 +445,59 @@
 
 
         <!-- =================================================
+             ORGANISER WISHES
+        ================================================== -->
+
+        @if (passReady(r)) {
+
+          <section class="organiser-wish-card">
+
+            <div class="organiser-wish-photo">
+
+              <img
+                src="/images/guru-sammy-thiagarajan.png"
+                alt="Guru Sammy Thiagarajan"
+              />
+
+            </div>
+
+
+            <div class="organiser-wish-content">
+
+              <span class="wish-from">
+                WISHES FROM
+              </span>
+
+              <h3>
+                Guru Sammy Thiagarajan
+              </h3>
+
+              <small>
+                STAR GURU CHARITABLE FOUNDATION
+              </small>
+
+
+              <div class="wish-message">
+
+                <strong>
+                  ✨ Happy Diwali! ✨
+                </strong>
+
+                <p>
+                  Warm wishes to all our young participants and families.
+                  May this festival bring happiness, creativity and success.
+                </p>
+
+              </div>
+
+            </div>
+
+          </section>
+
+        }
+
+
+        <!-- =================================================
              CONFIRMED MESSAGE
         ================================================== -->
 
@@ -436,16 +522,20 @@
 
 
             @if (store.settings().instructionsEn) {
+
               <p>
                 {{ store.settings().instructionsEn }}
               </p>
+
             }
 
 
             @if (store.settings().instructionsTa) {
+
               <p>
                 {{ store.settings().instructionsTa }}
               </p>
+
             }
 
           </div>
@@ -495,6 +585,7 @@
         </footer>
 
       </section>
+
     }
 
   </div>

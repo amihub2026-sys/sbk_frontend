@@ -67,51 +67,160 @@
     ')'
   "
 >
-  <div class="hero-inner">
-    <div>
-      <span class="eyebrow"
-        >SBK VIBGYOR SCHOOL · STAR GURU CHARITABLE FOUNDATION</span
-      >
-      <h1>{{ store.settings().titleTa }}</h1>
-      <h2>{{ store.settings().title }}</h2>
-      <p>{{ t("Student Application Form", "மாணவர் விண்ணப்பப் படிவம்") }}</p>
-    </div>
- <div class="language-helper">
 
-  <img
-    src="/images/language-girl.png"
-    alt="Select your language"
-    class="language-girl"
-  />
 
-  <div class="language-actions">
+ <!-- =====================================
+     STAR GURU ORGANISER MARQUEE
+====================================== -->
 
-  
+<div
+  class="organiser-marquee"
+  aria-label="Event organised by Star Guru Charitable Foundation"
+>
 
-    <div class="lang-switch" aria-label="Language">
+  <div class="organiser-marquee-track">
 
-      <button
-        type="button"
-        [class.active]="language() === 'ta'"
-        (click)="language.set('ta')"
-      >
-        தமிழ்
-      </button>
+    <!-- FIRST COPY -->
+    <span class="marquee-group">
 
-      <button
-        type="button"
-        [class.active]="language() === 'en'"
-        (click)="language.set('en')"
-      >
-        English
-      </button>
+      <strong>
+        EVENT ORGANISED BY STAR GURU CHARITABLE FOUNDATION
+      </strong>
 
-    </div>
+      <small class="marquee-event-name">
+        Chithiram Thiruvila 2026
+      </small>
+
+      <b class="marquee-star">
+        ✦
+      </b>
+
+    </span>
+
+
+    <!-- SECOND COPY FOR CONTINUOUS MOVEMENT -->
+    <span
+      class="marquee-group"
+      aria-hidden="true"
+    >
+
+      <strong>
+        EVENT ORGANISED BY STAR GURU CHARITABLE FOUNDATION
+      </strong>
+
+      <small class="marquee-event-name">
+        Chithiram Thiruvila 2026
+      </small>
+
+      <b class="marquee-star">
+        ✦
+      </b>
+
+    </span>
 
   </div>
 
 </div>
+
+
+  <div class="hero-inner">
+
+
+    <!-- =====================================
+         LEFT HERO CONTENT
+    ====================================== -->
+
+    <div class="hero-copy">
+
+      <span class="hero-school">
+        SBK VIBGYOR SCHOOL
+      </span>
+
+
+      <span class="hero-organiser-badge">
+
+        <small>
+          EVENT ORGANISED BY
+        </small>
+
+        <strong>
+          STAR GURU CHARITABLE FOUNDATION
+        </strong>
+
+      </span>
+
+
+      <!-- MAIN TAMIL TITLE -->
+
+      <h1>
+        {{ store.settings().titleTa }}
+      </h1>
+
+
+      <!-- ENGLISH TITLE DIRECTLY BELOW TAMIL -->
+
+      <h2>
+        {{ store.settings().title }}
+      </h2>
+
+
+      <p>
+        {{
+          t(
+            "Student Application Form",
+            "மாணவர் விண்ணப்பப் படிவம்"
+          )
+        }}
+      </p>
+
+    </div>
+
+
+    <!-- =====================================
+         LANGUAGE SELECTOR
+    ====================================== -->
+
+    <div class="language-helper">
+
+      <img
+        src="/images/language-girl.png"
+        alt="Select your language"
+        class="language-girl"
+      />
+
+
+      <div class="language-actions">
+
+        <div
+          class="lang-switch"
+          aria-label="Language"
+        >
+
+          <button
+            type="button"
+            [class.active]="language() === 'ta'"
+            (click)="language.set('ta')"
+          >
+            தமிழ்
+          </button>
+
+
+          <button
+            type="button"
+            [class.active]="language() === 'en'"
+            (click)="language.set('en')"
+          >
+            English
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
   </div>
+
 </section>
 
 <div class="container application-wrap">

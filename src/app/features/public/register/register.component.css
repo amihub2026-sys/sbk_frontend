@@ -1,37 +1,321 @@
+/* =========================================
+   FESTIVAL HERO
+========================================= */
+
 .festival-hero {
-  min-height: 310px;
+  min-height: 370px;
+
   background-size: cover;
   background-position: center;
+
   display: flex;
-  align-items: end;
-  color: #fff;
+  align-items: center;
+
+  color: #ffffff;
+
+  position: relative;
+  overflow: hidden;
 }
+
+
+/* =========================================
+   STAR GURU ORGANISER MARQUEE
+========================================= */
+
+.organiser-marquee {
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 100%;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  z-index: 5;
+
+  background:
+    linear-gradient(
+      90deg,
+      #8f5f00,
+      #b57a08,
+      #8f5f00
+    );
+
+  border-bottom:
+    1px solid rgba(255, 224, 152, 0.5);
+
+  box-shadow:
+    0 4px 18px rgba(0, 0, 0, 0.18);
+}
+
+
+.organiser-marquee-track {
+  display: flex;
+
+  align-items: center;
+
+  width: max-content;
+
+  white-space: nowrap;
+
+  animation:
+    organiserMarquee 22s linear infinite;
+
+  will-change: transform;
+}
+
+
+.marquee-group {
+  display: flex;
+
+  align-items: center;
+
+  gap: 22px;
+
+  flex-shrink: 0;
+
+  padding-right: 55px;
+}
+
+
+/* BIG MAIN TEXT */
+
+.marquee-group strong {
+  color: #ffffff;
+
+  font-size: 18px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.2px;
+
+  text-transform: uppercase;
+}
+
+
+/* SMALL EVENT NAME */
+
+.marquee-event-name {
+  color: #ffe6a0;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+}
+
+
+/* SEPARATOR */
+
+.marquee-star {
+  color: #fff4ca;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+@keyframes organiserMarquee {
+
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+
+}
+
+/* =========================================
+   HERO CONTENT
+========================================= */
+
 .hero-inner {
   width: min(1280px, 100%);
+
   margin: auto;
-  padding: 58px 40px;
+
+  padding:
+    94px
+    40px
+    52px;
+
   display: flex;
+
   justify-content: space-between;
-  align-items: end;
-  gap: 30px;
+
+  align-items: center;
+
+  gap: 40px;
+
+  position: relative;
+
+  z-index: 2;
 }
-.festival-hero .eyebrow {
-  color: #ffd282;
+
+
+.hero-copy {
+  width: min(680px, 100%);
 }
+
+
+/* =========================================
+   SBK NAME
+========================================= */
+
+.hero-school {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #ffffff;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  opacity: 0.9;
+}
+
+
+/* =========================================
+   STAR GURU HIGHLIGHT
+========================================= */
+
+.hero-organiser-badge {
+  display: inline-flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  margin-bottom: 16px;
+
+  padding: 8px 14px;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(177, 116, 10, 0.92),
+      rgba(215, 162, 62, 0.88)
+    );
+
+  border:
+    1px solid rgba(255, 226, 161, 0.6);
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.14);
+}
+
+
+.hero-organiser-badge small {
+  color: rgba(255, 255, 255, 0.86);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.3px;
+}
+
+
+.hero-organiser-badge strong {
+  margin-top: 2px;
+
+  color: #ffffff;
+
+  font-size: 13px;
+
+  font-weight: 900;
+
+  letter-spacing: 1.2px;
+}
+
+
+/* =========================================
+   MAIN TAMIL TITLE
+========================================= */
+
 .festival-hero h1 {
-  font-family: "Noto Sans Tamil", sans-serif;
-  font-size: clamp(2.8rem, 6vw, 5.2rem);
-  margin: 0 0 6px;
-  line-height: 1;
+  margin: 0 0 8px;
+
+  max-width: 720px;
+
+  font-family:
+    "Noto Sans Tamil",
+    sans-serif;
+
+  font-size:
+    clamp(
+      3.6rem,
+      6vw,
+      6rem
+    );
+
+  font-weight: 700;
+
+  line-height: 0.98;
+
+  letter-spacing: -1px;
+
+  color: #ffffff;
+
+  text-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.25);
 }
+
+
+/* =========================================
+   ENGLISH TITLE
+========================================= */
+
 .festival-hero h2 {
   margin: 0;
-  font-family: Georgia, serif;
-  font-size: 1.8rem;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      1.35rem,
+      2vw,
+      1.85rem
+    );
+
+  font-weight: 600;
+
+  line-height: 1.2;
+
+  color: #ffffff;
 }
+
+
+/* =========================================
+   APPLICATION FORM TEXT
+========================================= */
+
 .festival-hero p {
-  margin: 16px 0 0;
-  color: #d9ebe5;
+  margin: 18px 0 0;
+
+  color: #e6f1ed;
+
+  font-size: 1rem;
+
+  font-weight: 500;
 }
 .lang-switch {
   display: flex;
@@ -392,23 +676,177 @@
     position: static;
   }
   .hero-inner {
-    padding: 38px 24px;
-  }
+  padding:
+    84px
+    24px
+    38px;
+
+  gap: 24px;
+}
+
+
+.hero-copy {
+  width: min(560px, 100%);
+}
+
+
+.festival-hero h1 {
+  font-size:
+    clamp(
+      3rem,
+      7vw,
+      4.8rem
+    );
+}
+
+
+.festival-hero h2 {
+  font-size: 1.4rem;
+}
+
+
+.hero-organiser-badge strong {
+  font-size: 11px;
+}
+
+
+.organiser-marquee {
+  height: 40px;
+}
+
+
+.organiser-marquee-track span {
+  font-size: 10px;
+}
+
+
+.organiser-marquee-track strong {
+  font-size: 11px;
+}
 }
 @media (max-width: 620px) {
-  .festival-hero {
-    min-height: 255px;
-  }
-  .hero-inner {
-    padding: 32px 16px;
-    display: block;
-  }
-  .festival-hero h1 {
-    font-size: 2.7rem;
-  }
-  .festival-hero h2 {
-    font-size: 1.35rem;
-  }
+.festival-hero {
+  min-height: auto;
+  background-position: center;
+}
+
+
+.hero-inner {
+  padding:
+    72px
+    16px
+    28px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 20px;
+}
+
+
+.hero-copy {
+  width: 100%;
+}
+
+
+.hero-school {
+  margin-bottom: 6px;
+
+  font-size: 9px;
+
+  letter-spacing: 1.3px;
+}
+
+
+.hero-organiser-badge {
+  margin-bottom: 12px;
+
+  padding: 6px 10px;
+
+  border-radius: 8px;
+}
+
+
+.hero-organiser-badge small {
+  font-size: 6px;
+}
+
+
+.hero-organiser-badge strong {
+  font-size: 9px;
+
+  letter-spacing: 0.6px;
+}
+
+
+.festival-hero h1 {
+  margin-bottom: 7px;
+
+  font-size:
+    clamp(
+      2.7rem,
+      14vw,
+      4rem
+    );
+
+  line-height: 1;
+}
+
+
+.festival-hero h2 {
+  font-size: 1.15rem;
+
+  line-height: 1.2;
+}
+
+
+.festival-hero p {
+  margin-top: 12px;
+
+  font-size: 0.85rem;
+}
+
+
+.organiser-marquee {
+  height: 36px;
+}
+
+
+.marquee-group {
+  gap: 12px;
+
+  padding-right: 34px;
+}
+
+
+/* STAR GURU - MAIN BIG TEXT */
+
+.marquee-group strong {
+  font-size: 14px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+}
+
+
+/* CHITHIRAM THIRUVILA - SMALL TEXT */
+
+.marquee-event-name {
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
+}
+
+
+.marquee-star {
+  font-size: 11px;
+}
   .lang-switch {
     margin-top: 20px;
     width: max-content;

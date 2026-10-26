@@ -398,7 +398,40 @@ export class PassComponent {
     );
 
   }
+/* =========================================
+   FESTIVAL WISH
+========================================= */
 
+isDiwaliWish(r: any) {
+
+  if (!r?.createdAt) {
+    return false;
+  }
+
+  const registrationDate =
+    new Date(r.createdAt);
+
+  /*
+   * Diwali cutoff:
+   * 08 November 2026
+   *
+   * Registrations made on or before
+   * this date show Diwali wishes.
+   *
+   * Registrations after this date
+   * show Children's Day wishes.
+   */
+  const diwaliCutoff =
+    new Date(
+      "2026-11-08T23:59:59.999+05:30",
+    );
+
+  return (
+    registrationDate.getTime() <=
+    diwaliCutoff.getTime()
+  );
+
+}
 
   /* =========================================
      WAIT FOR IMAGES

@@ -11,38 +11,50 @@
       routerLink="/register"
     >
 
-      <!-- LEFT LOGO -->
-      <img
-        src="/logos/sbk-logo.png"
-        alt="SBK Vibgyor School"
-        class="header-logo side-logo sbk-logo"
-      />
+      <!-- STAR GURU - MAIN EVENT ORGANISER -->
+      <div class="organiser-brand">
 
-      <!-- CENTER CONTENT -->
-      <div class="brand-copy-center">
+        <span class="organiser-label">
+          EVENT ORGANISED BY
+        </span>
 
-        <b>
-          {{ store.settings().title }}
-        </b>
-
-        <small>
-          SBK VIBGYOR SCHOOL
-
-          <span class="brand-divider">
-            •
-          </span>
-
-          STAR GURU
-        </small>
+        <img
+          src="/logos/star-guru-logo.png"
+          alt="Star Guru Charitable Foundation"
+          class="header-logo star-guru-logo"
+        />
 
       </div>
 
-      <!-- RIGHT LOGO -->
-      <img
-        src="/logos/star-guru-logo.png"
-        alt="Star Guru"
-        class="header-logo side-logo star-guru-logo"
-      />
+
+      <!-- EVENT TITLE -->
+      <div class="brand-copy-center">
+
+        <b class="header-event-title">
+          {{ store.settings().title }}
+        </b>
+
+        <span class="brand-organiser-name">
+          STAR GURU CHARITABLE FOUNDATION
+        </span>
+
+        <span class="brand-school-name">
+          In association with SBK VIBGYOR SCHOOL
+        </span>
+
+      </div>
+
+
+      <!-- SBK SCHOOL -->
+      <div class="school-brand">
+
+        <img
+          src="/logos/sbk-logo.png"
+          alt="SBK Vibgyor School"
+          class="header-logo sbk-logo"
+        />
+
+      </div>
 
     </a>
 
@@ -90,27 +102,32 @@
 
     </div>
 
-<small>
-  For event support:
-  {{
-    store.settings().contact ||
-    "Contact number will be updated by the organiser"
-  }}
-</small>
 
-<div class="footer-links">
-  <a routerLink="/privacy-policy">
-    Privacy Policy
-  </a>
+    <small>
+      For event support:
+      {{
+        store.settings().contact ||
+        "Contact number will be updated by the organiser"
+      }}
+    </small>
 
-  <span>•</span>
 
-  <a routerLink="/terms">
-    Terms of Service
-  </a>
-</div>
+    <div class="footer-links">
 
-</footer>
+      <a routerLink="/privacy-policy">
+        Privacy Policy
+      </a>
+
+      <span>•</span>
+
+      <a routerLink="/terms">
+        Terms of Service
+      </a>
+
+    </div>
+
+  </footer>
+
 }
 
 
