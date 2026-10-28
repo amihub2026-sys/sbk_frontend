@@ -1,12 +1,13 @@
 /* =========================================
    FESTIVAL HERO
 ========================================= */
-
 .festival-hero {
-  min-height: 370px;
+  height: 600px;
+  min-height: 600px;
 
   background-size: cover;
-  background-position: center;
+  background-position: center 45%;
+  background-repeat: no-repeat;
 
   display: flex;
   align-items: center;
@@ -725,9 +726,14 @@
 }
 }
 @media (max-width: 620px) {
-.festival-hero {
-  min-height: auto;
-  background-position: center;
+@media (max-width: 620px) {
+  .festival-hero {
+    height: auto;
+    min-height: auto;
+
+    background-size: cover;
+    background-position: center;
+  }
 }
 
 

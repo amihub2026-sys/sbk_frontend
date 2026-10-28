@@ -32,7 +32,7 @@ export class RegisterComponent {
   busy = signal(false);
   selected = signal<string[]>([]);
   admissionCardOpen = signal(true);
-  language = signal<"ta" | "en">("ta");
+  language = signal<"ta" | "en">("en");
   consent = false;
   applicationDate = indiaDate();
   dob = signal("");
@@ -220,18 +220,51 @@ if (!this.category()) {
 
   return;
 }
-    const err = validateSelection(
-      this.selected(),
-      this.category()!.id,
-      this.store.state().competitions,
-      this.store.state().slots,
-      this.store.registrations(),
-      this.store.settings().maxEvents,
-    );
-    if (err) {
-      this.error.set(err);
-      return;
-    }
+if (this.selected().length === 0) {
+  this.error.set(
+    this.t(
+      "Select at least one competition.",
+      "குறைந்தது ஒரு போட்டியை தேர்வு செய்யவும்.",
+    ),
+  );
+
+setTimeout(() => {
+  const section =
+    document.querySelector(
+      ".competitions-panel",
+    ) as HTMLElement | null;
+
+  if (!section) return;
+
+  const headerOffset = 170;
+
+  const top =
+    section.getBoundingClientRect().top +
+    window.scrollY -
+    headerOffset;
+
+  window.scrollTo({
+    top,
+    behavior: "smooth",
+  });
+}, 0);
+
+  return;
+}
+
+const err = validateSelection(
+  this.selected(),
+  this.category()!.id,
+  this.store.state().competitions,
+  this.store.state().slots,
+  this.store.registrations(),
+  this.store.settings().maxEvents,
+);
+
+if (err) {
+  this.error.set(err);
+  return;
+}
     this.step.set(2);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

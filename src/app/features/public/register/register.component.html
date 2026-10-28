@@ -142,14 +142,15 @@
         <strong>
           STAR GURU CHARITABLE FOUNDATION
         </strong>
-
-      </span>
-  
-  <small>
+        <small>
            <span class="hero-school">
         SBK VIBGYOR SCHOOL
       </span>
         </small>
+
+      </span>
+  
+  
         
       <!-- MAIN TAMIL TITLE -->
 
@@ -197,22 +198,21 @@
           aria-label="Language"
         >
 
-          <button
-            type="button"
-            [class.active]="language() === 'ta'"
-            (click)="language.set('ta')"
-          >
-            தமிழ்
-          </button>
+<button
+  type="button"
+  [class.active]="language() === 'en'"
+  (click)="language.set('en')"
+>
+  English
+</button>
 
-
-          <button
-            type="button"
-            [class.active]="language() === 'en'"
-            (click)="language.set('en')"
-          >
-            English
-          </button>
+<button
+  type="button"
+  [class.active]="language() === 'ta'"
+  (click)="language.set('ta')"
+>
+  தமிழ்
+</button>
 
         </div>
 
@@ -377,6 +377,20 @@
     </section>
 
     <section class="form-panel competitions-panel">
+      @if (
+  error() &&
+  category() &&
+  selected().length === 0
+) {
+  <p class="error competition-error" role="alert">
+    {{
+      t(
+        "Select at least one competition.",
+        "குறைந்தது ஒரு போட்டியை தேர்வு செய்யவும்."
+      )
+    }}
+  </p>
+}
       <div class="section-title">
         <span>02</span>
         <div>

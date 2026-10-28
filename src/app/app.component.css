@@ -504,15 +504,21 @@
   }
 
 
-  .brand-organiser-name {
-    margin-top: 3px;
+.brand-organiser-name {
+  margin-top: 4px;
 
-    font-size: 6px;
+  color: #ad760e;
 
-    letter-spacing: 0.1px;
+  font-size: 7.5px;
 
-    white-space: normal;
-  }
+  font-weight: 900;
+
+  letter-spacing: 0.45px;
+
+  line-height: 1.1;
+
+  white-space: nowrap;
+}
 
 
   .brand-school-name {
@@ -540,9 +546,7 @@
   }
 
 
-  .public-header nav a:first-child {
-    display: none;
-  }
+
 
 
   .public-footer {
@@ -603,9 +607,11 @@
   }
 
 
-  .brand-organiser-name {
-    font-size: 5px;
-  }
+ .brand-organiser-name {
+  font-size: 6.5px;
+  font-weight: 900;
+  letter-spacing: 0.25px;
+}
 
 
   .brand-school-name {
