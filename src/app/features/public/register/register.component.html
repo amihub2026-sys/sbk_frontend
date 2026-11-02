@@ -436,10 +436,33 @@
                 selected().includes(c.id) ? "✓" : "+"
               }}</span>
               <div>
-                <small>{{ c.language }}</small>
-                <h3>{{ language() === "ta" ? c.tamil : c.name }}</h3>
-                <p>{{ language() === "ta" ? c.name : c.tamil }}</p>
-                <b>{{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}</b>
+               <small>{{ c.language }}</small>
+
+<h3>
+  {{ language() === "ta" ? c.tamil : c.name }}
+</h3>
+
+<p>
+  {{ language() === "ta" ? c.name : c.tamil }}
+</p>
+
+@if (c.topicEn || c.topicTa) {
+  <p class="competition-topic">
+    <strong>
+      {{ language() === "ta" ? "தலைப்பு:" : "Topic:" }}
+    </strong>
+
+    {{
+      language() === "ta"
+        ? (c.topicTa || c.topicEn)
+        : (c.topicEn || c.topicTa)
+    }}
+  </p>
+}
+
+<b>
+  {{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}
+</b>
               </div>
             </button>
           }

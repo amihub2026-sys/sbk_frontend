@@ -29,6 +29,8 @@ export interface Competition {
   id: string;
   name: string;
   tamil: string;
+  topicEn?: string;
+topicTa?: string;
   kind: CompetitionKind;
   categoryIds: string[];
   fee: number;

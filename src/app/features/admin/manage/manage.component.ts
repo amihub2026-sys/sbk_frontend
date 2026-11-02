@@ -950,11 +950,15 @@ newCompetition() {
         ? crypto.randomUUID()
         : "new",
 
-    name: "",
+ name: "",
 
-    tamil: "",
+tamil: "",
 
-    kind: "Art",
+topicEn: "",
+
+topicTa: "",
+
+kind: "Art",
 
     categoryIds: [],
 

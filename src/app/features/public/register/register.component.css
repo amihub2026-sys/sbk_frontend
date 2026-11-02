@@ -499,6 +499,25 @@
   margin: 0 0 8px;
   color: #d9e6e1;
 }
+.competition-card .competition-topic {
+  margin: 7px 0 9px;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 7px;
+  color: #ffffff;
+  font-size: 0.74rem;
+  line-height: 1.35;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.competition-card .competition-topic strong {
+  color: #f1d69f;
+  font-weight: 700;
+}
 .competition-card small {
   font-size: 0.7rem;
   color: #f1d69f;

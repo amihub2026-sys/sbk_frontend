@@ -301,7 +301,23 @@
               placeholder="Tamil competition name"
             />
           </label>
+<label class="span2">
+  Topic (English) · Optional
 
+  <textarea
+    [(ngModel)]="c.topicEn"
+    placeholder="Enter competition topic if applicable"
+  ></textarea>
+</label>
+
+<label class="span2">
+  Topic (Tamil) · Optional
+
+  <textarea
+    [(ngModel)]="c.topicTa"
+    placeholder="தேவைப்பட்டால் போட்டி தலைப்பை உள்ளிடவும்"
+  ></textarea>
+</label>
 
           <label>
             Competition type
