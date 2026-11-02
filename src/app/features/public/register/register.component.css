@@ -450,7 +450,7 @@
   gap: 16px;
 }
 .competition-card {
-  height: 230px;
+  height: 280px;
   border: 0;
   border-radius: 16px;
   background-size: cover;
@@ -523,7 +523,7 @@
   line-height: 1.35;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -919,10 +919,10 @@
     grid-template-columns: 1fr 1fr;
     gap: 10px;
   }
-  .competition-card {
-    height: 190px;
-    padding: 12px;
-  }
+.competition-card {
+  height: 250px;
+  padding: 12px;
+}
   .competition-card div {
     left: 12px;
     right: 12px;
@@ -1046,7 +1046,7 @@
     height: 76px;
   }
   .competition-card {
-    min-height: 190px;
+    min-height: 250px;
   }
   .actions.end .btn {
     width: 100%;
