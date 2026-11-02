@@ -459,7 +459,19 @@
     }}
   </p>
 }
+@if (c.instructions || c.instructionsTa) {
+  <p class="competition-instruction">
+    <strong>
+      {{ language() === "ta" ? "வழிமுறைகள்:" : "Instructions:" }}
+    </strong>
 
+    {{
+      language() === "ta"
+        ? (c.instructionsTa || c.instructions)
+        : (c.instructions || c.instructionsTa)
+    }}
+  </p>
+}
 <b>
   {{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}
 </b>

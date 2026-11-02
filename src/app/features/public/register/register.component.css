@@ -513,7 +513,25 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+.competition-card .competition-instruction {
+  margin: 6px 0 9px;
+  padding: 6px 8px;
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 7px;
+  color: #f3f5f4;
+  font-size: 0.72rem;
+  line-height: 1.35;
 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.competition-card .competition-instruction strong {
+  color: #f1d69f;
+  font-weight: 700;
+}
 .competition-card .competition-topic strong {
   color: #f1d69f;
   font-weight: 700;
