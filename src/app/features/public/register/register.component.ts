@@ -27,12 +27,20 @@ export class RegisterComponent {
   store = inject(EventStore);
   fb = inject(FormBuilder);
   router = inject(Router);
-  step = signal<1 | 2 | 3>(1);
-  error = signal("");
-  busy = signal(false);
-  selected = signal<string[]>([]);
-  admissionCardOpen = signal(true);
-  language = signal<"ta" | "en">("en");
+step = signal<1 | 2 | 3>(1);
+
+error = signal("");
+
+instructionCompetition = signal<any | null>(null);
+
+busy = signal(false);
+
+selected = signal<string[]>([]);
+
+admissionCardOpen = signal(true);
+
+language = signal<"ta" | "en">("en");
+  
   consent = false;
   applicationDate = indiaDate();
   dob = signal("");

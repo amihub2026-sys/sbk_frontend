@@ -472,6 +472,14 @@
     }}
   </p>
 }
+@if (c.instructions || c.instructionsTa) {
+  <span
+    class="competition-read-more"
+    (click)="instructionCompetition.set(c); $event.stopPropagation()"
+  >
+    {{ language() === "ta" ? "மேலும் படிக்க" : "Read more" }}
+  </span>
+}
 <b>
   {{ c.fee | currency: "INR" : "symbol" : "1.0-0" }}
 </b>
@@ -480,6 +488,63 @@
           }
         </div>
       }
+      @if (instructionCompetition(); as c) {
+  <div
+    class="competition-modal-backdrop"
+    (click)="instructionCompetition.set(null)"
+  >
+    <div
+      class="competition-modal"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        type="button"
+        class="competition-modal-close"
+        (click)="instructionCompetition.set(null)"
+      >
+        ×
+      </button>
+
+      <small>{{ c.language }}</small>
+
+      <h2>{{ c.name }}</h2>
+
+      @if (c.tamil) {
+        <h3>{{ c.tamil }}</h3>
+      }
+
+      @if (c.topicEn || c.topicTa) {
+        <div class="modal-topic">
+          <strong>Topic / தலைப்பு</strong>
+
+          @if (c.topicEn) {
+            <p>{{ c.topicEn }}</p>
+          }
+
+          @if (c.topicTa) {
+            <p>{{ c.topicTa }}</p>
+          }
+        </div>
+      }
+
+      <div class="modal-instructions">
+        @if (c.instructions) {
+          <div>
+            <strong>Instructions</strong>
+            <p>{{ c.instructions }}</p>
+          </div>
+        }
+
+        @if (c.instructionsTa) {
+          <div>
+            <strong>வழிமுறைகள்</strong>
+            <p>{{ c.instructionsTa }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
       <div class="instruction-box">
         <b>{{ t("Important instructions", "முக்கிய வழிமுறைகள்") }}</b>
         <p>
