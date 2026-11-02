@@ -138,6 +138,40 @@
   color: var(--muted);
   font-size: 0.78rem;
 }
+.pass-competition-topic,
+.pass-competition-instruction {
+  display: block;
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  line-height: 1.4;
+}
+
+.pass-competition-topic {
+  background: #fff7e5;
+  color: #70551c !important;
+  border: 1px solid #eadbb3;
+}
+
+.pass-competition-instruction {
+  background: #f3f7f5;
+  color: #52615b !important;
+  border: 1px solid #dce6e1;
+}
+
+.pass-competition-topic strong,
+.pass-competition-instruction strong {
+  color: #123f34;
+  font-weight: 800;
+  margin-right: 4px;
+}
+.pass-competition-topic > span,
+.pass-competition-instruction > span {
+  display: block;
+  margin-top: 3px;
+  color: inherit;
+  font-size: inherit;
+}
 /* =========================================
    ORGANISER WISH CARD
 ========================================= */

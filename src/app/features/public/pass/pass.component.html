@@ -419,7 +419,45 @@
                     {{ c.tamil }}
                   </span>
 
+@if (c.topicEn || c.topicTa) {
+  <small class="pass-competition-topic">
+    <strong>
+      Topic / தலைப்பு:
+    </strong>
 
+    @if (c.topicEn) {
+      <span>
+        {{ c.topicEn }}
+      </span>
+    }
+
+    @if (c.topicTa) {
+      <span>
+        {{ c.topicTa }}
+      </span>
+    }
+  </small>
+}
+
+@if (c.instructions || c.instructionsTa) {
+  <small class="pass-competition-instruction">
+    <strong>
+      Instructions / வழிமுறைகள்:
+    </strong>
+
+    @if (c.instructions) {
+      <span>
+        {{ c.instructions }}
+      </span>
+    }
+
+    @if (c.instructionsTa) {
+      <span>
+        {{ c.instructionsTa }}
+      </span>
+    }
+  </small>
+}
                   <small>
 
                     {{
